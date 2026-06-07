@@ -1,0 +1,10 @@
+.operations {
+  display: flex;
+  margin: 16px 0;
+}
+
+.operation-btn {
+  &:not(:first-child) {
+    margin-left: 16px;
+  }
+}

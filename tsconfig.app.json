@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".", // 👈 奠定基准路径为项目根目录
+    "paths": {
+      "@/*": ["src/*"] // 💥 告诉 TS：看到 @/ 符号，直接去 src/ 目录下找
+    },
+
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "es2023",
+    "lib": ["ES2023", "DOM"],
+    "module": "esnext",
+    "types": ["vite/client"],
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler", // 💥 铁律一：必须是 "bundler" 或者 "node"，告诉 TS 去 node_modules 里搂类型
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    // 💥 铁律二：允许合成默认导入，这能解决 three 内外包导出不一致的奇葩报错
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+
+    /* Linting */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"]
+}
