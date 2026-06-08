@@ -8,3 +8,11 @@
     margin-left: 16px;
   }
 }
+
+.table-btn {
+  font-size: 13px;
+
+  &:not(:first-child) {
+    margin-left: 16px;
+  }
+}

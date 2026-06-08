@@ -11,7 +11,7 @@ export interface Member {
   weight?: number;
   winTimes?: number; // 获奖次数.
   _isEdit?: boolean;
-  _type?: 'add' | 'update';
+  _type?: 'add' | 'edit';
   _backup?: Member;
 }
 

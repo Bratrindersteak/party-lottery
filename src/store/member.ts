@@ -1,31 +1,79 @@
-import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware' // 🚀 1. 核心：请出持久化门神
+import { create } from 'zustand';
 
-import { Member } from '@/types/lottery'
-import { db } from '@/config/db'
+import { db } from '@/config/db';
+import { generateTempId } from '@/utils/uuid.ts';
 
-export const useMemberStore = create(
-  persist(
-    (set, get) => ({
-      members: [],
+import type { Member } from '@/types/lottery';
 
-      init: async () => {},
+export const useMemberStore = create((set, get) => ({
+  members: [],
 
-      add: async () => {},
-
-      bulkAdd: async () => {},
-
-      update: async () => {},
-
-      remove: async () => {},
-
-      bulkRemove: async () => {},
-
-      clear: async () => {},
-    }),
-    {
-      name: 'party-lottery-member',
-      storage: createJSONStorage(() => localStorage),
+  init: async () => {
+    try {
+      const data = await db.member.toArray();
+      set({ members: data });
+    } catch (error) {
+      console.error('初始化人员数据失败: ', error);
     }
-  )
-);
+  },
+
+  add: async (item: Member) => {
+    const { _isEdit, _backup, _type, id, ...rest } = item;
+
+    if (_isEdit === true) {
+      // 若 item 没有 ID，则直接分配临时 ID.
+      const tempItem = { ...item, id: id || generateTempId() };
+
+      set((state) => ({ members: [...state.members, tempItem] }));
+    } else {
+      try {
+        const realId: number = await db.member.add(rest);
+        // 🚀 3. 内存渲染层：我们用带真ID的新对象去替换内存，顺手把 _isEdit 摘掉（设为 false）
+        set((state) => ({
+          members: state.members.map((member: Member) => member.id === id ? { id: realId, ...rest } : member),
+        }));
+      } catch (error) {
+        console.error('添加人员失败: ', error);
+      }
+    }
+  },
+
+  save: async (item: Member) => {
+  },
+
+  cancel: async (item: Member) => {
+    const { _backup, _type, id } = item;
+
+    if (_type === 'add') {
+      set((state) => ({
+        members: state.members.filter((member: Member) => member.id !== id),
+      }));
+    } else if (_type === 'edit') {
+      set((state) => ({
+        members: state.members.map((member: Member) => member.id === id ? _backup : member),
+      }));
+    }
+  },
+
+  bulkAdd: async (items: Member[]) => {
+  },
+
+  edit: async (item: Member) => {
+    const deepCloneItem = JSON.parse(JSON.stringify(item));
+
+    const tempItem = { ...item, _backup: deepCloneItem, _isEdit: true, _type: 'edit' };
+
+    set((state) => ({
+      members: state.members.map((member: Member) => member.id === item.id ? tempItem : member),
+    }));
+  },
+
+  delete: async (item: Member) => {
+  },
+
+  bulkDelete: async (items: Member[]) => {
+  },
+
+  clear: async () => {
+  },
+}));

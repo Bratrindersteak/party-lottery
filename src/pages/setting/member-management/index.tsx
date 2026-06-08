@@ -123,14 +123,14 @@ function MemberManagement() {
     ],
   };
 
-  const [columns] = useColumns(messageApi);
-
-  const dataSource = Array.from({ length: 46 }).map<Member>((_, i) => ({
+  const [dataSource, setDataSource] = useState<Member[]>(Array.from({ length: 46 }).map<Member>((_, i) => ({
     key: `${i}`,
     employeeId: `employee-${i}`,
     name: `Edward King ${i}`,
     department: `London, Park Lane no. ${i}`,
-  }));
+  })));
+
+  const [columns] = useColumns(dataSource, setDataSource, messageApi);
 
   return (
     <>
