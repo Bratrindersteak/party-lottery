@@ -5,7 +5,7 @@ import type { GetProp, MenuProps } from 'antd';
 
 import styles from './Setting.module.css';
 
-import MemberManagement from './member-management';
+import MemberManagement from './member';
 
 type MenuItem = GetProp<MenuProps, 'items'>[number];
 

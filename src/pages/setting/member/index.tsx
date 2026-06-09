@@ -3,7 +3,7 @@ import { Table, Button, message, Upload, Popconfirm } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
-import { useColumns } from './useColumns.tsx';
+import { useMember } from './useMember.tsx';
 import { parseExcel } from '@/utils/excel.ts';
 
 import styles from './styles.module.css';
@@ -123,21 +123,14 @@ function MemberManagement() {
     ],
   };
 
-  const [dataSource, setDataSource] = useState<Member[]>(Array.from({ length: 46 }).map<Member>((_, i) => ({
-    key: `${i}`,
-    employeeId: `employee-${i}`,
-    name: `Edward King ${i}`,
-    department: `London, Park Lane no. ${i}`,
-  })));
-
-  const [columns] = useColumns(dataSource, setDataSource, messageApi);
+  const { members: dataSource, columns, handleAdd, handleBulkDelete, handleClear } = useMember(messageApi);
 
   return (
     <>
       <div className={styles.operations}>
         {messageHolder}
 
-        <Button type="primary" className={styles['operation-btn']}>{t('operation.add')}</Button>
+        <Button type="primary" className={styles['operation-btn']} onClick={handleAdd}>{t('operation.add')}</Button>
 
         <Upload {...props}>
           <Button icon={<UploadOutlined />} color="green" variant="solid" className={styles['operation-btn']}>{t('member.excelImport')}</Button>
@@ -146,7 +139,7 @@ function MemberManagement() {
         <Popconfirm
           title="Delete the task"
           description="Are you sure to delete this task?"
-          onConfirm={confirm}
+          onConfirm={handleBulkDelete}
           onCancel={cancel}
           okText="Yes"
           cancelText="No"
@@ -157,15 +150,15 @@ function MemberManagement() {
         <Popconfirm
           title="Delete the task"
           description="Are you sure to delete this task?"
-          onConfirm={confirm}
+          onConfirm={handleClear}
           onCancel={cancel}
           okText="Yes"
           cancelText="No"
         >
-          <Button type="primary" danger className={styles['operation-btn']}>{t('operation.delete')}</Button>
+          <Button type="primary" danger className={styles['operation-btn']}>{t('operation.clear')}</Button>
         </Popconfirm>
       </div>
-      <Table<Member> rowSelection={rowSelection} columns={columns} dataSource={dataSource} />
+      <Table<Member> rowSelection={rowSelection} columns={columns} dataSource={dataSource} rowKey="id" />
     </>
   )
 }

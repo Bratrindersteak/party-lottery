@@ -41,7 +41,7 @@ export const useMemberStore = create((set, get) => ({
   save: async (item: Member) => {
   },
 
-  cancel: async (item: Member) => {
+  cancel: (item: Member) => {
     const { _backup, _type, id } = item;
 
     if (_type === 'add') {
@@ -54,11 +54,7 @@ export const useMemberStore = create((set, get) => ({
       }));
     }
   },
-
-  bulkAdd: async (items: Member[]) => {
-  },
-
-  edit: async (item: Member) => {
+  edit: (item: Member) => {
     const deepCloneItem = JSON.parse(JSON.stringify(item));
 
     const tempItem = { ...item, _backup: deepCloneItem, _isEdit: true, _type: 'edit' };
@@ -68,7 +64,37 @@ export const useMemberStore = create((set, get) => ({
     }));
   },
 
+  create: async (item: Member) => {
+    const { _isEdit, _backup, _type, id, ...rest } = item;
+
+    if (_isEdit === true) {
+      set((state) => ({ members: [...state.members, item] }));
+    } else {
+      try {
+        const realId: number = await db.member.add(rest);
+        // 🚀 3. 内存渲染层：我们用带真ID的新对象去替换内存，顺手把 _isEdit 摘掉（设为 false）
+        set((state) => ({
+          members: state.members.map((member: Member) => member.id === id ? { id: realId, ...rest } : member),
+        }));
+      } catch (error) {
+        console.error('添加人员失败: ', error);
+      }
+    }
+  },
+
+  bulkCreate: async (items: Member[]) => {
+  },
+
+  update: async (item: Member) => {
+    set((state) => ({
+      members: state.members.map((member: Member) => member.id === item.id ? item : member),
+    }));
+  },
+
   delete: async (item: Member) => {
+    set((state) => ({
+      members: state.members.filter((member: Member) => member.id !== item.id),
+    }));
   },
 
   bulkDelete: async (items: Member[]) => {
