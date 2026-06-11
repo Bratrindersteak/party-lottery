@@ -77,24 +77,54 @@ export const useMemberStore = create((set, get) => ({
           members: state.members.map((member: Member) => member.id === id ? { id: realId, ...rest } : member),
         }));
       } catch (error) {
-        console.error('添加人员失败: ', error);
+        console.error('添加人员信息失败: ', error);
       }
     }
   },
 
   bulkCreate: async (items: Member[]) => {
+    try {
+      await db.member.bulkAdd(items);
+
+      // TODO 这里批量导入的返回值是最后一条数据的ID值，问题是批量 ID 拿不到，无法给 members 依次赋值 ID，导致 Table 组件报错找不到 key.
+
+      set((state) => ({ members: [...state.members, ...items] }));
+    } catch (error) {
+      console.error('导入人员信息失败: ', error);
+    }
   },
 
   update: async (item: Member) => {
-    set((state) => ({
-      members: state.members.map((member: Member) => member.id === item.id ? item : member),
-    }));
+    const { _isEdit, _backup, _type, id, ...rest } = item;
+
+    try {
+      await db.member.update(id, rest);
+
+      set((state) => ({
+        members: state.members.map((member: Member) => member.id === id ? { id, ...rest } : member),
+      }));
+    } catch (error) {
+      console.error('更新人员信息失败: ', error);
+    }
   },
 
   delete: async (item: Member) => {
-    set((state) => ({
-      members: state.members.filter((member: Member) => member.id !== item.id),
-    }));
+    const { _isEdit, _type, id } = item;
+
+    try {
+      const isAddCancel = _isEdit === true && _type === 'add';
+
+      if (!isAddCancel) {
+        await db.member.delete(id);
+      }
+
+      set((state) => ({
+        members: state.members.filter((member: Member) => member.id !== id),
+      }));
+    } catch (error) {
+      console.error('删除人员信息失败: ', error);
+    }
+
   },
 
   bulkDelete: async (items: Member[]) => {
