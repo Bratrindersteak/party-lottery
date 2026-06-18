@@ -4,6 +4,8 @@ import { SettingOutlined } from '@ant-design/icons';
 import { useLotteryStore } from '@/store/useLotteryStore.ts';
 import { SETTING } from '@/config/constants.ts';
 
+import styles from './styles.module.css';
+
 function LotteryPage() {
   const setScreen = useLotteryStore((state) => state.setScreen);
 
@@ -13,7 +15,7 @@ function LotteryPage() {
 
   return (
     <div>
-      <SettingOutlined title="设置" onClick={handleSetting} />
+      <SettingOutlined className={styles.setting} title="设置" onClick={handleSetting} />
     </div>
   )
 }

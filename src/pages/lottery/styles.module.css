@@ -1,0 +1,5 @@
+.setting {
+  &:hover {
+    color: #1677ff;
+  }
+}

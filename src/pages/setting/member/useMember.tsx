@@ -1,5 +1,5 @@
-import React, { useMemo, useEffect, useCallback } from 'react';
-import { Form, Input, Button, Popconfirm, type UploadProps, message, Upload } from 'antd';
+import React, { useMemo, useEffect, useCallback, useState } from 'react';
+import { Form, Input, Button, Popconfirm, type UploadProps, message, Upload, Table } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
@@ -9,9 +9,11 @@ import { generateTempId } from '@/utils/uuid.ts';
 
 import styles from './styles.module.css';
 
-import type { TableColumnsType } from 'antd';
+import type { TableProps, TableColumnsType } from 'antd';
 import type { RcFile } from 'antd/es/upload';
 import type { Member } from '@/types/lottery';
+
+type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
 
 export function useMember(form) {
   const members = useMemberStore((state) => state.members);
@@ -36,6 +38,40 @@ export function useMember(form) {
 
   const [messageApi, messageHolder] = message.useMessage();
 
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const rowSelection: TableRowSelection<Member> = {
+    selectedRowKeys,
+    onChange: (newSelectedRowKeys: React.Key[], selectedRows, info) => {
+      console.log('selectedRowKeys changed: ', newSelectedRowKeys, { selectedRows, info });
+      setSelectedRowKeys(newSelectedRowKeys);
+    },
+    selections: [
+      Table.SELECTION_ALL,
+      Table.SELECTION_INVERT,
+      Table.SELECTION_NONE,
+      {
+        key: 'odd',
+        text: 'Select Odd Row',
+        onSelect: (changeableRowKeys) => {
+          const newSelectedRowKeys = changeableRowKeys.filter((_, index) => {
+            return index % 2 === 0;
+          });
+          setSelectedRowKeys(newSelectedRowKeys);
+        },
+      },
+      {
+        key: 'even',
+        text: 'Select Even Row',
+        onSelect: (changeableRowKeys) => {
+          const newSelectedRowKeys = changeableRowKeys.filter((_, index) => {
+            return index % 2 !== 0;
+          });
+          setSelectedRowKeys(newSelectedRowKeys);
+        },
+      },
+    ],
+  };
+
   const handleAdd = useCallback(() => {
     const tempItem = { id: generateTempId(), employeeId: '', name: '', department: '', createdAt: Date.now(), _isEdit: true, _type: 'add' };
 
@@ -43,8 +79,6 @@ export function useMember(form) {
   }, [createInMemory]);
 
   const handleEdit = useCallback((item: Member) => {
-    console.log('handleEdit: ', item);
-
     const deepCloneItem = JSON.parse(JSON.stringify(item));
 
     updateInMemory({ ...item, _backup: deepCloneItem, _isEdit: true, _type: 'edit' });
@@ -88,10 +122,6 @@ export function useMember(form) {
         message.error(`保存失败：${firstError || '请检查输入项！'}`);
       }
     }
-
-
-
-
   }, [create, update, form]);
 
   const handleCancel = useCallback((item: Member) => {
@@ -108,12 +138,12 @@ export function useMember(form) {
 
   const handleDelete = useCallback((item: Member) => {
     console.log('handleDelete: ', item);
-  }, []);
+    remove(item);
+  }, [remove]);
 
-  const handleBulkDelete = useCallback((selectedRowKeys: React.Key[]) =>{
-    console.log('handleBulkDelete: ', selectedRowKeys);
+  const handleBulkDelete = useCallback(() => {
     bulkRemove(selectedRowKeys);
-  }, [bulkRemove]);
+  }, [bulkRemove, selectedRowKeys]);
 
   const handleClear = useCallback(() => {
     clear();
@@ -138,17 +168,14 @@ export function useMember(form) {
         // 2. ⚡ 趁热打铁：直接调用我们写好的解析工具
         message.loading({ content: '正在拼命解析千人名单...', key: 'importing' })
         const members = await parseExcel(file);
-
         const timestamp = Date.now();
         const newMembers = members.map(member => ({ ...member, createdAt: timestamp, updatedAt: timestamp }));
         // 3. 📦 兵分两路送进全局状态中心（和本地数据库）
-        console.log('excel', newMembers);
         await bulkCreate(newMembers);
         message.success({ content: `成功导入${members.length}人！`, key: 'importing' });
       } catch (error) {
         message.error({ content: 'Excel 解析砸锅了，请检查格式！', key: 'importing' });
       }
-
       // 4. 💥 核心：死死咬住返回 false，坚决不让 antd 发起任何网络请求！
       return false;
     }, // ⚙️ 挂载拦截看门狗
@@ -226,7 +253,7 @@ export function useMember(form) {
         );
       },
     },
-  ], [t]);
+  ], [t, handleSave, handleCancel, handleEdit, handleDelete]);
 
   const setColumns = useCallback(() => {}, []);
 
@@ -240,5 +267,5 @@ export function useMember(form) {
     });
   }, [members]);
 
-  return { sortedMembers, columns, setColumns, uploadProps, handleAdd, handleBulkDelete, handleClear, messageHolder };
+  return { sortedMembers, columns, setColumns, rowSelection, uploadProps, handleAdd, handleBulkDelete, handleClear, messageHolder };
 }
