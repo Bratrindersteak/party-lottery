@@ -67,28 +67,27 @@ export const useMemberStore = create((set, get) => ({
   create: async (item: Member) => {
     const { _isEdit, _backup, _type, id, ...rest } = item;
 
-    if (_isEdit === true) {
-      set((state) => ({ members: [...state.members, item] }));
-    } else {
-      try {
-        const realId: number = await db.member.add(rest);
-        // 🚀 3. 内存渲染层：我们用带真ID的新对象去替换内存，顺手把 _isEdit 摘掉（设为 false）
-        set((state) => ({
-          members: state.members.map((member: Member) => member.id === id ? { id: realId, ...rest } : member),
-        }));
-      } catch (error) {
-        console.error('添加人员信息失败: ', error);
-      }
+    try {
+      const realId: number = await db.member.add(rest);
+      // 🚀 3. 内存渲染层：我们用带真ID的新对象去替换内存，顺手把 _isEdit 摘掉（设为 false）
+      set((state) => ({
+        members: state.members.map((member: Member) => member.id === id ? { id: realId, ...rest } : member),
+      }));
+    } catch (error) {
+      console.error('添加人员信息失败: ', error);
     }
+  },
+
+  createInMemory: async (item: Member) => {
+    set((state) => ({ members: [...state.members, item] }));
   },
 
   bulkCreate: async (items: Member[]) => {
     try {
-      await db.member.bulkAdd(items);
+      const realIds: number[] = await db.member.bulkAdd(items, undefined, { allKeys: true });
+      const newMembers = items.map((item, index) => ({ id: realIds[index], ...item }));
 
-      // TODO 这里批量导入的返回值是最后一条数据的ID值，问题是批量 ID 拿不到，无法给 members 依次赋值 ID，导致 Table 组件报错找不到 key.
-
-      set((state) => ({ members: [...state.members, ...items] }));
+      set((state) => ({ members: [...state.members, ...newMembers] }));
     } catch (error) {
       console.error('导入人员信息失败: ', error);
     }
@@ -106,6 +105,12 @@ export const useMemberStore = create((set, get) => ({
     } catch (error) {
       console.error('更新人员信息失败: ', error);
     }
+  },
+
+  updateInMemory: (item: Member) => {
+    set((state) => ({
+      members: state.members.map((member: Member) => member.id === item.id ? item : member),
+    }));
   },
 
   delete: async (item: Member) => {
@@ -127,9 +132,31 @@ export const useMemberStore = create((set, get) => ({
 
   },
 
-  bulkDelete: async (items: Member[]) => {
+  deleteInMemory: (item: Member) => {
+    set((state) => ({
+      members: state.members.filter((member: Member) => member.id !== item.id),
+    }));
+  },
+
+  bulkDelete: async (ids: number[]) => {
+    try {
+      await db.member.bulkDelete(ids);
+
+      set((state) => ({
+        members: state.members.filter((member: Member) => !ids.includes(member.id as number)),
+      }));
+    } catch (error) {
+      console.error('批量删除人员信息失败: ', error);
+    }
   },
 
   clear: async () => {
+    try {
+      await db.member.clear();
+
+      set(() => ({ members: [] }));
+    } catch (error) {
+      console.error('清空人员信息失败: ', error);
+    }
   },
 }));

@@ -1,3 +1,19 @@
+.header {
+  position: relative;
+  text-align: center;
+}
+
+.back {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  margin-top: -16px;
+}
+
+.title {
+  font-size: 24px;
+}
+
 .right-content {
-  padding-left: 16px;
+  padding: 0 16px;
 }

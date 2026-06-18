@@ -10,6 +10,8 @@ export interface Member {
   rank?: number;
   weight?: number;
   winTimes?: number; // 获奖次数.
+  createdAt?: string;
+  updatedAt?: string;
   _isEdit?: boolean;
   _type?: 'add' | 'edit';
   _backup?: Member;

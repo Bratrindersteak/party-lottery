@@ -12,7 +12,11 @@ import type { Member } from '@/types/lottery';
 
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
 
-function MemberManagement() {
+interface MemberManagementProps {
+  style?: React.CSSProperties; // 🎯 这里的 CSSProperties 就是 style 的正宗类型
+}
+
+function MemberManagement({ style }: MemberManagementProps) {
   const { t } = useTranslation();
 
   const [form] = Form.useForm();
@@ -62,10 +66,10 @@ function MemberManagement() {
     ],
   };
 
-  const { members: dataSource, columns, uploadProps, handleAdd, handleBulkDelete, handleClear, messageHolder } = useMember(form);
+  const { sortedMembers: dataSource, columns, uploadProps, handleAdd, handleBulkDelete, handleClear, messageHolder } = useMember(form);
 
   return (
-    <>
+    <div style={style}>
       <div className={styles.operations}>
         {messageHolder}
 
@@ -99,10 +103,10 @@ function MemberManagement() {
       </div>
 
       <Form form={form} component={false}>
-        <Table<Member> rowSelection={rowSelection} columns={columns} dataSource={dataSource} rowKey="id" />
+        <Table<Member> rowSelection={rowSelection} columns={columns} dataSource={dataSource} rowKey="id" pagination={{ showTotal: (total) => `共 ${total} 条`, pageSize: 10, showQuickJumper: true }} />
       </Form>
-    </>
+    </div>
   )
 }
 
-export default MemberManagement
+export default MemberManagement;

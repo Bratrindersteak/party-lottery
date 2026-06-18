@@ -16,3 +16,26 @@
     margin-left: 16px;
   }
 }
+
+.table-edit-item {
+  position: relative; /* 让父级成为定位基准 */
+  margin: 0;
+
+  /* 💥 核心：把包裹报错信息的容器变成绝对定位，让它脱离文档流，不再撑高表格！ */
+  .ant-form-item-explain-wrapper {
+    position: absolute;
+    top: 4px;        /* 调整上下位置 */
+    right: -55px;    /* 🚀 强行把红字往右边挤，挤到输入框的右屁股后面 */
+    z-index: 10;
+    background: #fff; /* 给个白底，防止跟右边的部门字段重叠 */
+    padding: 0 4px;
+    border-radius: 4px;
+  }
+
+  /* 🎨 把报错红字变小一点，紧凑一点 */
+  .ant-form-item-explain-error {
+    font-size: 12px;
+    color: #ff4d4f;
+    white-space: nowrap; /* 强行不让红字换行 */
+  }
+}

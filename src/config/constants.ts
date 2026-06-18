@@ -1,0 +1,9 @@
+export const LOTTERT = 'LOTTERY';
+export const SETTING = 'SETTING';
+export const GENERAL = 'GENERAL';
+export const MEMBER = 'MEMBER';
+export const AWARD = 'AWARD';
+export const RECORD = 'RECORD';
+export const MUSIC = 'MUSIC';
+export const INSTRUCTION = 'INSTRUCTION';
+

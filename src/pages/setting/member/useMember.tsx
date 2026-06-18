@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, useCallback } from 'react';
+import React, { useMemo, useEffect, useCallback } from 'react';
 import { Form, Input, Button, Popconfirm, type UploadProps, message, Upload } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +9,7 @@ import { generateTempId } from '@/utils/uuid.ts';
 
 import styles from './styles.module.css';
 
-import type { TableColumnsType, PopconfirmProps } from 'antd';
+import type { TableColumnsType } from 'antd';
 import type { RcFile } from 'antd/es/upload';
 import type { Member } from '@/types/lottery';
 
@@ -17,9 +17,12 @@ export function useMember(form) {
   const members = useMemberStore((state) => state.members);
   const init = useMemberStore((state) => state.init);
   const create = useMemberStore((state) => state.create);
+  const createInMemory = useMemberStore((state) => state.createInMemory);
   const bulkCreate = useMemberStore((state) => state.bulkCreate);
   const update = useMemberStore((state) => state.update);
+  const updateInMemory = useMemberStore((state) => state.updateInMemory);
   const remove = useMemberStore((state) => state.delete);
+  const removeInMemory = useMemberStore((state) => state.deleteInMemory);
   const bulkRemove = useMemberStore((state) => state.bulkDelete);
   const clear = useMemberStore((state) => state.clear);
 
@@ -34,14 +37,26 @@ export function useMember(form) {
   const [messageApi, messageHolder] = message.useMessage();
 
   const handleAdd = useCallback(() => {
-    const tempItem = { id: generateTempId(), employeeId: '', name: '', department: '', _isEdit: true, _type: 'add' };
+    const tempItem = { id: generateTempId(), employeeId: '', name: '', department: '', createdAt: Date.now(), _isEdit: true, _type: 'add' };
 
-    create(tempItem);
-  }, [create]);
+    createInMemory(tempItem);
+  }, [createInMemory]);
 
   const handleEdit = useCallback((item: Member) => {
+    console.log('handleEdit: ', item);
 
-  }, []);
+    const deepCloneItem = JSON.parse(JSON.stringify(item));
+
+    updateInMemory({ ...item, _backup: deepCloneItem, _isEdit: true, _type: 'edit' });
+
+    form.setFieldsValue({
+      [item.id as number]: {
+        name: item.name,
+        employeeId: item.employeeId,
+        department: item.department,
+      }
+    });
+  }, [updateInMemory, form]);
 
   const handleSave = useCallback(async (item: Member) => {
     const { _type, id } = item;
@@ -49,7 +64,7 @@ export function useMember(form) {
     try {
       // 1. 🛡️ 严格模式：先触发表单的校验（防止用户漏填必填项，或者格式写错）
       // validateFields 传入嵌套路径，只校验并捞出当前这一行，不影响表格其他行，体验极好
-      const rowValues = await form.validateFields([[id, 'name'], [id, 'dept']]);
+      const rowValues = await form.validateFields([[id, 'name'], [id, 'employeeId'], [id, 'department']]);
 
       // 2. 🎯 定点爆破：直接从大盒子里，把当前行 ID 对应的最新表单值捞出来
       // 此时的 fields 干净得就像刚出生的婴儿：{ name: "最新的名字", dept: "最新的部门" }
@@ -60,31 +75,36 @@ export function useMember(form) {
 
       console.log('handleSave: ', { rowValues, fields });
 
-      // if (_type === 'add') {
-      //   create({ ...item, _isEdit: false });
-      // } else if (_type === 'edit') {
-      //   update(item);
-      // }
-
+      const timestamp = Date.now();
+      if (_type === 'add') {
+        create({ ...item, ...fields, createdAt: timestamp, updatedAt: timestamp });
+      } else if (_type === 'edit') {
+        update({ ...item, ...fields, updatedAt: timestamp });
+      }
     } catch (error) {
-      // 如果表单校验失败（比如名字没填），会卡在这里，并自动弹出红字提示，绝不往下走
-      console.error('表单校验或保存失败:', error);
+      // 🚀 核心：当表单被拦截时，我们主动把错误抓出来，啪的一下拍在屏幕最上方！
+      if (error?.errorFields?.length > 0) {
+        const firstError = error.errorFields[0].errors[0];
+        message.error(`保存失败：${firstError || '请检查输入项！'}`);
+      }
     }
 
 
 
 
-  }, [create, update]);
+  }, [create, update, form]);
 
   const handleCancel = useCallback((item: Member) => {
-    const { _type, _backup } = item;
+    const { _type, _backup, id } = item;
 
     if (_type === 'add') {
-      remove(item);
+      removeInMemory(item);
     } else if (_type === 'edit') {
-      update(_backup);
+      updateInMemory(_backup);
     }
-  }, [remove, update]);
+
+    form.resetFields([id]);
+  }, [removeInMemory, updateInMemory, form]);
 
   const handleDelete = useCallback((item: Member) => {
     console.log('handleDelete: ', item);
@@ -92,11 +112,12 @@ export function useMember(form) {
 
   const handleBulkDelete = useCallback((selectedRowKeys: React.Key[]) =>{
     console.log('handleBulkDelete: ', selectedRowKeys);
-  }, []);
+    bulkRemove(selectedRowKeys);
+  }, [bulkRemove]);
 
-  const handleClear = useCallback(() =>{
-
-  }, []);
+  const handleClear = useCallback(() => {
+    clear();
+  }, [clear]);
 
   const uploadProps = useMemo<UploadProps<never>>(() => ({
     accept: '.xlsx, .xls, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel',      // 浏览器文件选择框层面的防御
@@ -118,9 +139,11 @@ export function useMember(form) {
         message.loading({ content: '正在拼命解析千人名单...', key: 'importing' })
         const members = await parseExcel(file);
 
+        const timestamp = Date.now();
+        const newMembers = members.map(member => ({ ...member, createdAt: timestamp, updatedAt: timestamp }));
         // 3. 📦 兵分两路送进全局状态中心（和本地数据库）
-        console.log('excel', members);
-        await bulkCreate(members);
+        console.log('excel', newMembers);
+        await bulkCreate(newMembers);
         message.success({ content: `成功导入${members.length}人！`, key: 'importing' });
       } catch (error) {
         message.error({ content: 'Excel 解析砸锅了，请检查格式！', key: 'importing' });
@@ -130,37 +153,46 @@ export function useMember(form) {
       return false;
     }, // ⚙️ 挂载拦截看门狗
     showUploadList: false,    // 既然不上传，我们可以隐藏那个自带的进度条列表
-  }), []);
+  }), [bulkCreate]);
 
   const columns = useMemo<TableColumnsType<Member>>(() => [
     {
       title: '姓名',
       dataIndex: 'name',
       key: 'name',
+      render: (value, record, index: number) => {
+        return record._isEdit ? (
+          <Form.Item name={[record.id as number, 'name']} initialValue={value} className={styles['table-edit-item']}>
+            <Input placeholder="请输入" />
+          </Form.Item>
+        ) : (
+          <>{value}</>
+        );
+      },
     },
     {
       title: '工号',
       dataIndex: 'employeeId',
       key: 'employeeId',
+      render: (value, record, index: number) => {
+        return record._isEdit ? (
+          <Form.Item name={[record.id as number, 'employeeId']} rules={[{ required: true, message: '' }]} initialValue={value} className={styles['table-edit-item']}>
+            <Input placeholder="请输入" />
+          </Form.Item>
+        ) : (
+          <>{value}</>
+        );
+      },
     },
     {
       title: '部门',
       dataIndex: 'department',
       key: 'department',
       render: (value, record, index: number) => {
-
-        console.log('部门: ', { value, record, index });
-
         return record._isEdit ? (
-            // name 用 [id, 'name'] 的数组形式，Antd 会自动把它拼成独立的一行数据
-            <Form.Item name={[record.id, 'name']} initialValue={value} style={{ margin: 0 }}>
-              <Input />
-            </Form.Item>
-
-          // <Input
-          //   value={value}
-          //   onChange={(e) => console.log('input: ', e.target.value)}
-          // />
+          <Form.Item name={[record.id as number, 'department']} initialValue={value} className={styles['table-edit-item']}>
+            <Input placeholder="请输入" />
+          </Form.Item>
         ) : (
           <>{value}</>
         );
@@ -169,10 +201,9 @@ export function useMember(form) {
     {
       title: '操作',
       key: 'operation',
+      fixed: 'end',
+      width: 200,
       render: (value, record, index: number) => {
-
-        console.log('操作: ', { value, record, index });
-
         return record._isEdit ? (
           <>
             <Button color="green" variant="outlined" size="small" className={styles['table-btn']} onClick={() => { handleSave(record) }}>{t('operation.save')}</Button>
@@ -199,5 +230,15 @@ export function useMember(form) {
 
   const setColumns = useCallback(() => {}, []);
 
-  return { members, columns, setColumns, uploadProps, handleAdd, handleBulkDelete, handleClear, messageHolder };
+  // 🚀 核心大招：在数据流向 Table 的最后关头，强行按创建时间倒序排列！
+  const sortedMembers = useMemo(() => {
+    return [...members].sort((a: Member, b: Member) => {
+      // 💥 绝杀逻辑：让最新创建的（createdAt 最大的）排在最前面
+      const timeA = Number(a.createdAt) || 0;
+      const timeB = Number(b.createdAt) || 0;
+      return timeB - timeA;
+    });
+  }, [members]);
+
+  return { sortedMembers, columns, setColumns, uploadProps, handleAdd, handleBulkDelete, handleClear, messageHolder };
 }
