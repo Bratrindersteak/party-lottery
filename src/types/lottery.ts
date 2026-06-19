@@ -1,3 +1,5 @@
+import { ADD, EDIT } from '@/config/constants.ts';
+
 export interface Member {
   id?: number;
   employeeId: string;
@@ -13,7 +15,7 @@ export interface Member {
   createdAt?: string;
   updatedAt?: string;
   _isEdit?: boolean;
-  _type?: 'add' | 'edit';
+  _type?: typeof ADD | typeof EDIT;
   _backup?: Member;
 }
 
@@ -22,10 +24,10 @@ export interface Award {
   name: string; // 奖项名称.
   prize: string; // 奖品.
   preview?: string; // 奖品预览图.
-  quota: number; // 奖项名额指标.
-  _isDrawn: boolean; // 是否已抽取.
+  count: number; // 奖项名额指标.
+  isFinished: boolean; // 是否已抽取.
   _isEdit?: boolean;
-  _type?: 'add' | 'update';
+  _type?: typeof ADD | typeof EDIT;
   _backup?: Member;
 }
 
@@ -41,7 +43,7 @@ export interface Music {
   file: File;           // 数据.
   size: number;         // 大小(MB).
   duration: number;     // 时长(秒).
-  _isBuildIn?: boolean; // 是否为内置.
+  isBuildIn?: boolean; // 是否为内置.
 }
 
 export interface Image {

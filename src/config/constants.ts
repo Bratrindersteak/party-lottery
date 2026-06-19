@@ -7,3 +7,5 @@ export const RECORD = 'RECORD';
 export const MUSIC = 'MUSIC';
 export const INSTRUCTION = 'INSTRUCTION';
 
+export const ADD =  'ADD';
+export const EDIT = 'EDIT';

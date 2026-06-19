@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useMemberStore } from '@/store/member.ts';
 import { parseExcel } from '@/utils/excel.ts';
 import { generateTempId } from '@/utils/uuid.ts';
+import { ADD, EDIT } from '@/config/constants.ts';
 
 import styles from './styles.module.css';
 
@@ -73,7 +74,7 @@ export function useMember(form) {
   };
 
   const handleAdd = useCallback(() => {
-    const tempItem = { id: generateTempId(), employeeId: '', name: '', department: '', createdAt: Date.now(), _isEdit: true, _type: 'add' };
+    const tempItem = { id: generateTempId(), employeeId: '', name: '', department: '', createdAt: Date.now(), _isEdit: true, _type: ADD };
 
     createInMemory(tempItem);
   }, [createInMemory]);
@@ -81,7 +82,7 @@ export function useMember(form) {
   const handleEdit = useCallback((item: Member) => {
     const deepCloneItem = JSON.parse(JSON.stringify(item));
 
-    updateInMemory({ ...item, _backup: deepCloneItem, _isEdit: true, _type: 'edit' });
+    updateInMemory({ ...item, _backup: deepCloneItem, _isEdit: true, _type: EDIT });
 
     form.setFieldsValue({
       [item.id as number]: {
@@ -110,9 +111,9 @@ export function useMember(form) {
       console.log('handleSave: ', { rowValues, fields });
 
       const timestamp = Date.now();
-      if (_type === 'add') {
+      if (_type === ADD) {
         create({ ...item, ...fields, createdAt: timestamp, updatedAt: timestamp });
-      } else if (_type === 'edit') {
+      } else if (_type === EDIT) {
         update({ ...item, ...fields, updatedAt: timestamp });
       }
     } catch (error) {
