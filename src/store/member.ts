@@ -1,8 +1,7 @@
-import { create } from 'zustand';
-
 import { db } from '@/config/db';
 
 import type { Member } from '@/types/lottery';
+import { create } from 'zustand';
 
 export const useMemberStore = create((set, get) => ({
   members: [],
@@ -12,6 +11,14 @@ export const useMemberStore = create((set, get) => ({
       set({ members: data });
     } catch (error) {
       console.error('初始化人员数据失败: ', error);
+    }
+  },
+  get: async (id: number): Promise<Member|null> => {
+    try {
+      return await db.member.get(id) || null;
+    } catch (error) {
+      console.error('查询人员信息失败: ', error);
+      return null;
     }
   },
   create: async (item: Member) => {

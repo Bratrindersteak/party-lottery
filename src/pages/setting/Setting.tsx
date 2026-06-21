@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import type { GetProp, MenuProps } from 'antd';
 
-import { useLotteryStore } from '@/store/useLotteryStore.ts';
+import { useLotteryStore } from '@/store/lottery.ts';
 import { useSettingStore } from '@/store/setting.ts';
 import { LOTTERT, SETTING, GENERAL, MEMBER, AWARD, RECORD, MUSIC, INSTRUCTION } from '@/config/constants.ts';
 

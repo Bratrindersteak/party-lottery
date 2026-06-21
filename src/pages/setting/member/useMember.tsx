@@ -19,6 +19,7 @@ type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'
 export function useMember(form) {
   const members = useMemberStore((state) => state.members);
   const init = useMemberStore((state) => state.init);
+  const get = useMemberStore((state) => state.get);
   const create = useMemberStore((state) => state.create);
   const createInMemory = useMemberStore((state) => state.createInMemory);
   const bulkCreate = useMemberStore((state) => state.bulkCreate);
@@ -72,6 +73,10 @@ export function useMember(form) {
       },
     ],
   };
+
+  const getMemberById = useCallback(async (id: number) => {
+    return await get(id);
+  }, [get]);
 
   const handleAdd = useCallback(() => {
     const tempItem = { id: generateTempId(), employeeId: '', name: '', department: '', createdAt: Date.now(), _isEdit: true, _type: ADD };
@@ -268,5 +273,5 @@ export function useMember(form) {
     });
   }, [members]);
 
-  return { sortedMembers, columns, setColumns, rowSelection, uploadProps, handleAdd, handleBulkDelete, handleClear, messageHolder };
+  return { sortedMembers, columns, setColumns, rowSelection, uploadProps, getMemberById, handleAdd, handleBulkDelete, handleClear, messageHolder };
 }

@@ -26,6 +26,8 @@ export interface Award {
   preview?: string; // 奖品预览图.
   count: number; // 奖项名额指标.
   isFinished: boolean; // 是否已抽取.
+  createdAt?: string;
+  updatedAt?: string;
   _isEdit?: boolean;
   _type?: typeof ADD | typeof EDIT;
   _backup?: Member;
@@ -35,6 +37,8 @@ export interface Record {
   id?: number;
   awardId: number;
   memberId: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Music {
@@ -43,11 +47,15 @@ export interface Music {
   file: File;           // 数据.
   size: number;         // 大小(MB).
   duration: number;     // 时长(秒).
-  isBuildIn?: boolean; // 是否为内置.
+  isBuildIn: boolean; // 是否为内置.
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Image {
   id?: number;
   url: string;
   file: File;
+  createdAt?: string;
+  updatedAt?: string;
 }

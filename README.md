@@ -109,7 +109,7 @@ src/
 3. Zustand Store 文件 ➡️ 统一使用 use 开头的小驼峰
    因为 Zustand 暴露出来的是一个 React Hook，所以按照官方规范，文件和变量都要以 use 开头，让人一眼看出这是个状态钩子。
 
-  - 正例：useLotteryStore.ts、useUserStore.ts
+  - 正例：lottery.ts、useUserStore.ts
 
 4. 样式文件（CSS / LESS / SCSS） ➡️ 名字与组件完全对齐
    如果你为某个特定的组件写样式，样式文件名最好和组件一模一样，方便在 WebStorm 里高亮结对。

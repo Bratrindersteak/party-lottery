@@ -6,7 +6,7 @@ import enUS from 'antd/locale/en_US'
 
 import './App.css'
 
-import { useLotteryStore } from './store/useLotteryStore'
+import { useLotteryStore } from './store/lottery.ts'
 import LotteryPage from './pages/lottery/LotteryPage'
 import Setting from '@/pages/setting/Setting.tsx'
 import { LOTTERT, SETTING } from '@/config/constants.ts';

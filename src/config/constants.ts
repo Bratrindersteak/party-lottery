@@ -9,3 +9,5 @@ export const INSTRUCTION = 'INSTRUCTION';
 
 export const ADD =  'ADD';
 export const EDIT = 'EDIT';
+
+export const DEFAULT_TITLE = '年会抽奖';
