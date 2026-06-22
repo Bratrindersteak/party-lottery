@@ -1,4 +1,4 @@
-export const LOTTERT = 'LOTTERY';
+export const LOTTERY = 'LOTTERY';
 export const SETTING = 'SETTING';
 export const GENERAL = 'GENERAL';
 export const MEMBER = 'MEMBER';
@@ -9,5 +9,9 @@ export const INSTRUCTION = 'INSTRUCTION';
 
 export const ADD =  'ADD';
 export const EDIT = 'EDIT';
+
+export const OPENING_MUSIC = 'OPENING_MUSIC';
+export const LOTTERY_MUSIC = 'LOTTERY_MUSIC';
+export const WINNING_MUSIC = 'WINNING_MUSIC';
 
 export const DEFAULT_TITLE = '年会抽奖';

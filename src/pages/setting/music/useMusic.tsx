@@ -4,7 +4,7 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
 import { useMusicStore } from '@/store/music.ts';
-import { ADD, EDIT } from '@/config/constants.ts';
+import { ADD, EDIT, OPENING_MUSIC, LOTTERY_MUSIC, WINNING_MUSIC } from '@/config/constants.ts';
 
 import styles from './styles.module.css';
 
@@ -16,11 +16,27 @@ type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'
 
 export function useMusic(form) {
   const musics = useMusicStore((state) => state.musics);
+  const openingId = useMusicStore((state) => state.openingId);
+  const lotteryId = useMusicStore((state) => state.lotteryId);
+  const winningId = useMusicStore((state) => state.winningId);
+  const setMusic = useMusicStore((state) => state.setMusic);
   const create = useMusicStore((state) => state.create);
   const update = useMusicStore((state) => state.update);
   const remove = useMusicStore((state) => state.delete);
   const bulkRemove = useMusicStore((state) => state.bulkDelete);
   const clear = useMusicStore((state) => state.clear);
+
+  const handleOpeningChange = useCallback((id: number) => {
+    setMusic(OPENING_MUSIC, id);
+  }, [setMusic]);
+
+  const handleLotteryChange = useCallback((id: number) => {
+    setMusic(LOTTERY_MUSIC, id);
+  }, [setMusic]);
+
+  const handleWinningChange = useCallback((id: number) => {
+    setMusic(WINNING_MUSIC, id);
+  }, [setMusic]);
 
   const { t } = useTranslation();
 
@@ -181,5 +197,5 @@ export function useMusic(form) {
     },
   ], [t, handleDelete]);
 
-  return { musics, columns, rowSelection, uploadProps, handleBulkDelete, handleClear, messageHolder };
+  return { musics, openingId, handleOpeningChange, lotteryId, handleLotteryChange, winningId, handleWinningChange, columns, rowSelection, uploadProps, handleBulkDelete, handleClear, messageHolder };
 }

@@ -9,7 +9,7 @@ import './App.css'
 import { useLotteryStore } from './store/lottery.ts'
 import LotteryPage from './pages/lottery/LotteryPage'
 import Setting from '@/pages/setting/Setting.tsx'
-import { LOTTERT, SETTING } from '@/config/constants.ts';
+import { LOTTERY, SETTING } from '@/config/constants.ts';
 
 function App() {
   const { i18n } = useTranslation()
@@ -33,7 +33,7 @@ function App() {
     <ConfigProvider locale={antdLocale}>
       <div className="app-root" style={{ width: '100vw', height: '100vh', position: 'relative' }}>
         {/* 大屏抽奖页 */}
-        <div style={{ display: currentScreen === LOTTERT ? 'block' : 'none', width: '100%', height: '100%' }}>
+        <div style={{ display: currentScreen === LOTTERY ? 'block' : 'none', width: '100%', height: '100%' }}>
           <LotteryPage />
         </div>
         {/* 后台配置页 */}

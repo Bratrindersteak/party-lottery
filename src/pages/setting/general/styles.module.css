@@ -1,0 +1,21 @@
+.item {
+  margin: 16px 0;
+}
+
+.title {
+  text-align: left;
+  padding-left: 4px;
+}
+
+.content {
+  display: flex;
+}
+
+.input {
+  width: 50%;
+  max-width:  500px;
+}
+
+.operation-btn {
+  margin-left: 8px;
+}

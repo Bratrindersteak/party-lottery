@@ -7,7 +7,7 @@ import type { GetProp, MenuProps } from 'antd';
 
 import { useLotteryStore } from '@/store/lottery.ts';
 import { useSettingStore } from '@/store/setting.ts';
-import { LOTTERT, SETTING, GENERAL, MEMBER, AWARD, RECORD, MUSIC, INSTRUCTION } from '@/config/constants.ts';
+import { LOTTERY, SETTING, GENERAL, MEMBER, AWARD, RECORD, MUSIC, INSTRUCTION } from '@/config/constants.ts';
 
 import styles from './Setting.module.css';
 
@@ -29,7 +29,7 @@ function Setting() {
   const { t } = useTranslation();
 
   const handleBack = useCallback(() => {
-    setScreen(LOTTERT);
+    setScreen(LOTTERY);
   }, [setScreen]);
 
   const items: MenuItem[] = [
