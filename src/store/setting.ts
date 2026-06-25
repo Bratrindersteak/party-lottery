@@ -9,6 +9,11 @@ export const useSettingStore = create(persist(
   (set, get) => ({
     currentModule: GENERAL,
 
+    language: 'zhCN',
+    setLanguage: async (language: string) => {
+      set({ language });
+    },
+
     init: async () => {
 
     },

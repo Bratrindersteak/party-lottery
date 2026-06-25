@@ -4,6 +4,7 @@ export default {
   lottery: {
     enter: '进入抽奖',
     play: '开始抽奖',
+    finish: 'Stop and Announce',
     replay: '重新抽奖',
   },
   general: {

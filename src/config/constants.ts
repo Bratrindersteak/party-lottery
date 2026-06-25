@@ -15,3 +15,15 @@ export const LOTTERY_MUSIC = 'LOTTERY_MUSIC';
 export const WINNING_MUSIC = 'WINNING_MUSIC';
 
 export const DEFAULT_TITLE = '年会抽奖';
+
+export enum LotteryStatus {
+  Init,
+  Ready,
+  Running,
+  Finished,
+}
+
+export const INIT = 'INIT';
+export const READY = 'READY';
+export const RUNNING = 'RUNNING';
+export const FINISHED = 'FINISHED';

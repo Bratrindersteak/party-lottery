@@ -1,16 +1,28 @@
-import { useCallback, useState } from 'react';
-import { Image, Tag } from 'antd';
+import React, { useCallback, useState } from 'react';
+import { Button, Image, Tag } from 'antd';
 import { LeftOutlined, RightOutlined, SettingOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import { useAwardStore } from '@/store/award.ts';
 import { useLotteryStore } from '@/store/lottery.ts';
-import { SETTING } from '@/config/constants.ts';
+import { useSettingStore } from '@/store/setting.ts';
+import { SETTING, INIT, READY, RUNNING, FINISHED } from '@/config/constants.ts';
 import defaultAwardUrl from '@/assets/images/default-award.png';
+
+import Background from './Background.tsx';
 
 import styles from './styles.module.css';
 
 function LotteryPage() {
+  const { t, i18n } = useTranslation();
   const setScreen = useLotteryStore((state) => state.setScreen);
+  const title = useLotteryStore((state) => state.title);
+  const currAwardId = useLotteryStore((state) => state.currAwardId);
+  const setCurrAwardId = useLotteryStore((state) => state.setCurrAwardId);
+  const lotteryStatus = useLotteryStore((state) => state.lotteryStatus);
+  const setLotteryStatus = useLotteryStore((state) => state.setLotteryStatus);
+
+  const setLanguage = useSettingStore((state) => state.setLanguage);
 
   const awards = useAwardStore((state) => state.awards);
 
@@ -18,24 +30,57 @@ function LotteryPage() {
     setScreen(SETTING);
   }, [setScreen]);
 
-  const [awardHandle, setAwardHandle] = useState<boolean>(false);
-  const [activeAwardId, setActiveAwardId] = useState<number | null>(null);
+  const [awardHandle, setAwardHandle] = useState<boolean>(true);
 
   const handleAwardClick = useCallback((award) => {
     // TODO 其他操作，比如改变当前抽取奖项的状态.
 
-    setActiveAwardId(award.id);
-  }, [setActiveAwardId]);
+    setCurrAwardId(award.id);
+  }, [setCurrAwardId]);
+
+  const handleEnter = useCallback(() => {
+    setLotteryStatus(READY);
+  }, [setLotteryStatus]);
+  const handlePlay = useCallback(() => {
+    setLotteryStatus(RUNNING);
+  }, [setLotteryStatus]);
+  const handleFinish = useCallback(() => {
+    setLotteryStatus(FINISHED);
+  }, [setLotteryStatus]);
+  const handleReplay = useCallback(() => {
+    setLotteryStatus(READY);
+  }, [setLotteryStatus]);
+
+  const handleLanguageChange = useCallback((lang: string) => {
+    setLanguage(lang);
+    i18n.changeLanguage(lang);
+  }, [i18n]);
 
   return (
-    <div>
-      <SettingOutlined className={styles.setting} title="设置" onClick={handleSetting} />
+    <>
+      <Background />
+
+      <div className={styles['top-bar']}>
+        <div className={styles.languages}>
+          <span className={`${styles.language} ${styles.cn} ${i18n.language === 'zhCN' ? styles.active : '' }`} onClick={() => { handleLanguageChange('zhCN') }}>中</span>
+          <span className={styles.separator}>&nbsp;/&nbsp;</span>
+          <span className={`${styles.language} ${styles.en} ${i18n.language === 'enUS' ? styles.active : '' }`} onClick={() => { handleLanguageChange('enUS') }}>EN</span>
+        </div>
+        <SettingOutlined className={styles.setting} title="设置" onClick={handleSetting} />
+      </div>
+
+      <h1 className={styles['title']}>{title}</h1>
+
+      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === INIT ? 'block' : 'none' }} type="primary" size="large" onClick={handleEnter}>{t('lottery.enter')}</Button>
+      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === READY ? 'block' : 'none' }} type="primary" size="large" onClick={handlePlay}>{t('lottery.play')}</Button>
+      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === RUNNING ? 'block' : 'none' }} type="primary" size="large" onClick={handleFinish}>{t('lottery.finish')}</Button>
+      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === FINISHED ? 'block' : 'none' }} type="primary" size="large" onClick={handleReplay}>{t('lottery.replay')}</Button>
 
       <div className={styles['award-drawer']}>
         <ul className={`${styles['award-list']} ${awardHandle ? styles['award-closed'] : ''}`}>
           {awards.map((award) => (
             // 🚨 注意：这里必须显式绑定一个全局唯一的 key！
-            <li key={award.id} className={`${styles['award-item']} ${activeAwardId === award.id ? styles['award-active'] : ''}`} onClick={() => handleAwardClick(award)}>
+            <li key={award.id} className={`${styles['award-item']} ${currAwardId === award.id ? styles['award-active'] : ''}`} onClick={() => handleAwardClick(award)}>
               <div className={styles['award-left']}>
                 <Image
                   className={styles['award-image']}
@@ -61,7 +106,7 @@ function LotteryPage() {
         </div>
       </div>
 
-    </div>
+    </>
   )
 }
 

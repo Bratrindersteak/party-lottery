@@ -1,7 +1,9 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
-import { LOTTERY, SETTING, DEFAULT_TITLE } from '@/config/constants.ts';
+import { LOTTERY, SETTING, DEFAULT_TITLE, INIT } from '@/config/constants.ts';
+
+import type { LotteryStatus } from '@/types/lottery.ts';
 
 type ScreenType = typeof LOTTERY | typeof SETTING;
 
@@ -11,6 +13,12 @@ interface LotteryStore {
 
   title: string; // 抽奖标题.
   setTitle: (title: string) => void;
+
+  currAwardId: number | null;
+  setCurrAwardId: (id: number) => void;
+
+  lotteryStatus: LotteryStatus;
+  setLotteryStatus: (lotteryStatus: LotteryStatus) => void;
 }
 
 export const useLotteryStore = create<LotteryStore>()(
@@ -20,11 +28,22 @@ export const useLotteryStore = create<LotteryStore>()(
       setScreen: (screen) => set({ currentScreen: screen }),
 
       title: DEFAULT_TITLE,
-      setTitle: (newTitle: string) => set({ title: newTitle }),
+      setTitle: (title: string) => set({ title }),
+
+      currAwardId: null,
+      setCurrAwardId: (id: number) => set({ currAwardId: id }),
+
+      lotteryStatus: INIT,
+      setLotteryStatus: (lotteryStatus: LotteryStatus) => set({ lotteryStatus }),
     }),
     {
       name: 'party-lottery',
       storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        currentScreen: state.currentScreen,
+        title: state.title,
+        currAwardId: state.currAwardId,
+      }),
     }
   )
 );

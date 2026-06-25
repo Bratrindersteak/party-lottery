@@ -18,6 +18,8 @@ function GeneralConfig({ style }: GeneralConfigProps) {
 
   // TODO 这里应该加一个一键清空缓存的按钮，当抽奖结束之后使用，否则缓存一直留在IndexedDB和localStorage中，很不环保.
 
+  // TODO 抽奖标题除了内容可修改之外，还应该支持修改字号和颜色等.
+
   return (
     <div style={style}>
       <Form form={form} component={false}>

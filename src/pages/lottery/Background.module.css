@@ -1,0 +1,50 @@
+.universeContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+
+  /* 🚀 核心绝杀：径向渐变，中心亮、四周暗，天然自带星系引力场的视觉汇聚感 */
+  background: radial-gradient(
+    circle at center,
+    #180b30 0%,    /* 中心是神秘的暗紫 */
+    #0c051a 50%,   /* 逐渐过渡到深邃紫黑 */
+    #020105 100%   /* 边缘是无尽的死黑 */
+  );
+
+  /* 🛡️ 硬件加速，大屏多媒体抗锯齿防抖*/
+  transform: translate3d(0, 0, 0);
+}
+
+.starCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* 💡 细节：让鼠标事件穿透过去，绝不阻挡你中间 3D 头像卡片的点击！ */
+}
+
+.nebulaCloud {
+  position: absolute;
+  top: -20%;
+  left: -20%;
+  width: 140vw;
+  height: 140vh;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(24, 144, 255, 0.12) 0%, transparent 40%), /* 科技蓝星云 */
+    radial-gradient(circle at 70% 60%, rgba(114, 46, 209, 0.15) 0%, transparent 50%); /* 华丽紫星云 */
+  filter: blur(80px); /* 爆表级别的毛玻璃模糊，直接化作轻柔的气体 */
+  mix-blend-mode: screen; /* 🚀 屏幕滤色混合模式，让颜色完美融合叠加 */
+  animation: nebulaRotate 40s linear infinite; /* 极其缓慢的自转 */
+  pointer-events: none;
+}
+
+@keyframes nebulaRotate {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.05); } /* 微微涨缩，感觉是有生命的宇宙 */
+  100% { transform: rotate(360deg) scale(1); }
+}

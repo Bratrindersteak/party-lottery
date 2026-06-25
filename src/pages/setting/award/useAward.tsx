@@ -1,10 +1,11 @@
 import React, { useMemo, useEffect, useCallback, useState } from 'react';
-import { Form, Input, InputNumber, Button, Popconfirm, Table, Tag, message } from 'antd';
+import { Form, Input, InputNumber, Button, Popconfirm, Table, Tag, Image, message } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
 import { useAwardStore } from '@/store/award.ts';
 import { ADD, EDIT } from '@/config/constants.ts';
+import defaultAwardUrl from '@/assets/images/default-award.png';
 
 import styles from './styles.module.css';
 
@@ -63,7 +64,7 @@ export function useAward(form) {
     const tempItem = {
       name: '',
       prize: '',
-      url: '',
+      url: null,
       count: 0,
       isFinished: false,
       createdAt: Date.now(),
@@ -183,7 +184,12 @@ export function useAward(form) {
             <Input placeholder="请输入"/>
           </Form.Item>
         ) : (
-          <>{value}</>
+        <Image
+          height={32}
+          alt="basic"
+          src={value}
+          fallback={defaultAwardUrl}
+        />
         );
       },
     },

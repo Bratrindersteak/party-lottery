@@ -1,4 +1,4 @@
-import { ADD, EDIT } from '@/config/constants.ts';
+import { ADD, EDIT, FINISHED, INIT, READY, RUNNING } from '@/config/constants.ts';
 
 export interface Member {
   id?: number;
@@ -59,3 +59,5 @@ export interface Image {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export type LotteryStatus = typeof INIT |typeof READY | typeof RUNNING | typeof FINISHED;
