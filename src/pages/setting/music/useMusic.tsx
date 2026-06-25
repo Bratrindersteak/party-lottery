@@ -162,6 +162,17 @@ export function useMusic(form) {
       },
     },
     {
+      title: '播放',
+      key: 'play',
+      render: (value, record, index: number) => {
+        return value ? (
+          <Tag color="processing" variant="outlined">内置音乐</Tag>
+        ) : (
+          <Tag color="success" variant="outlined">自定义音乐</Tag>
+        );
+      },
+    },
+    {
       title: '内置',
       dataIndex: 'isBuildIn',
       key: 'isBuildIn',

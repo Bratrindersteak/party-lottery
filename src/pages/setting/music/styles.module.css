@@ -1,5 +1,6 @@
 .operations {
   display: flex;
+  justify-content: space-between;
   margin: 16px 0;
 }
 
@@ -7,6 +8,10 @@
   &:not(:first-child) {
     margin-left: 16px;
   }
+}
+
+.music-selector {
+  margin-left: 16px;
 }
 
 .table-btn {

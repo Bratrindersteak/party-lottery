@@ -103,3 +103,15 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+ul, ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  /* 🛡️ 细节防御：确保所有的 li 在排版时，不会因为某些浏览器的怪异行为产生意外的内外边距 */
+  margin: 0;
+  padding: 0;
+}

@@ -38,10 +38,10 @@ export const useMusicStore = create<MusicStore>()(
             set(() => ({ openingId: id }));
             break;
           case LOTTERY_MUSIC:
-            set(() => ({ openingId: id }));
+            set(() => ({ lotteryId: id }));
             break;
           case WINNING_MUSIC:
-            set(() => ({ openingId: id }));
+            set(() => ({ winningId: id }));
             break;
           default:
         }

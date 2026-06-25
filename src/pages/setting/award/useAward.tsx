@@ -63,7 +63,7 @@ export function useAward(form) {
     const tempItem = {
       name: '',
       prize: '',
-      preview: '',
+      url: '',
       count: 0,
       isFinished: false,
       createdAt: Date.now(),
@@ -83,7 +83,7 @@ export function useAward(form) {
       [item.id as number]: {
         name: item.name,
         prize: item.prize,
-        preview: item.preview,
+        url: item.url,
         count: item.count,
         isFinished: item.isFinished,
       },
@@ -175,11 +175,11 @@ export function useAward(form) {
     },
     {
       title: '预览',
-      dataIndex: 'preview',
-      key: 'preview',
+      dataIndex: 'url',
+      key: 'url',
       render: (value, record, index: number) => {
         return record._isEdit ? (
-          <Form.Item name={[record.id as number, 'preview']} initialValue={value} className={styles['table-edit-item']}>
+          <Form.Item name={[record.id as number, 'url']} initialValue={value} className={styles['table-edit-item']}>
             <Input placeholder="请输入"/>
           </Form.Item>
         ) : (

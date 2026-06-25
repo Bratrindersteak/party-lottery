@@ -23,7 +23,7 @@ export interface Award {
   id?: number;
   name: string; // 奖项名称.
   prize: string; // 奖品.
-  preview?: string; // 奖品预览图.
+  url?: string; // 奖品预览图.
   count: number; // 奖项名额指标.
   isFinished: boolean; // 是否已抽取.
   createdAt?: string;
