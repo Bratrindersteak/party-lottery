@@ -14,6 +14,9 @@ export const useSettingStore = create(persist(
       set({ language });
     },
 
+    mute: false,
+    setMute: (mute: boolean) => set({ mute }),
+
     init: async () => {
 
     },

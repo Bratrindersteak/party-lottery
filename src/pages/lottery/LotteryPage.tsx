@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Button, Image, Tag } from 'antd';
-import { LeftOutlined, RightOutlined, SettingOutlined } from '@ant-design/icons';
+import { LeftOutlined, RightOutlined, SettingOutlined, AudioOutlined, AudioMutedOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
 import { useAwardStore } from '@/store/award.ts';
@@ -22,6 +22,8 @@ function LotteryPage() {
   const lotteryStatus = useLotteryStore((state) => state.lotteryStatus);
   const setLotteryStatus = useLotteryStore((state) => state.setLotteryStatus);
 
+  const mute = useSettingStore((state) => state.mute);
+  const setMute = useSettingStore((state) => state.setMute);
   const setLanguage = useSettingStore((state) => state.setLanguage);
 
   const awards = useAwardStore((state) => state.awards);
@@ -54,13 +56,20 @@ function LotteryPage() {
   const handleLanguageChange = useCallback((lang: string) => {
     setLanguage(lang);
     i18n.changeLanguage(lang);
-  }, [i18n]);
+  }, [setLanguage, i18n]);
+
+  const handleMute = useCallback(() => {
+    setMute(!mute);
+  }, [mute, setMute]);
 
   return (
     <>
       <Background />
 
       <div className={styles['top-bar']}>
+        <div className={styles['music']} onClick={handleMute}>
+          { mute ? <AudioMutedOutlined /> : <AudioOutlined />}
+        </div>
         <div className={styles.languages}>
           <span className={`${styles.language} ${styles.cn} ${i18n.language === 'zhCN' ? styles.active : '' }`} onClick={() => { handleLanguageChange('zhCN') }}>中</span>
           <span className={styles.separator}>&nbsp;/&nbsp;</span>
@@ -69,12 +78,12 @@ function LotteryPage() {
         <SettingOutlined className={styles.setting} title="设置" onClick={handleSetting} />
       </div>
 
-      <h1 className={styles['title']}>{title}</h1>
+      <div className={styles['title']}>{title}</div>
 
-      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === INIT ? 'block' : 'none' }} type="primary" size="large" onClick={handleEnter}>{t('lottery.enter')}</Button>
-      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === READY ? 'block' : 'none' }} type="primary" size="large" onClick={handlePlay}>{t('lottery.play')}</Button>
-      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === RUNNING ? 'block' : 'none' }} type="primary" size="large" onClick={handleFinish}>{t('lottery.finish')}</Button>
-      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === FINISHED ? 'block' : 'none' }} type="primary" size="large" onClick={handleReplay}>{t('lottery.replay')}</Button>
+      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === INIT ? 'block' : 'none' }} color="pink" variant="filled" size="large" onClick={handleEnter}>{t('lottery.enter')}</Button>
+      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === READY ? 'block' : 'none' }} color="pink" variant="filled" size="large" onClick={handlePlay}>{t('lottery.play')}</Button>
+      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === RUNNING ? 'block' : 'none' }} color="pink" variant="filled" size="large" onClick={handleFinish}>{t('lottery.finish')}</Button>
+      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === FINISHED ? 'block' : 'none' }} color="pink" variant="filled" size="large" onClick={handleReplay}>{t('lottery.replay')}</Button>
 
       <div className={styles['award-drawer']}>
         <ul className={`${styles['award-list']} ${awardHandle ? styles['award-closed'] : ''}`}>

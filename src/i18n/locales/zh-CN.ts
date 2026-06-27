@@ -14,6 +14,7 @@ export default {
   member: {
     title: '成员管理',
     excelImport: 'Excel 导入',
+    downloadTemplate: '下载 Excel 导入模版',
   },
   award: {
     title: '奖项配置',

@@ -14,10 +14,7 @@ export default {
   member: {
     title: 'Member Management',
     excelImport: 'Excel Import',
-    add: 'Add',
-    bulkDelete: 'Bulk Delete',
-    delete: 'Delete',
-    clear: 'Clear',
+    downloadTemplate: 'Download Excel Import Template',
   },
   award: {
     title: 'Award Config',

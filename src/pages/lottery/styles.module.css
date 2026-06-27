@@ -1,12 +1,24 @@
+.top-bar {
+  position: fixed;
+  top: 16px;
+  right: 32px;
+  display: flex;
+}
+
+.music {
+  cursor: pointer;
+
+  &:hover {
+    color: #ffffff;
+  }
+}
+
 .languages {
+  margin-left: 16px;
   color: white;
 
   span {
     opacity: 0.6;
-  }
-
-  .en {
-    font-size: 16px;
   }
 
   .language {
@@ -20,9 +32,21 @@
 }
 
 .setting {
+  margin-left: 16px;
+
   &:hover {
-    color: #1677ff;
+    color: #ffffff;
   }
+}
+
+.title {
+  position: fixed;
+  top: 128px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 48px;
+  font-weight: bold;
+  color: #ffffff;
 }
 
 .operation-btn {
@@ -33,6 +57,7 @@
   width: 500px;
   height: 48px;
   font-size: 24px;
+  font-weight: bold;
 }
 
 .award-drawer {

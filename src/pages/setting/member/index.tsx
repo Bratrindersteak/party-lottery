@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Table, Button, Upload, Popconfirm } from 'antd';
-import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
+import { DeleteOutlined, UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
 import { useMember } from './useMember.tsx';
@@ -16,7 +16,7 @@ interface MemberManagementProps {
 function MemberManagement({ style }: MemberManagementProps) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const { sortedMembers: dataSource, columns, rowSelection, uploadProps, handleAdd, handleBulkDelete, handleClear, messageHolder } = useMember(form);
+  const { sortedMembers: dataSource, columns, rowSelection, uploadProps, handleDownloadTemplate, handleAdd, handleBulkDelete, handleClear, messageHolder } = useMember(form);
 
   return (
     <div style={style}>
@@ -26,6 +26,7 @@ function MemberManagement({ style }: MemberManagementProps) {
         <Upload {...uploadProps}>
           <Button icon={<UploadOutlined />} color="green" variant="solid" className={styles['operation-btn']}>{t('member.excelImport')}</Button>
         </Upload>
+        <Button icon={<DownloadOutlined />} color="green" variant="solid" className={styles['operation-btn']} onClick={handleDownloadTemplate}>{t('member.downloadTemplate')}</Button>
         <Popconfirm
           title="确认批量删除？"
           icon={<DeleteOutlined style={{ color: '#F56C6C' }}/>}

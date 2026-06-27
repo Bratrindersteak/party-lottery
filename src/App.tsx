@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next'
 import { ConfigProvider } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
@@ -7,11 +7,20 @@ import enUS from 'antd/locale/en_US'
 import './App.css'
 
 import { useLotteryStore } from './store/lottery.ts'
+import { useMemberStore } from '@/store/member.ts';
 import LotteryPage from './pages/lottery/LotteryPage'
 import Setting from '@/pages/setting/Setting.tsx'
 import { LOTTERY, SETTING } from '@/config/constants.ts';
 
 function App() {
+  const init = useMemberStore((state) => state.init);
+
+  useEffect(() => {
+    console.log('init 被调用~');
+    init();
+  }, [init]);
+
+
   const { i18n } = useTranslation()
 
   const antdLocale = useMemo(() => {

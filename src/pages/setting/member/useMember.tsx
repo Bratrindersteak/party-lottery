@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useCallback, useState } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import { Form, Input, Button, Popconfirm, type UploadProps, message, Upload, Table } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +18,6 @@ type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'
 
 export function useMember(form) {
   const members = useMemberStore((state) => state.members);
-  const init = useMemberStore((state) => state.init);
   const get = useMemberStore((state) => state.get);
   const create = useMemberStore((state) => state.create);
   const createInMemory = useMemberStore((state) => state.createInMemory);
@@ -29,13 +28,6 @@ export function useMember(form) {
   const removeInMemory = useMemberStore((state) => state.deleteInMemory);
   const bulkRemove = useMemberStore((state) => state.bulkDelete);
   const clear = useMemberStore((state) => state.clear);
-
-  // 🚀 2. 核心大招：在 Hook 内部直接绑定初始化看门狗
-  useEffect(() => {
-    console.log('init 被调用~');
-    init();
-  }, [init]);
-
   const { t } = useTranslation();
 
   const [messageApi, messageHolder] = message.useMessage();
@@ -155,6 +147,10 @@ export function useMember(form) {
     clear();
   }, [clear]);
 
+  const handleDownloadTemplate = useCallback(() => {
+    // TODO 下载 Excel 模版.
+  }, []);
+
   const uploadProps = useMemo<UploadProps<never>>(() => ({
     accept: '.xlsx, .xls, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel',      // 浏览器文件选择框层面的防御
     maxCount: 1,              // 每次只允许传一个文件
@@ -273,5 +269,5 @@ export function useMember(form) {
     });
   }, [members]);
 
-  return { sortedMembers, columns, setColumns, rowSelection, uploadProps, getMemberById, handleAdd, handleBulkDelete, handleClear, messageHolder };
+  return { sortedMembers, columns, setColumns, rowSelection, uploadProps, getMemberById, handleDownloadTemplate, handleAdd, handleBulkDelete, handleClear, messageHolder };
 }
