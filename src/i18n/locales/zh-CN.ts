@@ -10,6 +10,7 @@ export default {
   general: {
     title: '通用配置',
     lotteryTitle: '抽奖标题',
+    clearAll: '清空所有缓存',
   },
   member: {
     title: '成员管理',
@@ -41,6 +42,11 @@ export default {
   },
   instruction: {
     title: '操作说明',
+    paragraphs: [
+      '1. dasdasdasdasdasd',
+      '2. fsdfsdfsdfsdfsdfsd',
+      '3. dfvsfgdfhrewsdfwdd',
+    ],
   },
   operation: {
     add: '添加',

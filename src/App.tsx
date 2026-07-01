@@ -8,17 +8,20 @@ import './App.css'
 
 import { useLotteryStore } from './store/lottery.ts'
 import { useMemberStore } from '@/store/member.ts';
+import { useMusicStore } from '@/store/music.ts';
 import LotteryPage from './pages/lottery/LotteryPage'
 import Setting from '@/pages/setting/Setting.tsx'
 import { LOTTERY, SETTING } from '@/config/constants.ts';
 
 function App() {
   const init = useMemberStore((state) => state.init);
+  const getMusics = useMusicStore((state) => state.getMusics);
 
   useEffect(() => {
     console.log('init 被调用~');
     init();
-  }, [init]);
+    getMusics();
+  }, [init, getMusics]);
 
 
   const { i18n } = useTranslation()

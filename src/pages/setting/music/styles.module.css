@@ -44,3 +44,13 @@
     white-space: nowrap; /* 强行不让红字换行 */
   }
 }
+
+.play-icon {
+  font-size: 24px;
+  vertical-align: -6px;
+  cursor: pointer;
+
+  &:hover {
+    color: #1677ff;
+  }
+}

@@ -10,6 +10,7 @@ export default {
   general: {
     title: 'General Config',
     lotteryTitle: 'Lottery Title',
+    clearAll: 'Clean All Cache',
   },
   member: {
     title: 'Member Management',

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Button, Image, Tag } from 'antd';
 import { LeftOutlined, RightOutlined, SettingOutlined, AudioOutlined, AudioMutedOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,7 @@ import { useSettingStore } from '@/store/setting.ts';
 import { SETTING, INIT, READY, RUNNING, FINISHED } from '@/config/constants.ts';
 import defaultAwardUrl from '@/assets/images/default-award.png';
 
+import ThreeD from './three-d';
 import Background from './Background.tsx';
 
 import styles from './styles.module.css';
@@ -62,8 +63,11 @@ function LotteryPage() {
     setMute(!mute);
   }, [mute, setMute]);
 
+
+
   return (
     <>
+      <ThreeD />
       <Background />
 
       <div className={styles['top-bar']}>

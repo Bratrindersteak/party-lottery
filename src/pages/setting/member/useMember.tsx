@@ -4,7 +4,8 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
 import { useMemberStore } from '@/store/member.ts';
-import { parseExcel } from '@/utils/excel.ts';
+import { parseExcel, parseExcel2 } from '@/utils/excel.ts';
+import { triggerDownload } from '@/utils/download.ts';
 import { generateTempId } from '@/utils/uuid.ts';
 import { ADD, EDIT } from '@/config/constants.ts';
 
@@ -148,7 +149,7 @@ export function useMember(form) {
   }, [clear]);
 
   const handleDownloadTemplate = useCallback(() => {
-    // TODO 下载 Excel 模版.
+    triggerDownload('/template.xlsx', '员工导入模板.xlsx');
   }, []);
 
   const uploadProps = useMemo<UploadProps<never>>(() => ({
@@ -170,6 +171,10 @@ export function useMember(form) {
         // 2. ⚡ 趁热打铁：直接调用我们写好的解析工具
         message.loading({ content: '正在拼命解析千人名单...', key: 'importing' })
         const members = await parseExcel(file);
+
+        const members2 = await parseExcel2(file);
+        console.log('members2: ', members2);
+
         const timestamp = Date.now();
         const newMembers = members.map(member => ({ ...member, createdAt: timestamp, updatedAt: timestamp }));
         // 3. 📦 兵分两路送进全局状态中心（和本地数据库）

@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
-    "baseUrl": ".", // 👈 奠定基准路径为项目根目录
     "paths": {
-      "@/*": ["src/*"] // 💥 告诉 TS：看到 @/ 符号，直接去 src/ 目录下找
+      "@/*": ["./src/*"] // 💥 告诉 TS：看到 @/ 符号，直接去 src/ 目录下找
     },
 
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",

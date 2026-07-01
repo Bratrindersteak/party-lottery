@@ -1,7 +1,8 @@
+import { create } from 'zustand';
+
 import { db } from '@/config/db';
 
 import type { Member } from '@/types/lottery';
-import { create } from 'zustand';
 
 export const useMemberStore = create((set, get) => ({
   members: [],
@@ -13,6 +14,11 @@ export const useMemberStore = create((set, get) => ({
       console.error('初始化人员数据失败: ', error);
     }
   },
+
+  getMembers: async(): Promise<Member[]> => {
+    return db.member.toArray();
+  },
+
   get: async (id: number): Promise<Member|null> => {
     try {
       return await db.member.get(id) || null;

@@ -19,3 +19,9 @@
 .operation-btn {
   margin-left: 8px;
 }
+
+.clear-all-modal {
+  .ant-modal-confirm-btns {
+    text-align: center;
+  }
+}
