@@ -16,7 +16,7 @@ interface RecordStore {
 
 export const useRecordStore = create<RecordStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       id: 0,
       records: [],
 

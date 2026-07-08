@@ -23,7 +23,7 @@ interface MusicStore {
 
 export const useMusicStore = create<MusicStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       musics: [],
       openingId: null,
       lotteryId: null,

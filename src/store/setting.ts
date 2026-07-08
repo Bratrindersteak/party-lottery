@@ -5,9 +5,25 @@ import { GENERAL, MEMBER, AWARD, RECORD, MUSIC, INSTRUCTION } from '@/config/con
 
 type SettingModule = typeof GENERAL | typeof MEMBER | typeof AWARD | typeof RECORD | typeof MUSIC | typeof INSTRUCTION;
 
-export const useSettingStore = create(persist(
-  (set, get) => ({
+interface SettingStore {
+  currentModule: SettingModule;
+  setModule: (module: SettingModule) => void;
+
+  language: string;
+  setLanguage: (language: string) => void;
+
+  mute: boolean;
+  setMute: (mute: boolean) => void;
+
+  init: () => void;
+}
+
+export const useSettingStore = create<SettingStore>()(persist(
+  (set) => ({
     currentModule: GENERAL,
+    setModule: (module: SettingModule) => {
+      set({ currentModule: module });
+    },
 
     language: 'zhCN',
     setLanguage: async (language: string) => {
@@ -17,13 +33,7 @@ export const useSettingStore = create(persist(
     mute: false,
     setMute: (mute: boolean) => set({ mute }),
 
-    init: async () => {
-
-    },
-
-    setModule: async (module: SettingModule) => {
-      set({ currentModule: module });
-    },
+    init: () => {},
   }), {
     name: 'party-lottery-setting',
     storage: createJSONStorage(() => localStorage),

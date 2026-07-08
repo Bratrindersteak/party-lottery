@@ -80,7 +80,7 @@ export const useThreeStore = create<ThreeStore>()((set, get) => ({
       targets.sphere.push(objectSphere);
     }
 
-    set((state) => ({
+    set(() => ({
       scene: scene,
       camera: camera,
       renderer: renderer,
@@ -97,26 +97,26 @@ export const useThreeStore = create<ThreeStore>()((set, get) => ({
   },
 
   setScene: async (scene: THREE.Scene | null) => {
-    set((state) => ({ scene }));
+    set(() => ({ scene }));
   },
 
   setCamera: async (camera: THREE.PerspectiveCamera | null) => {
-    set((state) => ({ camera }));
+    set(() => ({ camera }));
   },
 
   setRenderer: async (renderer: CSS3DRenderer | null) => {
-    set((state) => ({ renderer }));
+    set(() => ({ renderer }));
   },
 
   setControls: async (controls: TrackballControls | null) => {
-    set((state) => ({ controls }));
+    set(() => ({ controls }));
   },
 
   setObjects: async (objects: CSS3DObject[]) => {
-    set((state) => ({ objects }));
+    set(() => ({ objects }));
   },
 
   setTargets: async (targets: Targets) => {
-    set((state) => ({ targets }));
+    set(() => ({ targets }));
   },
 }));

@@ -4,7 +4,23 @@ import { db } from '@/config/db';
 
 import type { Member } from '@/types/lottery';
 
-export const useMemberStore = create ((set, get) => ({
+interface MemberStore {
+  members: Member[];
+
+  init: () => Promise<void>;
+  get: (id: number) => Promise<Member | null>;
+  create: (item: Member) => Promise<void>;
+  createInMemory: (item: Member) => void;
+  bulkCreate: (items: Member[]) => Promise<void>;
+  update: (item: Member) => Promise<void>;
+  updateInMemory: (item: Member) => void;
+  delete: (item: Member) => Promise<void>;
+  deleteInMemory: (item: Member) => void;
+  bulkDelete: (ids: number[]) => Promise<void>;
+  clear: () => Promise<void>;
+}
+
+export const useMemberStore = create<MemberStore>((set) => ({
   members: [],
   init: async () => {
     try {
@@ -14,11 +30,6 @@ export const useMemberStore = create ((set, get) => ({
       console.error('初始化人员数据失败: ', error);
     }
   },
-
-  getMembers: async(): Promise<Member[]> => {
-    return db.member.toArray();
-  },
-
   get: async (id: number): Promise<Member|null> => {
     try {
       return await db.member.get(id) || null;

@@ -1,11 +1,23 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware' // 🚀 1. 核心：请出持久化门神
 
-import type { Award, Member } from '@/types/lottery';
+import type { Award } from '@/types/lottery';
 
-export const useAwardStore = create(
+interface AwardStore {
+  id: number;
+  awards: Award[];
+  currAward: Award | null;
+
+  create: (item: Omit<Award, 'id'>) => Promise<void>; // 💡 新建音乐时，入参通常是不带 id 的
+  update: (item: Award) => Promise<void>;
+  delete: (item: Award) => Promise<void>;
+  bulkDelete: (ids: number[]) => Promise<void>;
+  clear: () => Promise<void>;
+}
+
+export const useAwardStore = create<AwardStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       id: 0,
       awards: [],
       currAward: null,
@@ -16,19 +28,19 @@ export const useAwardStore = create(
 
       update: async (item: Award) => {
         set((state) => ({
-          awards: state.awards.map((member: Member) => member.id === item.id ? item : member),
+          awards: state.awards.map((award: Award) => award.id === item.id ? item : award),
         }));
       },
 
       delete: async (item: Award) => {
         set((state) => ({
-          awards: state.awards.filter((member: Member) => member.id !== item.id),
+          awards: state.awards.filter((award: Award) => award.id !== item.id),
         }));
       },
 
       bulkDelete: async (ids: number[]) => {
         set((state) => ({
-          awards: state.awards.filter((member: Member) => !ids.includes(member.id as number)),
+          awards: state.awards.filter((award: Award) => !ids.includes(award.id as number)),
         }));
       },
 
