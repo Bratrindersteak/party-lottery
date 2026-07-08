@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { useAwardStore } from '@/store/award.ts';
 import { useLotteryStore } from '@/store/lottery.ts';
 import { useSettingStore } from '@/store/setting.ts';
-import { useThreeStore } from '@/store/three.ts';
 import { SETTING, INIT, READY, RUNNING, FINISHED } from '@/config/constants.ts';
 import defaultAwardUrl from '@/assets/images/default-award.png';
 import { useLottery } from './useLottery.tsx';
