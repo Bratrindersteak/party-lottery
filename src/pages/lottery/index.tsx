@@ -6,22 +6,28 @@ import { useTranslation } from 'react-i18next';
 import { useAwardStore } from '@/store/award.ts';
 import { useLotteryStore } from '@/store/lottery.ts';
 import { useSettingStore } from '@/store/setting.ts';
+import { useThreeStore } from '@/store/three.ts';
 import { SETTING, INIT, READY, RUNNING, FINISHED } from '@/config/constants.ts';
 import defaultAwardUrl from '@/assets/images/default-award.png';
-
-import ThreeD from './three-d';
-import Background from './Background.tsx';
+import { useLottery } from './useLottery.tsx';
 
 import styles from './styles.module.css';
 
+import Three from './three';
+import Background from './background';
+
+import type { Award } from '@/types/lottery.ts';
+
 function LotteryPage() {
+  const { handleEnter, handlePlay, handleFinish, handleReplay } = useLottery();
+
   const { t, i18n } = useTranslation();
+
   const setScreen = useLotteryStore((state) => state.setScreen);
   const title = useLotteryStore((state) => state.title);
   const currAwardId = useLotteryStore((state) => state.currAwardId);
   const setCurrAwardId = useLotteryStore((state) => state.setCurrAwardId);
   const lotteryStatus = useLotteryStore((state) => state.lotteryStatus);
-  const setLotteryStatus = useLotteryStore((state) => state.setLotteryStatus);
 
   const mute = useSettingStore((state) => state.mute);
   const setMute = useSettingStore((state) => state.setMute);
@@ -35,24 +41,9 @@ function LotteryPage() {
 
   const [awardHandle, setAwardHandle] = useState<boolean>(true);
 
-  const handleAwardClick = useCallback((award) => {
-    // TODO 其他操作，比如改变当前抽取奖项的状态.
-
-    setCurrAwardId(award.id);
+  const handleAwardClick = useCallback((award: Award) => {
+    setCurrAwardId(award.id as number);
   }, [setCurrAwardId]);
-
-  const handleEnter = useCallback(() => {
-    setLotteryStatus(READY);
-  }, [setLotteryStatus]);
-  const handlePlay = useCallback(() => {
-    setLotteryStatus(RUNNING);
-  }, [setLotteryStatus]);
-  const handleFinish = useCallback(() => {
-    setLotteryStatus(FINISHED);
-  }, [setLotteryStatus]);
-  const handleReplay = useCallback(() => {
-    setLotteryStatus(READY);
-  }, [setLotteryStatus]);
 
   const handleLanguageChange = useCallback((lang: string) => {
     setLanguage(lang);
@@ -63,11 +54,9 @@ function LotteryPage() {
     setMute(!mute);
   }, [mute, setMute]);
 
-
-
   return (
     <>
-      <ThreeD />
+      <Three />
       <Background />
 
       <div className={styles['top-bar']}>
@@ -118,7 +107,6 @@ function LotteryPage() {
           {awardHandle ? <RightOutlined/> : <LeftOutlined/>}
         </div>
       </div>
-
     </>
   )
 }

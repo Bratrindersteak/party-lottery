@@ -1,17 +1,69 @@
-import { cardRule } from '@/config/constants.ts'
 import * as THREE from 'three'
 import TWEEN from 'three/addons/libs/tween.module.js';
-
-import  { type Object3D } from 'three';
 import { CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 
+import { cardRule } from '@/config/constants.ts'
+
+import type { Object3D } from 'three';
+import type { CSS3DRenderer } from 'three/addons/renderers/CSS3DRenderer.js';
+import type { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+
 import type { Render } from '@/types/3d.ts';
+import type { Member } from '@/types/lottery.ts';
 
 export function tween(source: any, target: any, duration: number, easingFn: TWEEN.EasingFunction = TWEEN.Easing.Exponential.InOut) {
   return new TWEEN.Tween(source)
     .to({ x: target.x, y: target.y, z: target.z }, duration)
     .easing(easingFn)
     .start();
+}
+
+/**
+ * .
+ *
+ * @param renderer - .
+ * @param scene - .
+ * @param camera - .
+ */
+export function render(renderer: CSS3DRenderer | null, scene: THREE.Scene | null, camera: THREE.PerspectiveCamera | null) {
+  if (renderer && scene && camera) {
+    renderer.render(scene, camera);
+  }
+}
+
+/**
+ * .
+ *
+ * @param controls - .
+ */
+export function animate(controls: TrackballControls) {
+  TWEEN.update();
+
+  if (controls) {
+    controls.update();
+  }
+
+  requestAnimationFrame(() => { animate(controls) });
+}
+
+/**
+ * .
+ *
+ * @param scene - .
+ * @param camera - .
+ * @param renderer - .
+ */
+export function resize(scene: THREE.Scene | null, camera: THREE.PerspectiveCamera | null, renderer: CSS3DRenderer | null) {
+  if (camera) {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+  }
+
+  if (renderer) {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }
+
+  render(renderer, scene, camera);
 }
 
 export function transform(objects: CSS3DObject[], targets: Object3D[], duration: number, render: Render): Promise<void> {
@@ -26,7 +78,6 @@ export function transform(objects: CSS3DObject[], targets: Object3D[], duration:
 
       tween(object.rotation, target.rotation, Math.random() * duration + duration, TWEEN.Easing.Exponential.InOut);
     }
-
 
     tween({}, {}, duration * 2)
       .onUpdate(render)
@@ -45,6 +96,46 @@ export function rotating(scene: THREE.Scene, rotateY: number, duration: number, 
       .onStop(() => { console.log('rotating is stop') })
       .start();
   });
+}
+
+export function genMemberCard(styles: Record<string, string>, member: Member, index: number, length: number) {
+  const element: HTMLDivElement = document.createElement('div');
+  element.className = styles.element;
+  element.style.backgroundColor = 'rgba(0,127,127,' + (Math.random() * 0.5 + 0.25) + ')';
+
+  const number: HTMLDivElement = document.createElement('div');
+  number.className = styles.number;
+  number.textContent = index + '';
+  element.appendChild(number);
+
+  const name: HTMLDivElement = document.createElement('div');
+  name.className = styles.name;
+  name.textContent = member.name;
+  element.appendChild(name);
+
+  const department: HTMLDivElement = document.createElement('div');
+  department.className = styles.department;
+  department.textContent = member.department;
+  element.appendChild(department);
+
+  const objectCSS = new CSS3DObject(element);
+  objectCSS.userData.id = member.id; // 存放员工 ID.
+  objectCSS.userData.employeeId = member.employeeId; // 存放员工工号.
+  objectCSS.userData.name = member.name; // 存放员工姓名.
+  objectCSS.position.x = Math.random() * 4000 - 2000;
+  objectCSS.position.y = Math.random() * 4000 - 2000;
+  objectCSS.position.z = Math.random() * 4000 - 2000;
+
+  const objectTable = new THREE.Object3D();
+  objectTable.position.x = ((index % 18) * 140) - 1330;
+  objectTable.position.y = - (Math.ceil((index + 1) / 18) * 180) + 990;
+
+  const objectSphere = new THREE.Object3D();
+  const phi = Math.acos(-1 + (2 * index) / length);
+  const theta = Math.sqrt(length * Math.PI) * phi;
+  objectSphere.position.setFromSphericalCoords(800, phi, theta);
+
+  return { element, objectCSS, objectTable, objectSphere };
 }
 
 export function calcWinnerDisplayCoord(

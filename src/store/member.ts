@@ -4,7 +4,7 @@ import { db } from '@/config/db';
 
 import type { Member } from '@/types/lottery';
 
-export const useMemberStore = create((set, get) => ({
+export const useMemberStore = create ((set, get) => ({
   members: [],
   init: async () => {
     try {

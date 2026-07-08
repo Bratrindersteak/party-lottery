@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next'
-import { ConfigProvider } from 'antd'
+import { ConfigProvider, App as AntDesign } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import enUS from 'antd/locale/en_US'
 
@@ -9,7 +9,7 @@ import './App.css'
 import { useLotteryStore } from './store/lottery.ts'
 import { useMemberStore } from '@/store/member.ts';
 import { useMusicStore } from '@/store/music.ts';
-import LotteryPage from './pages/lottery/LotteryPage'
+import LotteryPage from './pages/lottery'
 import Setting from '@/pages/setting/Setting.tsx'
 import { LOTTERY, SETTING } from '@/config/constants.ts';
 
@@ -43,16 +43,18 @@ function App() {
 
   return (
     <ConfigProvider locale={antdLocale}>
-      <div className="app-root" style={{ width: '100vw', height: '100vh', position: 'relative' }}>
-        {/* 大屏抽奖页 */}
-        <div style={{ display: currentScreen === LOTTERY ? 'block' : 'none', width: '100%', height: '100%' }}>
-          <LotteryPage />
+      <AntDesign>
+        <div className="app-root" style={{ width: '100vw', height: '100vh', position: 'relative' }}>
+          {/* 大屏抽奖页 */}
+          <div style={{ display: currentScreen === LOTTERY ? 'block' : 'none', width: '100%', height: '100%' }}>
+            <LotteryPage />
+          </div>
+          {/* 后台配置页 */}
+          <div style={{ display: currentScreen === SETTING ? 'block' : 'none', width: '100%', height: '100%' }}>
+            <Setting />
+          </div>
         </div>
-        {/* 后台配置页 */}
-        <div style={{ display: currentScreen === SETTING ? 'block' : 'none', width: '100%', height: '100%' }}>
-          <Setting />
-        </div>
-      </div>
+      </AntDesign>
     </ConfigProvider>
   )
 }

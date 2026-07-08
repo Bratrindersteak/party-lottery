@@ -4,12 +4,13 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
 import { useRecordStore } from '@/store/record.ts';
-import { ADD, EDIT } from '@/config/constants.ts';
+import { useAwardStore } from '@/store/award.ts';
+import { useMemberStore } from '@/store/member.ts';
 
 import styles from './styles.module.css';
 
 import type { TableProps, TableColumnsType } from 'antd';
-import type { Record } from '@/types/lottery';
+import type { Record, Award, Member } from '@/types/lottery';
 
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
 
@@ -21,6 +22,10 @@ export function useRecord(form) {
   const remove = useRecordStore((state) => state.delete);
   const bulkRemove = useRecordStore((state) => state.bulkDelete);
   const clear = useRecordStore((state) => state.clear);
+
+  const awards = useAwardStore((state) => state.awards);
+
+  const members = useMemberStore((state) => state.members);
 
   const { t } = useTranslation();
 
@@ -103,12 +108,10 @@ export function useRecord(form) {
       dataIndex: 'awardId',
       key: 'awardId',
       render: (value, record, index: number) => {
-        return record._isEdit ? (
-          <Form.Item name={[record.id as number, 'name']} initialValue={value} className={styles['table-edit-item']}>
-            <Input placeholder="请输入"/>
-          </Form.Item>
-        ) : (
-          <>{value}</>
+        const award: Award = awards.find(award => award.id === value);
+
+        return (
+          <>{award ? award.name : ''}</>
         );
       },
     },
@@ -117,12 +120,10 @@ export function useRecord(form) {
       dataIndex: 'memberId',
       key: 'memberId',
       render: (value, record, index: number) => {
-        return record._isEdit ? (
-          <Form.Item name={[record.id as number, 'prize']} rules={[{ required: true, message: '' }]} initialValue={value} className={styles['table-edit-item']}>
-            <Input placeholder="请输入"/>
-          </Form.Item>
-        ) : (
-          <>{value}</>
+        const member: Member = members.find(member => member.id === value);
+
+        return (
+          <>{member ? member.name : ''}</>
         );
       },
     },
@@ -148,7 +149,7 @@ export function useRecord(form) {
         );
       },
     },
-  ], [t, handleDelete]);
+  ], [t, handleDelete, awards, members]);
 
   return { records, columns, rowSelection, handleAdd, handleBulkAdd, handleBulkDelete, handleClear, messageHolder };
 }

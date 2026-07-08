@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-import styles from './Background.module.css';
+import styles from './styles.module.css';
 
 interface Star {
   x: number;

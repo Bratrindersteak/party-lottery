@@ -3,7 +3,18 @@ import { persist, createJSONStorage } from 'zustand/middleware' // 🚀 1. 核�
 
 import type { Record } from '@/types/lottery';
 
-export const useRecordStore = create(
+interface RecordStore {
+  id: number;
+  records: Record[];
+  create: (item: Omit<Record, 'id'>) => Promise<void>; // 💡 新建音乐时，入参通常是不带 id 的
+  bulkCreate: (items: Omit<Record, 'id'>[]) => Promise<void>;
+  update: (item: Record) => Promise<void>;
+  delete: (item: Record) => Promise<void>;
+  bulkDelete: (ids: number[]) => Promise<void>;
+  clear: () => Promise<void>;
+}
+
+export const useRecordStore = create<RecordStore>()(
   persist(
     (set, get) => ({
       id: 0,

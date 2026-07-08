@@ -97,7 +97,7 @@ src/
 1. 组件文件 ➡️ 统一使用大驼峰（PascalCase），后缀为 .tsx
    不管是页面组件还是小纽扣组件，只要这个文件返回了 HTML/JSX 标签，首字母必须大写。
 
-  - 正例：LotteryPage.tsx、UploadButton.tsx、WinnerWall.tsx
+  - 正例：index.tsx、UploadButton.tsx、WinnerWall.tsx
   - 反例：lotteryPage.js（首字母小写会跟普通函数混淆，React 会报错）
 
 2. 普通逻辑/工具文件 ➡️ 统一使用小驼峰（camelCase）或下划线，后缀为 .ts
@@ -114,7 +114,7 @@ src/
 4. 样式文件（CSS / LESS / SCSS） ➡️ 名字与组件完全对齐
    如果你为某个特定的组件写样式，样式文件名最好和组件一模一样，方便在 WebStorm 里高亮结对。
 
-  - 正例：LotteryPage.tsx 旁边配一个 LotteryPage.css
+  - 正例：index.tsx 旁边配一个 LotteryPage.css
 
 现代化推荐：如果你用 CSS Modules（Vite 天生支持），可以命名为 LotteryPage.module.css，防止全局样式冲突。
 
@@ -129,8 +129,11 @@ src/
 
 ### 待办
 
-- [ ] 人员、奖项、音乐这3类数据都应该存在 IndexedDB 中，那么就需要在根页面初始化时捞取数据，因为抽奖页面就需要用到
+- [X] 人员、奖项、音乐这3类数据都应该存在 IndexedDB 中，那么就需要在根页面初始化时捞取数据，因为抽奖页面就需要用到
 - [ ] 提供人员导入 Excel 模版下载
 - [ ] 人员导入的操作是否要单独开一个 Worker 线程防止阻塞
-- [ ] 音乐配置列表添加一列播放试听功能
-
+- [X] 音乐配置列表添加一列播放试听功能
+- [ ] three.js纳入react的hook和store中管理水太深，还是抽出来独立，不然现阶段卡顿崩溃不可避免.
+- [ ] i18n需要补齐，这是一个大工程.
+- [ ] 考虑一下是否要添加皮肤切换.
+- [ ] 感觉需要添加一个背景更换的功能.
