@@ -24,6 +24,7 @@ export function useRecord(form) {
   const clear = useRecordStore((state) => state.clear);
 
   const awards = useAwardStore((state) => state.awards);
+  const updateAward = useAwardStore((state) => state.update);
 
   const members = useMemberStore((state) => state.members);
 
@@ -65,6 +66,10 @@ export function useRecord(form) {
     ],
   };
 
+  const handleDownload = useCallback(() => {
+    // TODO 抽奖结果导出.
+  }, []);
+
   const handleAdd = useCallback((item) => {
     const timestamp = Date.now();
     const tempItem = {
@@ -100,7 +105,11 @@ export function useRecord(form) {
 
   const handleClear = useCallback(() => {
     clear();
-  }, [clear]);
+
+    awards.forEach(award => {
+      updateAward({ ...award, isFinished: false });
+    });
+  }, [clear, awards, updateAward]);
 
   const columns = useMemo<TableColumnsType<Record>>(() => [
     {
@@ -151,5 +160,5 @@ export function useRecord(form) {
     },
   ], [t, handleDelete, awards, members]);
 
-  return { records, columns, rowSelection, handleAdd, handleBulkAdd, handleBulkDelete, handleClear, messageHolder };
+  return { records, columns, rowSelection, handleDownload, handleAdd, handleBulkAdd, handleBulkDelete, handleClear, messageHolder };
 }

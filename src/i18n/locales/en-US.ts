@@ -22,6 +22,7 @@ export default {
   },
   record: {
     title: 'Award Record',
+    excelExport: 'Excel Export',
   },
   music: {
     title: 'Music Config',

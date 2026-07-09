@@ -37,19 +37,17 @@ export function useLottery() {
 
   const currWinnersRef = useRef<Member[]>([]);
 
-  const currAward = useMemo<Award>(() => {
-    const award = awards.find((award: Award) => award.id === currAwardId);
+  const currAward = useMemo<Award | null>(() => {
+    const award = awards.find((award: Award) => award.id === currAwardId) || null;
 
     console.log('currAward: ', award);
 
     return award;
   }, [currAwardId, awards]);
 
-  // .
+  // 进入抽奖环节.
   const handleEnter = useCallback(async () => {
-    if (lotteryStatus !== INIT) {
-      return;
-    }
+    if (lotteryStatus !== INIT) { return }
 
     setLotteryStatus(READY);
 
@@ -66,11 +64,9 @@ export function useLottery() {
 
   }, [lotteryStatus, setLotteryStatus, objects, targets, scene, camera, renderer]);
 
-  // .
+  // 开始抽取当前奖项.
   const handlePlay = useCallback(async () => {
-    if (lotteryStatus !== READY) {
-      return;
-    }
+    if (lotteryStatus !== READY) { return }
 
     if (!currAward) {
       message.warning('请选择要抽取的奖项！');
@@ -89,6 +85,9 @@ export function useLottery() {
 
   // 停止动效并开奖.
   const handleFinish = useCallback(async () => {
+    if (lotteryStatus !== RUNNING) { return }
+    if (!currAward) { return }
+
     setLotteryStatus(FINISHED);
 
     // TODO 开奖动效.
@@ -103,20 +102,25 @@ export function useLottery() {
     bulkCreateRecord(records);
 
     await rotating(scene as THREE.Scene, 0, 0.1, () => { render(renderer, scene, camera) });
-  }, [setLotteryStatus, currAward, updateAward, bulkCreateRecord, scene, camera, renderer]);
+  }, [lotteryStatus, setLotteryStatus, currAward, updateAward, bulkCreateRecord, scene, camera, renderer]);
 
-  // .
+  // 重新抽取当前奖项.
   const handleReplay = useCallback(async () => {
+    if (lotteryStatus !== FINISHED) { return }
+    if (!currAward) { return }
+
+    // 更新抽奖状态.
     setLotteryStatus(READY);
 
+    // 清除当前奖项的获奖记录.
     const winnerIds = currWinnersRef.current.map((winner) => winner.id);
-
     const targetRecords = records.filter(({ awardId, memberId }) => (awardId === currAward.id && winnerIds.includes(memberId)));
     const targetRecordIds = targetRecords.map((record) => record.id);
     bulkDeleteRecord(targetRecordIds as number[]);
 
+    // 重置当前奖项为未开奖.
     updateAward({ ...currAward, isFinished: false });
-  }, [setLotteryStatus, currAward, records, bulkDeleteRecord, updateAward]);
+  }, [lotteryStatus, setLotteryStatus, currAward, records, bulkDeleteRecord, updateAward]);
 
-  return { handleEnter, handlePlay, handleFinish, handleReplay };
+  return { currAward, handleEnter, handlePlay, handleFinish, handleReplay };
 }

@@ -29,6 +29,7 @@ export default {
   },
   record: {
     title: '获奖记录',
+    excelExport: 'Excel 导出',
   },
   music: {
     title: '音乐配置',

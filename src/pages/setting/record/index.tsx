@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Form, Popconfirm, Table } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, DownloadOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
 import { useRecord } from './useRecord.tsx';
@@ -16,12 +16,13 @@ interface AwardRecordProps {
 function AwardRecord({ style }: AwardRecordProps) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const { records: dataSource, columns, rowSelection, handleBulkDelete, handleClear, messageHolder } = useRecord(form);
+  const { records: dataSource, columns, rowSelection, handleDownload, handleBulkDelete, handleClear, messageHolder } = useRecord(form);
 
   return (
     <div style={style}>
       <div className={styles.operations}>
         {messageHolder}
+        <Button icon={<DownloadOutlined />} color="green" variant="solid" className={styles['operation-btn']} onClick={handleDownload}>{t('record.excelExport')}</Button>
         <Popconfirm
           title="确认批量删除？"
           icon={<DeleteOutlined style={{ color: '#F56C6C' }}/>}

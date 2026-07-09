@@ -18,7 +18,7 @@ import Background from './background';
 import type { Award } from '@/types/lottery.ts';
 
 function LotteryPage() {
-  const { handleEnter, handlePlay, handleFinish, handleReplay } = useLottery();
+  const { currAward, handleEnter, handlePlay, handleFinish, handleReplay } = useLottery();
 
   const { t, i18n } = useTranslation();
 
@@ -73,9 +73,9 @@ function LotteryPage() {
       <div className={styles['title']}>{title}</div>
 
       <Button className={styles['operation-btn']} style={{ display: lotteryStatus === INIT ? 'block' : 'none' }} color="pink" variant="filled" size="large" onClick={handleEnter}>{t('lottery.enter')}</Button>
-      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === READY ? 'block' : 'none' }} color="pink" variant="filled" size="large" onClick={handlePlay}>{t('lottery.play')}</Button>
-      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === RUNNING ? 'block' : 'none' }} color="pink" variant="filled" size="large" onClick={handleFinish}>{t('lottery.finish')}</Button>
-      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === FINISHED ? 'block' : 'none' }} color="pink" variant="filled" size="large" onClick={handleReplay}>{t('lottery.replay')}</Button>
+      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === READY ? 'block' : 'none' }} color="pink" variant="filled" size="large" onClick={handlePlay} disabled={!!(currAward && currAward.isFinished)}>{t('lottery.play')}</Button>
+      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === RUNNING ? 'block' : 'none' }} color="pink" variant="filled" size="large" onClick={handleFinish} disabled={!!(currAward && currAward.isFinished)}>{t('lottery.finish')}</Button>
+      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === FINISHED ? 'block' : 'none' }} color="pink" variant="filled" size="large" onClick={handleReplay} disabled={!!(currAward && !currAward.isFinished)}>{t('lottery.replay')}</Button>
 
       <div className={styles['award-drawer']}>
         <ul className={`${styles['award-list']} ${awardHandle ? styles['award-closed'] : ''}`}>
