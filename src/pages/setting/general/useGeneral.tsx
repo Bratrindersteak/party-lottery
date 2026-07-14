@@ -18,9 +18,13 @@ export function useGeneral(form) {
     });
   }, [form, title]);
 
+  const handleAlgoChange = useCallback(() => {
+
+  }, []);
+
   const handleClearAll = useCallback(() => {
     // TODO 清除所有 Localstorage 和 IndexedDB 中的相关数据.
   }, []);
 
-  return { title, handleSaveTitle, handleCancelTitle, handleClearAll };
+  return { title, handleSaveTitle, handleCancelTitle, handleAlgoChange, handleClearAll };
 }

@@ -1,5 +1,4 @@
 import { useThree } from './useThree.tsx';
-import { useThreeStore } from '@/store/three.ts';
 
 import styles from './styles.module.css';
 

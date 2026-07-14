@@ -25,6 +25,9 @@ export const useMemberStore = create<MemberStore>((set) => ({
   init: async () => {
     try {
       const data = await db.member.toArray();
+
+      console.log('data: ', data);
+
       set({ members: data });
     } catch (error) {
       console.error('初始化人员数据失败: ', error);

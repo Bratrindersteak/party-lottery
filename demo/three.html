@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js 单页面引入示例</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden; /* 隐藏滚动条，让3D场景铺满全屏 */
+      }
+    </style>
+    <style>
+      .element {
+        width: 120px;
+        height: 160px;
+        box-shadow: 0px 0px 12px rgba(0, 255, 255, 0.5);
+        border: 1px solid rgba(127, 255, 255, 0.25);
+        font-family: Helvetica, sans-serif;
+        text-align: center;
+        line-height: normal;
+        cursor: default;
+
+        /* 🚀 核心大招一：强制提升为独立 GPU 渲染图层，不占用主线程渲染 */
+        will-change: transform, opacity;
+
+        /* 🚀 核心大招二：开启 3D 硬件加速，让显卡去计算 matrix3d */
+        transform-style: preserve-3d;
+        backface-visibility: hidden;
+      }
+
+      .element:hover {
+        box-shadow: 0px 0px 12px rgba(0, 255, 255, 0.75);
+        border: 1px solid rgba(127, 255, 255, 0.75);
+      }
+
+      .element .number {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 12px;
+        color: rgba(127, 255, 255, 0.75);
+      }
+
+      .element .name {
+        position: absolute;
+        top: 40px;
+        left: 0px;
+        right: 0px;
+        font-size: 36px;
+        font-weight: bold;
+        color: rgba(255, 255, 255, 0.75);
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.95);
+      }
+
+      .element .department {
+        position: absolute;
+        bottom: 15px;
+        left: 0px;
+        right: 0px;
+        font-size: 12px;
+        color: rgba(127, 255, 255, 0.75);
+      }
+    </style>
+
+    <!-- 1. 引入 ES Module Shims，确保老旧浏览器也能支持 importmap -->
+    <!--<script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>-->
+
+    <!-- 2. 配置导入映射 (Import Map) -->
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://unpkg.com/three@0.185.1/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.185.1/examples/jsm/"
+          }
+        }
+    </script>
+</head>
+<body>
+<div id="container"></div>
+
+<script type="module">
+  import * as THREE from 'three';
+  import TWEEN from 'three/addons/libs/tween.module.js';
+  import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
+  import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+
+  import { default as members } from './data.mjs';
+
+  const scene = new THREE.Scene();
+
+  const camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+  camera.position.z = 3000;
+
+  const renderer = new CSS3DRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  container.appendChild(renderer.domElement);
+
+  const controls = new TrackballControls(camera, renderer.domElement)
+  controls.minDistance = 500;
+  controls.maxDistance = 6000;
+  controls.addEventListener('change', () => { render(renderer, scene, camera) });
+
+  // 动画循环
+  function animate() {
+    TWEEN.update();
+
+    controls.update();
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+
+  const objects = [];
+  const targets = { table: [], sphere: [], helix: [], grid: [] };
+  const len = members.length;
+  const vector = new THREE.Vector3();
+
+  export function genMemberCard(member, index, length) {
+    const element = document.createElement('div');
+    element.className = 'element';
+    element.style.backgroundColor = 'rgba(0,127,127,' + (Math.random() * 0.5 + 0.25) + ')';
+
+    const number = document.createElement('div');
+    number.className = 'number';
+    number.textContent = index + '';
+    element.appendChild(number);
+
+    const name = document.createElement('div');
+    name.className = 'name';
+    name.textContent = member.name;
+    element.appendChild(name);
+
+    const department = document.createElement('div');
+    department.className = 'department';
+    department.textContent = member.department;
+    element.appendChild(department);
+
+    const objectCSS = new CSS3DObject(element);
+    objectCSS.userData.id = member.id; // 存放员工 ID.
+    objectCSS.userData.employeeId = member.employeeId; // 存放员工工号.
+    objectCSS.userData.name = member.name; // 存放员工姓名.
+    objectCSS.position.x = Math.random() * 4000 - 2000;
+    objectCSS.position.y = Math.random() * 4000 - 2000;
+    objectCSS.position.z = Math.random() * 4000 - 2000;
+
+    const objectTable = new THREE.Object3D();
+    objectTable.position.x = ((index % 18) * 140) - 1330;
+    objectTable.position.y = - (Math.ceil((index + 1) / 18) * 180) + 990;
+
+    const objectSphere = new THREE.Object3D();
+    const phi = Math.acos(-1 + (2 * index) / length);
+    const theta = Math.sqrt(length * Math.PI) * phi;
+    objectSphere.position.setFromSphericalCoords(800, phi, theta);
+
+    return { element, objectCSS, objectTable, objectSphere };
+  }
+  
+  for (let i = 0; i < len; i += 1) {
+    const { objectCSS, objectTable, objectSphere } = genMemberCard(members[i], i, len);
+
+    scene.add(objectCSS);
+
+    objects.push(objectCSS);
+
+    targets.table.push(objectTable);
+
+    vector.copy(objectSphere.position).multiplyScalar(2);
+
+    objectSphere.lookAt(vector);
+
+    targets.sphere.push(objectSphere);
+  }
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.render(scene, camera);
+  });
+
+  function tween(source, target, duration, easingFn = TWEEN.Easing.Exponential.InOut) {
+    return new TWEEN.Tween(source)
+      .to({ x: target.x, y: target.y, z: target.z }, duration)
+      .easing(easingFn)
+      .start();
+  }
+
+  function transform(objects, targets, duration, render) {
+    TWEEN.removeAll();
+
+    return new Promise((resolve, reject) => {
+      for (let i = 0; i < objects.length; i += 1) {
+        const object = objects[i];
+        const target = targets[i];
+
+        tween(object.position, target.position, Math.random() * duration + duration, TWEEN.Easing.Exponential.InOut);
+
+        tween(object.rotation, target.rotation, Math.random() * duration + duration, TWEEN.Easing.Exponential.InOut);
+      }
+
+      tween({}, {}, duration * 2)
+        .onUpdate(render)
+        .onComplete(() => { resolve() });
+    });
+  }
+
+  await transform(objects, targets.table, 1500, () => { renderer.render(scene, camera) });
+
+  renderer.render(scene, camera);
+</script>
+
+
+<!--<script type="module">-->
+<!--  // 3. 像在现代前端框架中一样直接引入-->
+<!--  import * as THREE from 'three';-->
+<!--  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';-->
+
+<!--  const container = document.getElementById('container');-->
+
+<!--  // -&#45;&#45; 以下是基础的 Three.js 场景渲染流程 -&#45;&#45;-->
+
+<!--  // 创建场景-->
+<!--  const scene = new THREE.Scene();-->
+
+<!--  // 创建相机-->
+<!--  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);-->
+<!--  camera.position.z = 5;-->
+
+<!--  // 创建渲染器-->
+<!--  const renderer = new THREE.WebGLRenderer({antialias: true}); // 开启抗锯齿-->
+<!--  renderer.setSize(window.innerWidth, window.innerHeight);-->
+<!--  container.appendChild(renderer.domElement); // 将画布添加到页面-->
+
+<!--  // 添加一个绿色的方块-->
+<!--  const geometry = new THREE.BoxGeometry(1, 1, 1);-->
+<!--  const material = new THREE.MeshBasicMaterial({color: 0x00ff00, wireframe: true});-->
+<!--  const cube = new THREE.Mesh(geometry, material);-->
+<!--  scene.add(cube);-->
+
+<!--  // 初始化我们上次聊到的轨道控制器-->
+<!--  const controls = new OrbitControls(camera, renderer.domElement);-->
+<!--  controls.enableDamping = true; // 开启阻尼感-->
+
+<!--  // 动画循环-->
+<!--  function animate() {-->
+<!--    requestAnimationFrame(animate);-->
+
+<!--    // 让方块自己转动-->
+<!--    cube.rotation.x += 0.01;-->
+<!--    cube.rotation.y += 0.01;-->
+
+<!--    controls.update(); // 配合阻尼必须在每帧更新-->
+<!--    renderer.render(scene, camera);-->
+<!--  }-->
+
+<!--  animate();-->
+
+<!--  // 监听窗口大小变化，防止画面拉伸-->
+<!--  window.addEventListener('resize', () => {-->
+<!--    camera.aspect = window.innerWidth / window.innerHeight;-->
+<!--    camera.updateProjectionMatrix();-->
+<!--    renderer.setSize(window.innerWidth, window.innerHeight);-->
+<!--  });-->
+<!--</script>-->
+</body>
+</html>
