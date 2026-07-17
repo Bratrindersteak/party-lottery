@@ -62,6 +62,23 @@
         color: rgba(127, 255, 255, 0.75);
       }
     </style>
+    <style>
+      .operations {
+        position: fixed;
+        bottom: 150px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 300px;
+        height: 48px;
+      }
+
+      .operations button {
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+      }
+    </style>
 
     <!-- 1. 引入 ES Module Shims，确保老旧浏览器也能支持 importmap -->
     <!--<script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>-->
@@ -77,7 +94,14 @@
     </script>
 </head>
 <body>
-<div id="container"></div>
+<div id="container">
+    <div class="operations">
+        <button type="button" id="enterLottery">进入抽奖</button>
+        <button type="button" id="startLottery" style="display: none">开始抽奖</button>
+        <button type="button" id="stopLottery" style="display: none">停止抽奖</button>
+        <button type="button" id="restartLottery" style="display: none">重新抽奖</button>
+    </div>
+</div>
 
 <script type="module">
   import * as THREE from 'three';
@@ -85,7 +109,46 @@
   import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
   import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 
-  import { default as members } from './data.mjs';
+  import { default as members } from './mock.mjs';
+  import { genMemberCard } from './utils.mjs';
+
+  function tween(source, target, duration, easingFn = TWEEN.Easing.Exponential.InOut) {
+    return new TWEEN.Tween(source)
+      .to({ x: target.x, y: target.y, z: target.z }, duration)
+      .easing(easingFn)
+      .start();
+  }
+
+  function transform(objects, targets, duration, render) {
+    TWEEN.removeAll();
+
+    return new Promise((resolve, reject) => {
+      for (let i = 0; i < objects.length; i += 1) {
+        const object = objects[i];
+        const target = targets[i];
+
+        tween(object.position, target.position, Math.random() * duration + duration, TWEEN.Easing.Exponential.InOut);
+        tween(object.rotation, target.rotation, Math.random() * duration + duration, TWEEN.Easing.Exponential.InOut);
+      }
+
+      tween({}, {}, duration * 2)
+        .onUpdate(render)
+        .onComplete(() => { resolve() });
+    });
+  }
+
+  function rotating(scene, rotateY, duration, render) {
+    TWEEN.removeAll();
+
+    return new Promise((resolve, reject) => {
+      new TWEEN.Tween(scene.rotation)
+        .to({ x: 0, y: Math.PI * rotateY * 1000, z: 0 }, duration * 1000)
+        .onUpdate(render)
+        .onComplete(() => { resolve() })
+        .onStop(() => { console.log('rotating is stop') })
+        .start();
+    });
+  }
 
   const scene = new THREE.Scene();
 
@@ -95,68 +158,26 @@
   const renderer = new CSS3DRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
 
+  const container = document.getElementById('container');
   container.appendChild(renderer.domElement);
 
   const controls = new TrackballControls(camera, renderer.domElement)
   controls.minDistance = 500;
   controls.maxDistance = 6000;
-  controls.addEventListener('change', () => { render(renderer, scene, camera) });
+  controls.addEventListener('change', () => { renderer.render(scene, camera) });
 
-  // 动画循环
-  function animate() {
+  (function animate() {
     TWEEN.update();
 
     controls.update();
 
     requestAnimationFrame(animate);
-  }
-
-  animate();
+  })();
 
   const objects = [];
   const targets = { table: [], sphere: [], helix: [], grid: [] };
   const len = members.length;
   const vector = new THREE.Vector3();
-
-  export function genMemberCard(member, index, length) {
-    const element = document.createElement('div');
-    element.className = 'element';
-    element.style.backgroundColor = 'rgba(0,127,127,' + (Math.random() * 0.5 + 0.25) + ')';
-
-    const number = document.createElement('div');
-    number.className = 'number';
-    number.textContent = index + '';
-    element.appendChild(number);
-
-    const name = document.createElement('div');
-    name.className = 'name';
-    name.textContent = member.name;
-    element.appendChild(name);
-
-    const department = document.createElement('div');
-    department.className = 'department';
-    department.textContent = member.department;
-    element.appendChild(department);
-
-    const objectCSS = new CSS3DObject(element);
-    objectCSS.userData.id = member.id; // 存放员工 ID.
-    objectCSS.userData.employeeId = member.employeeId; // 存放员工工号.
-    objectCSS.userData.name = member.name; // 存放员工姓名.
-    objectCSS.position.x = Math.random() * 4000 - 2000;
-    objectCSS.position.y = Math.random() * 4000 - 2000;
-    objectCSS.position.z = Math.random() * 4000 - 2000;
-
-    const objectTable = new THREE.Object3D();
-    objectTable.position.x = ((index % 18) * 140) - 1330;
-    objectTable.position.y = - (Math.ceil((index + 1) / 18) * 180) + 990;
-
-    const objectSphere = new THREE.Object3D();
-    const phi = Math.acos(-1 + (2 * index) / length);
-    const theta = Math.sqrt(length * Math.PI) * phi;
-    objectSphere.position.setFromSphericalCoords(800, phi, theta);
-
-    return { element, objectCSS, objectTable, objectSphere };
-  }
   
   for (let i = 0; i < len; i += 1) {
     const { objectCSS, objectTable, objectSphere } = genMemberCard(members[i], i, len);
@@ -182,35 +203,18 @@
     renderer.render(scene, camera);
   });
 
-  function tween(source, target, duration, easingFn = TWEEN.Easing.Exponential.InOut) {
-    return new TWEEN.Tween(source)
-      .to({ x: target.x, y: target.y, z: target.z }, duration)
-      .easing(easingFn)
-      .start();
-  }
-
-  function transform(objects, targets, duration, render) {
-    TWEEN.removeAll();
-
-    return new Promise((resolve, reject) => {
-      for (let i = 0; i < objects.length; i += 1) {
-        const object = objects[i];
-        const target = targets[i];
-
-        tween(object.position, target.position, Math.random() * duration + duration, TWEEN.Easing.Exponential.InOut);
-
-        tween(object.rotation, target.rotation, Math.random() * duration + duration, TWEEN.Easing.Exponential.InOut);
-      }
-
-      tween({}, {}, duration * 2)
-        .onUpdate(render)
-        .onComplete(() => { resolve() });
-    });
-  }
-
   await transform(objects, targets.table, 1500, () => { renderer.render(scene, camera) });
 
   renderer.render(scene, camera);
+
+
+  const EnterButton = document.getElementById('enterLottery');
+  EnterButton.addEventListener('click', async () => {
+    await transform(objects, targets.sphere, 1000, renderer.render(scene, camera));
+
+    scene.rotation.y = 0;
+    await rotating(scene, 0.1, 2000, renderer.render(scene, camera));
+  });
 </script>
 
 

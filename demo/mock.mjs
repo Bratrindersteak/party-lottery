@@ -1,4 +1,4 @@
-const data = [
+const members = [
   {
     "employeeId": "000001",
     "name": "朱厚熜",
@@ -1237,4 +1237,4 @@ const data = [
   }
 ];
 
-export default data;
+export default members;

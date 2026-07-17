@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>three.js css3d - periodic table</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta property="og:title" content="three.js css3d - periodic table">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://threejs.org/examples/css3d_periodictable.html">
+    <meta property="og:image" content="https://threejs.org/examples/screenshots/css3d_periodictable.jpg">
+    <link type="text/css" rel="stylesheet" href="./styles/main.css" />
+    <link type="text/css" rel="stylesheet" href="./styles/style.css" />
+</head>
+<body>
+<div id="info"><a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> css3d - periodic table.</div>
+<div id="container"></div>
+<div id="menu">
+    <button id="table">TABLE</button>
+    <button id="sphere">SPHERE</button>
+    <button id="helix">HELIX</button>
+    <button id="grid">GRID</button>
+</div>
+
+<script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.185.1/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.185.1/examples/jsm/"
+      }
+    }
+</script>
+
+<script type="module">
+  import * as THREE from 'three';
+
+  import TWEEN from 'three/addons/libs/tween.module.js';
+  import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+  import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
+
+  import table from './data.js';
+  import { transform, onWindowResize, animate, render } from './utils.js';
+
+  let camera, scene, renderer;
+  let controls;
+
+  const objects = [];
+  const targets = {table: [], sphere: [], helix: [], grid: []};
+
+  init();
+  animate(controls);
+
+  function init() {
+    camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
+    camera.position.z = 3000;
+
+    scene = new THREE.Scene();
+
+    // table
+    for (let i = 0; i < table.length; i += 5) {
+      const element = document.createElement('div');
+      element.className = 'element';
+      element.style.backgroundColor = 'rgba(0,127,127,' + (Math.random() * 0.5 + 0.25) + ')';
+
+      const number = document.createElement('div');
+      number.className = 'number';
+      number.textContent = (i / 5) + 1;
+      element.appendChild(number);
+
+      const symbol = document.createElement('div');
+      symbol.className = 'symbol';
+      symbol.textContent = table[i];
+      element.appendChild(symbol);
+
+      const details = document.createElement('div');
+      details.className = 'details';
+      details.innerHTML = table[i + 1] + '<br>' + table[i + 2];
+      element.appendChild(details);
+
+      const objectCSS = new CSS3DObject(element);
+      objectCSS.position.x = Math.random() * 4000 - 2000;
+      objectCSS.position.y = Math.random() * 4000 - 2000;
+      objectCSS.position.z = Math.random() * 4000 - 2000;
+      scene.add(objectCSS);
+
+      objects.push(objectCSS);
+
+      const object = new THREE.Object3D();
+      object.position.x = (table[i + 3] * 140) - 1330;
+      object.position.y = -(table[i + 4] * 180) + 990;
+
+      targets.table.push(object);
+    }
+
+    const vector = new THREE.Vector3();
+
+    // sphere
+    for (let i = 0, l = objects.length; i < l; i++) {
+      const phi = Math.acos(-1 + (2 * i) / l);
+      const theta = Math.sqrt(l * Math.PI) * phi;
+
+      const object = new THREE.Object3D();
+
+      object.position.setFromSphericalCoords(800, phi, theta);
+
+      vector.copy(object.position).multiplyScalar(2);
+
+      object.lookAt(vector);
+
+      targets.sphere.push(object);
+    }
+
+    // helix
+    for (let i = 0, l = objects.length; i < l; i++) {
+      const theta = i * 0.175 + Math.PI;
+      const y = -(i * 8) + 450;
+
+      const object = new THREE.Object3D();
+
+      object.position.setFromCylindricalCoords(900, theta, y);
+
+      vector.x = object.position.x * 2;
+      vector.y = object.position.y;
+      vector.z = object.position.z * 2;
+
+      object.lookAt(vector);
+
+      targets.helix.push(object);
+    }
+
+    // grid
+    for (let i = 0; i < objects.length; i++) {
+      const object = new THREE.Object3D();
+
+      object.position.x = ((i % 5) * 400) - 800;
+      object.position.y = (-(Math.floor(i / 5) % 5) * 400) + 800;
+      object.position.z = (Math.floor(i / 25)) * 1000 - 2000;
+
+      targets.grid.push(object);
+    }
+
+    renderer = new CSS3DRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('container').appendChild(renderer.domElement);
+
+    controls = new TrackballControls(camera, renderer.domElement);
+    controls.minDistance = 500;
+    controls.maxDistance = 6000;
+    controls.addEventListener('change', () => render(renderer, scene, camera));
+
+    const buttonTable = document.getElementById('table');
+    buttonTable.addEventListener('click', function () {
+      transform(objects, targets.table, 1000, renderer, scene, camera);
+    });
+
+    const buttonSphere = document.getElementById('sphere');
+    buttonSphere.addEventListener('click', function () {
+      transform(objects, targets.sphere, 1000, renderer, scene, camera);
+    });
+
+    const buttonHelix = document.getElementById('helix');
+    buttonHelix.addEventListener('click', function () {
+      transform(objects, targets.helix, 1000, renderer, scene, camera);
+    });
+
+    const buttonGrid = document.getElementById('grid');
+    buttonGrid.addEventListener('click', function () {
+      transform(objects, targets.grid, 1000, renderer, scene, camera);
+    });
+
+    transform(objects, targets.table, 1000, renderer, scene, camera);
+
+    window.addEventListener('resize', () => onWindowResize(renderer, scene, camera));
+  }
+
+  // function transform(targets, duration) {
+  //   TWEEN.removeAll();
+  //
+  //   for (let i = 0; i < objects.length; i++) {
+  //     const object = objects[i];
+  //     const target = targets[i];
+  //
+  //     new TWEEN.Tween(object.position)
+  //       .to({x: target.position.x, y: target.position.y, z: target.position.z}, Math.random() * duration + duration)
+  //       .easing(TWEEN.Easing.Exponential.InOut)
+  //       .start();
+  //
+  //     new TWEEN.Tween(object.rotation)
+  //       .to({x: target.rotation.x, y: target.rotation.y, z: target.rotation.z}, Math.random() * duration + duration)
+  //       .easing(TWEEN.Easing.Exponential.InOut)
+  //       .start();
+  //   }
+  //
+  //   new TWEEN.Tween(this)
+  //     .to({}, duration * 2)
+  //     .onUpdate(render)
+  //     .start();
+  // }
+
+  // function onWindowResize() {
+  //   camera.aspect = window.innerWidth / window.innerHeight;
+  //   camera.updateProjectionMatrix();
+  //
+  //   renderer.setSize(window.innerWidth, window.innerHeight);
+  //
+  //   render();
+  // }
+
+  // function animate() {
+  //   requestAnimationFrame(animate);
+  //
+  //   TWEEN.update();
+  //
+  //   controls.update();
+  // }
+
+  // function render() {
+  //   renderer.render(scene, camera);
+  // }
+</script>
+</body>
+</html>
