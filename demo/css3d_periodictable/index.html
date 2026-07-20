@@ -32,13 +32,13 @@
 
 <script type="module">
   import * as THREE from 'three';
-
-  import TWEEN from 'three/addons/libs/tween.module.js';
   import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
   import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 
-  import table from './data.js';
+  import data from './data.js';
   import { transform, onWindowResize, animate, render } from './utils.js';
+
+  console.log(`共有 ${data.length} 个元素.`);
 
   let camera, scene, renderer;
   let controls;
@@ -46,8 +46,11 @@
   const objects = [];
   const targets = {table: [], sphere: [], helix: [], grid: []};
 
+  // 1. 搞一个全局开关
+  const isAutoSpinning = { value: false };
+
   init();
-  animate(controls);
+  animate(controls, isAutoSpinning, renderer, scene, camera);
 
   function init() {
     camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
@@ -55,87 +58,93 @@
 
     scene = new THREE.Scene();
 
-    // table
-    for (let i = 0; i < table.length; i += 5) {
-      const element = document.createElement('div');
-      element.className = 'element';
-      element.style.backgroundColor = 'rgba(0,127,127,' + (Math.random() * 0.5 + 0.25) + ')';
-
-      const number = document.createElement('div');
-      number.className = 'number';
-      number.textContent = (i / 5) + 1;
-      element.appendChild(number);
-
-      const symbol = document.createElement('div');
-      symbol.className = 'symbol';
-      symbol.textContent = table[i];
-      element.appendChild(symbol);
-
-      const details = document.createElement('div');
-      details.className = 'details';
-      details.innerHTML = table[i + 1] + '<br>' + table[i + 2];
-      element.appendChild(details);
-
-      const objectCSS = new CSS3DObject(element);
-      objectCSS.position.x = Math.random() * 4000 - 2000;
-      objectCSS.position.y = Math.random() * 4000 - 2000;
-      objectCSS.position.z = Math.random() * 4000 - 2000;
-      scene.add(objectCSS);
-
-      objects.push(objectCSS);
-
-      const object = new THREE.Object3D();
-      object.position.x = (table[i + 3] * 140) - 1330;
-      object.position.y = -(table[i + 4] * 180) + 990;
-
-      targets.table.push(object);
-    }
-
     const vector = new THREE.Vector3();
 
-    // sphere
-    for (let i = 0, l = objects.length; i < l; i++) {
-      const phi = Math.acos(-1 + (2 * i) / l);
-      const theta = Math.sqrt(l * Math.PI) * phi;
+    const length = data.length;
 
-      const object = new THREE.Object3D();
+    for (let i = 0; i < length; i += 1) {
+      // table
+      (() => {
+        const element = document.createElement('div');
+        element.className = 'element';
+        element.style.backgroundColor = 'rgba(0,127,127,' + (Math.random() * 0.5 + 0.25) + ')';
 
-      object.position.setFromSphericalCoords(800, phi, theta);
+        const member = data[i];
 
-      vector.copy(object.position).multiplyScalar(2);
+        const number = document.createElement('div');
+        number.className = 'number';
+        number.textContent = member.employeeId;
+        element.appendChild(number);
 
-      object.lookAt(vector);
+        const symbol = document.createElement('div');
+        symbol.className = 'symbol';
+        symbol.textContent = member.name;
+        element.appendChild(symbol);
 
-      targets.sphere.push(object);
-    }
+        const details = document.createElement('div');
+        details.className = 'details';
+        details.innerHTML = member.department;
+        element.appendChild(details);
 
-    // helix
-    for (let i = 0, l = objects.length; i < l; i++) {
-      const theta = i * 0.175 + Math.PI;
-      const y = -(i * 8) + 450;
+        const objectCSS = new CSS3DObject(element);
+        objectCSS.position.x = Math.random() * 4000 - 2000;
+        objectCSS.position.y = Math.random() * 4000 - 2000;
+        objectCSS.position.z = Math.random() * 4000 - 2000;
+        scene.add(objectCSS);
 
-      const object = new THREE.Object3D();
+        objects.push(objectCSS);
 
-      object.position.setFromCylindricalCoords(900, theta, y);
+        const object = new THREE.Object3D();
+        object.position.x = ((i % 18) * 140) - 1330;
+        object.position.y = -(Math.ceil((i + 1) / 18) * 180) + 990;
 
-      vector.x = object.position.x * 2;
-      vector.y = object.position.y;
-      vector.z = object.position.z * 2;
+        targets.table.push(object);
+      })();
 
-      object.lookAt(vector);
+      // sphere
+      (() => {
+        const phi = Math.acos(-1 + (2 * i) / length);
+        const theta = Math.sqrt(length * Math.PI) * phi;
 
-      targets.helix.push(object);
-    }
+        const object = new THREE.Object3D();
 
-    // grid
-    for (let i = 0; i < objects.length; i++) {
-      const object = new THREE.Object3D();
+        object.position.setFromSphericalCoords(800, phi, theta);
 
-      object.position.x = ((i % 5) * 400) - 800;
-      object.position.y = (-(Math.floor(i / 5) % 5) * 400) + 800;
-      object.position.z = (Math.floor(i / 25)) * 1000 - 2000;
+        vector.copy(object.position).multiplyScalar(2);
 
-      targets.grid.push(object);
+        object.lookAt(vector);
+
+        targets.sphere.push(object);
+      })();
+
+      // helix
+      (() => {
+        const theta = i * 0.175 + Math.PI;
+        const y = -(i * 8) + 450;
+
+        const object = new THREE.Object3D();
+
+        object.position.setFromCylindricalCoords(900, theta, y);
+
+        vector.x = object.position.x * 2;
+        vector.y = object.position.y;
+        vector.z = object.position.z * 2;
+
+        object.lookAt(vector);
+
+        targets.helix.push(object);
+      })();
+
+      // grid
+      (() => {
+        const object = new THREE.Object3D();
+
+        object.position.x = ((i % 5) * 400) - 800;
+        object.position.y = (-(Math.floor(i / 5) % 5) * 400) + 800;
+        object.position.z = (Math.floor(i / 25)) * 1000 - 2000;
+
+        targets.grid.push(object);
+      })();
     }
 
     renderer = new CSS3DRenderer();
@@ -149,21 +158,33 @@
 
     const buttonTable = document.getElementById('table');
     buttonTable.addEventListener('click', function () {
+      // 切回表格时，一键关闭自转，重置角度
+      isAutoSpinning.value = false;
+      scene.rotation.y = 0;
       transform(objects, targets.table, 1000, renderer, scene, camera);
     });
 
     const buttonSphere = document.getElementById('sphere');
-    buttonSphere.addEventListener('click', function () {
-      transform(objects, targets.sphere, 1000, renderer, scene, camera);
+    buttonSphere.addEventListener('click', async () => {
+      await transform(objects, targets.sphere, 1000, renderer, scene, camera);
+
+      // 卡片全部落地了！一键开启永恒自转
+      isAutoSpinning.value = true;
     });
 
     const buttonHelix = document.getElementById('helix');
     buttonHelix.addEventListener('click', function () {
+      // 切回表格时，一键关闭自转，重置角度
+      isAutoSpinning.value = false;
+      scene.rotation.y = 0;
       transform(objects, targets.helix, 1000, renderer, scene, camera);
     });
 
     const buttonGrid = document.getElementById('grid');
     buttonGrid.addEventListener('click', function () {
+      // 切回表格时，一键关闭自转，重置角度
+      isAutoSpinning.value = false;
+      scene.rotation.y = 0;
       transform(objects, targets.grid, 1000, renderer, scene, camera);
     });
 
@@ -171,51 +192,6 @@
 
     window.addEventListener('resize', () => onWindowResize(renderer, scene, camera));
   }
-
-  // function transform(targets, duration) {
-  //   TWEEN.removeAll();
-  //
-  //   for (let i = 0; i < objects.length; i++) {
-  //     const object = objects[i];
-  //     const target = targets[i];
-  //
-  //     new TWEEN.Tween(object.position)
-  //       .to({x: target.position.x, y: target.position.y, z: target.position.z}, Math.random() * duration + duration)
-  //       .easing(TWEEN.Easing.Exponential.InOut)
-  //       .start();
-  //
-  //     new TWEEN.Tween(object.rotation)
-  //       .to({x: target.rotation.x, y: target.rotation.y, z: target.rotation.z}, Math.random() * duration + duration)
-  //       .easing(TWEEN.Easing.Exponential.InOut)
-  //       .start();
-  //   }
-  //
-  //   new TWEEN.Tween(this)
-  //     .to({}, duration * 2)
-  //     .onUpdate(render)
-  //     .start();
-  // }
-
-  // function onWindowResize() {
-  //   camera.aspect = window.innerWidth / window.innerHeight;
-  //   camera.updateProjectionMatrix();
-  //
-  //   renderer.setSize(window.innerWidth, window.innerHeight);
-  //
-  //   render();
-  // }
-
-  // function animate() {
-  //   requestAnimationFrame(animate);
-  //
-  //   TWEEN.update();
-  //
-  //   controls.update();
-  // }
-
-  // function render() {
-  //   renderer.render(scene, camera);
-  // }
 </script>
 </body>
 </html>

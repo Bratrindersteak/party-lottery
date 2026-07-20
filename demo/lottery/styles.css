@@ -1,6 +1,6 @@
-.container {
-  width: 100vw;
-  height: 100vh;
+body {
+  margin: 0;
+  overflow: hidden; /* 隐藏滚动条，让3D场景铺满全屏 */
 }
 
 .element {
@@ -12,13 +12,6 @@
   text-align: center;
   line-height: normal;
   cursor: default;
-
-  /* 🚀 核心大招一：强制提升为独立 GPU 渲染图层，不占用主线程渲染 */
-  will-change: transform, opacity;
-
-  /* 🚀 核心大招二：开启 3D 硬件加速，让显卡去计算 matrix3d */
-  /*transform-style: preserve-3d;*/
-  /*backface-visibility: hidden;*/
 }
 
 .element:hover {
@@ -52,4 +45,20 @@
   right: 0px;
   font-size: 12px;
   color: rgba(127, 255, 255, 0.75);
+}
+
+.operations {
+  position: fixed;
+  bottom: 150px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 48px;
+}
+
+.operations button {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
 }

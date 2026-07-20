@@ -4,85 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Three.js 单页面引入示例</title>
-    <style>
-      body {
-        margin: 0;
-        overflow: hidden; /* 隐藏滚动条，让3D场景铺满全屏 */
-      }
-    </style>
-    <style>
-      .element {
-        width: 120px;
-        height: 160px;
-        box-shadow: 0px 0px 12px rgba(0, 255, 255, 0.5);
-        border: 1px solid rgba(127, 255, 255, 0.25);
-        font-family: Helvetica, sans-serif;
-        text-align: center;
-        line-height: normal;
-        cursor: default;
-
-        /* 🚀 核心大招一：强制提升为独立 GPU 渲染图层，不占用主线程渲染 */
-        will-change: transform, opacity;
-
-        /* 🚀 核心大招二：开启 3D 硬件加速，让显卡去计算 matrix3d */
-        transform-style: preserve-3d;
-        backface-visibility: hidden;
-      }
-
-      .element:hover {
-        box-shadow: 0px 0px 12px rgba(0, 255, 255, 0.75);
-        border: 1px solid rgba(127, 255, 255, 0.75);
-      }
-
-      .element .number {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        font-size: 12px;
-        color: rgba(127, 255, 255, 0.75);
-      }
-
-      .element .name {
-        position: absolute;
-        top: 40px;
-        left: 0px;
-        right: 0px;
-        font-size: 36px;
-        font-weight: bold;
-        color: rgba(255, 255, 255, 0.75);
-        text-shadow: 0 0 10px rgba(0, 255, 255, 0.95);
-      }
-
-      .element .department {
-        position: absolute;
-        bottom: 15px;
-        left: 0px;
-        right: 0px;
-        font-size: 12px;
-        color: rgba(127, 255, 255, 0.75);
-      }
-    </style>
-    <style>
-      .operations {
-        position: fixed;
-        bottom: 150px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 300px;
-        height: 48px;
-      }
-
-      .operations button {
-        display: inline-block;
-        width: 100%;
-        height: 100%;
-        cursor: pointer;
-      }
-    </style>
-
+    <link rel="stylesheet" href="./styles.css" />
     <!-- 1. 引入 ES Module Shims，确保老旧浏览器也能支持 importmap -->
     <!--<script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>-->
-
     <!-- 2. 配置导入映射 (Import Map) -->
     <script type="importmap">
         {
@@ -112,6 +36,8 @@
   import { default as members } from './mock.mjs';
   import { genMemberCard } from './utils.mjs';
 
+  console.log(`共有 ${members.length} 个成员.`);
+
   function tween(source, target, duration, easingFn = TWEEN.Easing.Exponential.InOut) {
     return new TWEEN.Tween(source)
       .to({ x: target.x, y: target.y, z: target.z }, duration)
@@ -122,7 +48,6 @@
   function transform(objects, targets, duration, render) {
     TWEEN.removeAll();
 
-    return new Promise((resolve, reject) => {
       for (let i = 0; i < objects.length; i += 1) {
         const object = objects[i];
         const target = targets[i];
@@ -131,10 +56,11 @@
         tween(object.rotation, target.rotation, Math.random() * duration + duration, TWEEN.Easing.Exponential.InOut);
       }
 
-      tween({}, {}, duration * 2)
+      new TWEEN.Tween(this)
+        .to({}, duration * 2)
         .onUpdate(render)
-        .onComplete(() => { resolve() });
-    });
+        .start();
+
   }
 
   function rotating(scene, rotateY, duration, render) {
@@ -154,25 +80,6 @@
 
   const camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
   camera.position.z = 3000;
-
-  const renderer = new CSS3DRenderer();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-
-  const container = document.getElementById('container');
-  container.appendChild(renderer.domElement);
-
-  const controls = new TrackballControls(camera, renderer.domElement)
-  controls.minDistance = 500;
-  controls.maxDistance = 6000;
-  controls.addEventListener('change', () => { renderer.render(scene, camera) });
-
-  (function animate() {
-    TWEEN.update();
-
-    controls.update();
-
-    requestAnimationFrame(animate);
-  })();
 
   const objects = [];
   const targets = { table: [], sphere: [], helix: [], grid: [] };
@@ -195,6 +102,27 @@
     targets.sphere.push(objectSphere);
   }
 
+  const renderer = new CSS3DRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const container = document.getElementById('container');
+  container.appendChild(renderer.domElement);
+
+  const controls = new TrackballControls(camera, renderer.domElement)
+  controls.minDistance = 500;
+  controls.maxDistance = 6000;
+  controls.addEventListener('change', () => { renderer.render(scene, camera) });
+
+  const EnterButton = document.getElementById('enterLottery');
+  EnterButton.addEventListener('click', async () => {
+    transform(objects, targets.sphere, 1000, renderer.render(scene, camera));
+
+    scene.rotation.y = 0;
+    await rotating(scene, 0.1, 2000, renderer.render(scene, camera));
+  });
+
+  transform(objects, targets.table, 1500, () => { renderer.render(scene, camera) });
+
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -203,18 +131,13 @@
     renderer.render(scene, camera);
   });
 
-  await transform(objects, targets.table, 1500, () => { renderer.render(scene, camera) });
+  (function animate() {
+    TWEEN.update();
 
-  renderer.render(scene, camera);
+    controls.update();
 
-
-  const EnterButton = document.getElementById('enterLottery');
-  EnterButton.addEventListener('click', async () => {
-    await transform(objects, targets.sphere, 1000, renderer.render(scene, camera));
-
-    scene.rotation.y = 0;
-    await rotating(scene, 0.1, 2000, renderer.render(scene, camera));
-  });
+    requestAnimationFrame(animate);
+  })();
 </script>
 
 

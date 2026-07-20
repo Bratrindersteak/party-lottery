@@ -85,16 +85,56 @@ export function transform(objects: CSS3DObject[], targets: Object3D[], duration:
   });
 }
 
-export function rotating(scene: THREE.Scene, rotateY: number, duration: number, render: Render): Promise<void> {
-  TWEEN.removeAll();
+// export function rotating(scene: THREE.Scene, rotateY: number, duration: number, render: Render): Promise<void> {
+//   TWEEN.removeAll();
+//
+//   return new Promise<void>((resolve, reject) => {
+//     new TWEEN.Tween(scene.rotation)
+//       .to({ x: 0, y: Math.PI * rotateY * 1000, z: 0 }, duration * 1000)
+//       .onUpdate(render)
+//       .onComplete(() => { resolve() })
+//       .onStop(() => { console.log('rotating is stop') })
+//       .start();
+//   });
+// }
 
+
+// 👑 在函数外部定义一个模块级的变量，用来死死盯住当前的旋转动画
+let currentRotatingTween: TWEEN.Tween<THREE.Euler> | null = null;
+
+/**
+ * 丝滑的场景旋转控制器
+ * @param scene THREE.Scene 场景实例
+ * @param turns 旋转的圈数（比如 2 代表转 2 圈）
+ * @param duration 动画持续时间（单位：秒）
+ * @param render 渲染回调函数
+ */
+export function rotating(scene: THREE.Scene, turns: number, duration: number, render: Render): Promise<void> {
+  // 🚨 关键一步：在启动新动画前，精准定点清除上一次的旋转，不伤及无辜
+  if (currentRotatingTween) {
+    currentRotatingTween.stop(); // 别用 removeAll，只让上一个旋转动画停下
+    currentRotatingTween = null;
+  }
+
+  // 💡 优化 1：不要直接 removeAll()，只管理当前这一个 tween 变量
   return new Promise<void>((resolve, reject) => {
-    new TWEEN.Tween(scene.rotation)
-      .to({ x: 0, y: Math.PI * rotateY * 1000, z: 0 }, duration * 1000)
+    // 计算出真正合理的弧度目标（1圈 = 2 * Math.PI）
+    const targetY = scene.rotation.y + (Math.PI * 2 * turns);
+
+    currentRotatingTween = new TWEEN.Tween(scene.rotation)
+      .to({ x: 0, y: targetY, z: 0 }, duration * 1000) // 毫秒单位
+      .easing(TWEEN.Easing.Linear.None) // 持续旋转通常用匀速
       .onUpdate(render)
-      .onComplete(() => { resolve() })
-      .onStop(() => { console.log('rotating is stop') })
-      .start();
+      .onComplete(() => {
+        currentRotatingTween = null; // 播完主动释放
+        resolve();
+      })
+      .onStop(() => {
+        currentRotatingTween = null; // 被动停下也释放
+        resolve(); // 💡 优化 2：被叫停时，也要妥善释放 Promise，避免外部 await 死锁
+      });
+
+    currentRotatingTween.start();
   });
 }
 

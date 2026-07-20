@@ -42,12 +42,6 @@ export function genMemberCard(member, index, length) {
   return { element, objectCSS, objectTable, objectSphere };
 }
 
-export function tween(source, target, duration, easingFn = TWEEN.Easing.Exponential.InOut) {
-  return new TWEEN.Tween(source)
-    .to({ x: target.x, y: target.y, z: target.z }, duration)
-    .easing(easingFn)
-    .start();
-}
 
 export function transform(objects, targets, duration, render) {
   TWEEN.removeAll();
@@ -65,6 +59,64 @@ export function transform(objects, targets, duration, render) {
       .onUpdate(render)
       .onComplete(() => { resolve() });
   });
+}
+
+// export function transform(objects, targets, duration, renderer, scene, camera) {
+//   TWEEN.removeAll();
+//
+//   for (let i = 0; i < objects.length; i++) {
+//     const object = objects[i];
+//     const target = targets[i];
+//
+//     new TWEEN.Tween(object.position)
+//       .to({x: target.position.x, y: target.position.y, z: target.position.z}, Math.random() * duration + duration)
+//       .easing(TWEEN.Easing.Exponential.InOut)
+//       .start();
+//
+//     new TWEEN.Tween(object.rotation)
+//       .to({x: target.rotation.x, y: target.rotation.y, z: target.rotation.z}, Math.random() * duration + duration)
+//       .easing(TWEEN.Easing.Exponential.InOut)
+//       .start();
+//   }
+//
+//   new TWEEN.Tween(this)
+//     .to({}, duration * 2)
+//     .onUpdate(() => render(renderer, scene, camera))
+//     .start();
+// }
+
+export function onWindowResize(renderer, scene, camera) {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  render(renderer, scene, camera);
+}
+
+export function animate(controls) {
+  requestAnimationFrame(() => animate(controls));
+
+  TWEEN.update();
+
+  controls.update();
+}
+
+export function render(renderer, scene, camera) {
+  renderer.render(scene, camera);
+}
+
+
+
+
+
+
+
+export function tween(source, target, duration, easingFn = TWEEN.Easing.Exponential.InOut) {
+  return new TWEEN.Tween(source)
+    .to({ x: target.x, y: target.y, z: target.z }, duration)
+    .easing(easingFn)
+    .start();
 }
 
 export function rotating(scene, rotateY, duration, render) {
