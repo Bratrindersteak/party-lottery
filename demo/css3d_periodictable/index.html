@@ -19,7 +19,11 @@
     <button id="sphere">SPHERE</button>
     <button id="helix">HELIX</button>
     <button id="grid">GRID</button>
+    <button id="lottery">Lottery</button>
+    <button id="finish">Finish</button>
 </div>
+
+<div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 6px; height: 6px; border-radius: 50%; background-color: #88ffff;"></div>
 
 <script type="importmap">
     {
@@ -32,11 +36,12 @@
 
 <script type="module">
   import * as THREE from 'three';
+  import TWEEN from 'three/addons/libs/tween.module.js';
   import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
   import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 
   import data from './data.js';
-  import { transform, onWindowResize, animate, render } from './utils.js';
+  import { transform, rotating, calcWinnerCoord, handleWindowResize, animate, render, calcLayout } from './utils';
 
   console.log(`共有 ${data.length} 个元素.`);
 
@@ -46,11 +51,8 @@
   const objects = [];
   const targets = {table: [], sphere: [], helix: [], grid: []};
 
-  // 1. 搞一个全局开关
-  const isAutoSpinning = { value: false };
-
   init();
-  animate(controls, isAutoSpinning, renderer, scene, camera);
+  animate(controls, renderer, scene, camera);
 
   function init() {
     camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
@@ -61,6 +63,11 @@
     const vector = new THREE.Vector3();
 
     const length = data.length;
+
+    // 一键获取智能计算的结果.
+    const gapX = 140;
+    const gapY = 180;
+    const { col, offsetX, offsetY } = calcLayout(length, gapX, gapY);
 
     for (let i = 0; i < length; i += 1) {
       // table
@@ -91,12 +98,12 @@
         objectCSS.position.y = Math.random() * 4000 - 2000;
         objectCSS.position.z = Math.random() * 4000 - 2000;
         scene.add(objectCSS);
-
         objects.push(objectCSS);
 
         const object = new THREE.Object3D();
-        object.position.x = ((i % 18) * 140) - 1330;
-        object.position.y = -(Math.ceil((i + 1) / 18) * 180) + 990;
+        // 动态居中.
+        object.position.x = ((i % col) * gapX) + offsetX;
+        object.position.y = -(Math.floor(i / col) * gapY) + offsetY; // 3D里第一行在最上面，所以用负号往下排
 
         targets.table.push(object);
       })();
@@ -157,40 +164,92 @@
     controls.addEventListener('change', () => render(renderer, scene, camera));
 
     const buttonTable = document.getElementById('table');
-    buttonTable.addEventListener('click', function () {
-      // 切回表格时，一键关闭自转，重置角度
-      isAutoSpinning.value = false;
-      scene.rotation.y = 0;
-      transform(objects, targets.table, 1000, renderer, scene, camera);
+    buttonTable.addEventListener('click', async () => {
+      await Promise.all([
+        transform(objects, targets.table, 1000),
+        rotating(scene, 0, 500),
+      ]);
     });
 
     const buttonSphere = document.getElementById('sphere');
     buttonSphere.addEventListener('click', async () => {
-      await transform(objects, targets.sphere, 1000, renderer, scene, camera);
+      await Promise.all([
+        transform(objects, targets.sphere, 1000),
+        rotating(scene, 0, 500),
+      ]);
 
-      // 卡片全部落地了！一键开启永恒自转
-      isAutoSpinning.value = true;
+      // 落地瞬间，无缝衔接：让它开启“伪无限”的慢速自转
+      // 转 1000 圈，耗时 50000 秒（大概 833.33 分钟，足够年会背景用了）
+      rotating(scene, Math.PI * 2 * 1000, 50000000);
     });
 
     const buttonHelix = document.getElementById('helix');
-    buttonHelix.addEventListener('click', function () {
-      // 切回表格时，一键关闭自转，重置角度
-      isAutoSpinning.value = false;
-      scene.rotation.y = 0;
-      transform(objects, targets.helix, 1000, renderer, scene, camera);
+    buttonHelix.addEventListener('click', async () => {
+      await Promise.all([
+        transform(objects, targets.helix, 1000),
+        rotating(scene, 0, 500),
+      ]);
     });
 
     const buttonGrid = document.getElementById('grid');
-    buttonGrid.addEventListener('click', function () {
-      // 切回表格时，一键关闭自转，重置角度
-      isAutoSpinning.value = false;
-      scene.rotation.y = 0;
-      transform(objects, targets.grid, 1000, renderer, scene, camera);
+    buttonGrid.addEventListener('click', async () => {
+      await Promise.all([
+        transform(objects, targets.grid, 1000),
+        rotating(scene, 0, 500),
+      ]);
     });
 
-    transform(objects, targets.table, 1000, renderer, scene, camera);
+    const buttonLottery = document.getElementById('lottery');
+    buttonLottery.addEventListener('click', async () => {
+      // 1. ⚡ 【第一阶段：狂暴冲刺】
+      // 2秒钟疯狂空转 40 圈，用 Linear（匀速）或者 Exponential.In（指数加速）
+      const startY = scene.rotation.y;
+      const fastTargetY = startY + (Math.PI * 2 * 1000);
+      await rotating(scene, fastTargetY, 500000, TWEEN.Easing.Linear.None);
+    });
 
-    window.addEventListener('resize', () => onWindowResize(renderer, scene, camera));
+    const buttonFinish = document.getElementById('finish');
+    buttonFinish.addEventListener('click', async () => {
+      // 2. 🛑 【第二阶段：灵魂减速刹车】（这就是你要的渐渐停止效果）
+      // 重点：我们再往前加 5 圈（给足刹车缓冲距离），但是耗时拉长到 3.5 秒！
+      // 并且使用顶级的 Cubic.Out（由快到慢的优雅减速曲线）
+      const currentY = scene.rotation.y;
+      const stopTargetY = currentY + (Math.PI * 2 * 5);
+
+      console.log("🔔 触动刹车！正在缓缓减速定格...");
+      await rotating(scene, stopTargetY, 3500, TWEEN.Easing.Cubic.Out);
+
+      const { xTable, yTable, scale } = calcWinnerCoord(
+        1,
+        { width: 120, height: 160 },
+        { width: window.innerWidth, height: window.innerHeight },
+        0
+      );
+
+      const winner = objects[0];
+
+      new TWEEN.Tween(winner.position)
+        .to({ x: xTable, y: yTable, z: 1000 }, 2200)
+        .easing(TWEEN.Easing.Exponential.InOut)
+        .onStart(() => {
+          // const ele = winner.element;
+          // ele.style.transform = `scale(5)`;
+
+          // winner.element = ele;
+        })
+        .start()
+        .onComplete(() => {});
+
+      new TWEEN.Tween(winner.rotation)
+        .to({ x: 0, y: 0, z: 0 }, 900)
+        .easing(TWEEN.Easing.Exponential.InOut)
+        .start()
+        .onComplete(() => {});
+    });
+
+    transform(objects, targets.table, 1000);
+
+    window.addEventListener('resize', () => handleWindowResize(renderer, scene, camera));
   }
 </script>
 </body>
