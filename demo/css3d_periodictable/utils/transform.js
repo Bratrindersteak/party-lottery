@@ -1,8 +1,12 @@
 import TWEEN from 'three/addons/libs/tween.module.js';
 
+import render from './render.js';
+
 let tweenInstance = null;
 
-export default function transform(objects, targets, duration) {
+export default function transform(instances, objects, targets, duration) {
+  const { renderer, scene, camera } = instances;
+
   // 1. 🚨 核心优化：如果上一次的全局渲染计时器还没跑完，立刻叫停它！
   // 这会直接触发上一个 Tween 的 .onStop()，妥善释放上一个 Promise
   if (tweenInstance) {
@@ -33,6 +37,9 @@ export default function transform(objects, targets, duration) {
   return new Promise((resolve) => {
     tweenInstance = new TWEEN.Tween({})
       .to({}, duration * 2)
+      .onUpdate(() => {
+        render(renderer, scene, camera);
+      })
       .onComplete(() => {
         tweenInstance = null; // 正常播完，释放引用
         resolve();

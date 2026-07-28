@@ -1,8 +1,9 @@
+export { default as init } from './init.js';
 export { default as transform } from './transform.js';
 export { default as rotating } from './rotating.js';
 export { default as animate } from './animate.js';
 export { default as render } from './render.js';
-export { default as handleWindowResize } from './handleWindowResize.js';
+export { default as cleanup } from './cleanup.js';
 
 export function calcWinnerCoord(totalCount, cardSize, windowSize, cardIndex) {
   let xTable = 0

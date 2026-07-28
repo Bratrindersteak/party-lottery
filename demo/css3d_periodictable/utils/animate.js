@@ -1,13 +1,16 @@
 import TWEEN from 'three/addons/libs/tween.module.js';
 
-import render from './render.js';
+let animationFrameId = null;
 
-export default function animate(controls, renderer, scene, camera) {
-  requestAnimationFrame(() => animate(controls, renderer, scene, camera));
+export default function animate(instances) {
+  const { controls } = instances;
+
+  animationFrameId = requestAnimationFrame(() => animate(instances));
 
   TWEEN.update();
 
   controls.update();
-
-  render(renderer, scene, camera); // 强制刷新画面
 }
+
+// 卸载的时候调用这个清除 requestAnimationFrame.
+// cancelAnimationFrame(animationFrameId);
