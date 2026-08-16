@@ -68,14 +68,25 @@ export async function handleLottery(instances) {
 }
 
 export async function handleFinish(instances, objects) {
-  // 2. 🛑 【第二阶段：灵魂减速刹车】（这就是你要的渐渐停止效果）
-  // 重点：我们再往前加 5 圈（给足刹车缓冲距离），但是耗时拉长到 3.5 秒！
-  // 并且使用顶级的 Cubic.Out（由快到慢的优雅减速曲线）
-  const currentY = instances.scene.rotation.y;
-  const stopTargetY = currentY + (Math.PI * 2 * 5);
+  const { renderer, scene, camera } = instances;
+
+  // 2. 获取当前停下的弧度值
+  const currentY = scene.rotation.y
+
+
+  console.log('currentYcurrentYcurrentY', currentY);
+
+
+  // 3. 计算下一个正面的目标弧度（保证顺时针继续滑动到正面）
+  const TWO_PI = Math.PI * 2
+  // Math.ceil 确保总是往前找最近的正面；+ 1 可以在当前位置基础上再多转 1 圈作为缓冲减速
+  const currentRounds = Math.floor(currentY / TWO_PI)
+  const targetY = (currentRounds + 3)
 
   console.log("🔔 触动刹车！正在缓缓减速定格...");
-  await rotating(instances, currentY + 5, 3.5, TWEEN.Easing.Cubic.Out);
+  await rotating(instances, targetY, 2.5, TWEEN.Easing.Cubic.Out);
+
+
 
   const { xTable, yTable, scale } = calcWinnerCoord(
     1,
@@ -87,19 +98,26 @@ export async function handleFinish(instances, objects) {
   const winner = objects[0];
 
   new TWEEN.Tween(winner.position)
-    .to({ x: xTable, y: yTable, z: 1000 }, 2200)
+    .to({ x: xTable, y: yTable, z: 1000 }, 1200)
     .easing(TWEEN.Easing.Exponential.InOut)
+    .onUpdate(() => {
+      render(renderer, scene, camera);
+    })
     .onStart(() => {
-      const ele = winner.element;
-      ele.style.transform = `scale(5)`;
-
-      winner.element = ele;
+      // const ele = winner.element;
+      // ele.style.width = '240px';
+      // ele.style.width = '320px';
+      //
+      // winner.element = ele;
     })
     .start()
     .onComplete(() => {});
 
   new TWEEN.Tween(winner.rotation)
     .to({ x: 0, y: 0, z: 0 }, 900)
+    .onUpdate(() => {
+      render(renderer, scene, camera);
+    })
     .easing(TWEEN.Easing.Exponential.InOut)
     .start()
     .onComplete(() => {});
