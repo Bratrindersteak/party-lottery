@@ -29,33 +29,33 @@ export function handlePagehide(event) {
 
 export async function handleTable(instances, objects, targets) {
   await Promise.all([
-    transform(instances, objects, targets.table, 1000),
-    rotating(instances, 0, 500),
+    transform(instances, objects, targets.table, 2000),
+    rotating(instances, 0, 0.5),
   ]);
 }
 
 export async function handleSphere(instances, objects, targets) {
-  await Promise.all([
-    transform(instances, objects, targets.sphere, 1000),
-    rotating(instances, 0, 500),
-  ]);
+  // await Promise.all([
+  //   transform(instances, objects, targets.sphere, 1000),
+  //   rotating(instances, 0, 500),
+  // ]);
 
-  // 落地瞬间，无缝衔接：让它开启“伪无限”的慢速自转
-  // 转 1000 圈，耗时 50000 秒（大概 833.33 分钟，足够年会背景用了）
-  rotating(instances, Math.PI * 2 * 1000, 50000000);
+  await transform(instances, objects, targets.sphere, 2000);
+
+  rotating(instances, 100, 2 * 60 * 60);
 }
 
 export async function handleHelix(instances, objects, targets) {
   await Promise.all([
-    transform(instances, objects, targets.helix, 1000),
-    rotating(instances, 0, 500),
+    transform(instances, objects, targets.helix, 2000),
+    rotating(instances, 0, 0.5),
   ]);
 }
 
 export async function handleGrid(instances, objects, targets) {
   await Promise.all([
-    transform(instances, objects, targets.grid, 1000),
-    rotating(instances, 0, 500),
+    transform(instances, objects, targets.grid, 2000),
+    rotating(instances, 0, 0.5),
   ]);
 }
 
@@ -63,8 +63,8 @@ export async function handleLottery(instances) {
   // 1. ⚡ 【第一阶段：狂暴冲刺】
   // 2秒钟疯狂空转 40 圈，用 Linear（匀速）或者 Exponential.In（指数加速）
   const startY = instances.scene.rotation.y;
-  const fastTargetY = startY + (Math.PI * 2 * 1000);
-  await rotating(instances, fastTargetY, 500000, TWEEN.Easing.Linear.None);
+  const fastTargetY = startY + 1000;
+  await rotating(instances, fastTargetY, 500, TWEEN.Easing.Linear.None);
 }
 
 export async function handleFinish(instances, objects) {
@@ -75,7 +75,7 @@ export async function handleFinish(instances, objects) {
   const stopTargetY = currentY + (Math.PI * 2 * 5);
 
   console.log("🔔 触动刹车！正在缓缓减速定格...");
-  await rotating(instances, stopTargetY, 3500, TWEEN.Easing.Cubic.Out);
+  await rotating(instances, currentY + 5, 3.5, TWEEN.Easing.Cubic.Out);
 
   const { xTable, yTable, scale } = calcWinnerCoord(
     1,

@@ -2,41 +2,42 @@ import TWEEN from 'three/addons/libs/tween.module.js';
 
 import render from './render.js';
 
-let tweenInstance = null;
+let rotatingInstance = null;
 
 /**
- * 万能旋转/回正控制器
- * @param instances
- * @param targetY 目标弧度（如果是归零，直接传 0）
- * @param duration 动画耗时（毫秒）
- * @param easing
+ * 万能旋转/回正控制器.
+ *
+ * @param instances - .
+ * @param rotations - 自转圈数.
+ * @param duration - 动画耗时（秒）.
+ * @param easing - 运动速率函数.
  */
-export default function rotating(instances, targetY, duration, easing = TWEEN.Easing.Cubic.Out) {
+export default function rotating(instances, rotations, duration, easing = TWEEN.Easing.Cubic.Out) {
   const { renderer, scene, camera } = instances;
 
   // 1. 🚨 进来先定点清除前任旋转动画，绝对不打架
-  if (tweenInstance) {
-    tweenInstance.stop();
-    tweenInstance = null;
+  if (rotatingInstance) {
+    rotatingInstance.stop();
+    rotatingInstance = null;
   }
 
   // 3. 返回 Promise
   return new Promise((resolve) => {
-    tweenInstance = new TWEEN.Tween(scene.rotation)
-      .to({ x: 0, y: targetY, z: 0 }, duration)
+    rotatingInstance = new TWEEN.Tween(scene.rotation)
+      .to({ x: 0, y: Math.PI * 2 * rotations, z: 0 }, duration * 1000)
       .easing(easing)
       .onUpdate(() => {
         render(renderer, scene, camera);
       })
       .onComplete(() => {
-        tweenInstance = null;
+        rotatingInstance = null;
         resolve();
       })
       .onStop(() => {
-        tweenInstance = null;
+        rotatingInstance = null;
         resolve();
       });
 
-    tweenInstance.start();
+    rotatingInstance.start();
   });
 }

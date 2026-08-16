@@ -84,7 +84,7 @@ export default function init(instances, objects, targets) {
     handleFinish(instances, objects);
   });
 
-  transform(instances, objects, targets.table, 1000);
+  transform(instances, objects, targets.table, 2000);
 
   window.addEventListener('resize', () => handleWindowResize(instances));
   window.addEventListener('pagehide', (event) => handlePagehide(event));
