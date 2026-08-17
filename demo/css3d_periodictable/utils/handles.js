@@ -3,7 +3,9 @@ import TWEEN from 'three/addons/libs/tween.module.js';
 import render from './render.js';
 import transform from './transform.js';
 import rotating from './rotating.js';
-import { calcWinnerCoord } from './index.js';
+import shuffle, {calcWinnerCoord, calcWinnerPositions} from './index.js';
+
+let winners = [];
 
 export function handleWindowResize(instances) {
   const { renderer, scene, camera } = instances;
@@ -59,7 +61,9 @@ export async function handleGrid(instances, objects, targets) {
   ]);
 }
 
-export async function handleLottery(instances) {
+export async function handleLottery(instances, objects) {
+  winners = shuffle(objects, 5);
+
   // 1. ⚡ 【第一阶段：狂暴冲刺】
   // 2秒钟疯狂空转 40 圈，用 Linear（匀速）或者 Exponential.In（指数加速）
   const startY = instances.scene.rotation.y;
@@ -72,11 +76,6 @@ export async function handleFinish(instances, objects) {
 
   // 2. 获取当前停下的弧度值
   const currentY = scene.rotation.y
-
-
-  console.log('currentYcurrentYcurrentY', currentY);
-
-
   // 3. 计算下一个正面的目标弧度（保证顺时针继续滑动到正面）
   const TWO_PI = Math.PI * 2
   // Math.ceil 确保总是往前找最近的正面；+ 1 可以在当前位置基础上再多转 1 圈作为缓冲减速
@@ -84,9 +83,11 @@ export async function handleFinish(instances, objects) {
   const targetY = (currentRounds + 3)
 
   console.log("🔔 触动刹车！正在缓缓减速定格...");
-  await rotating(instances, targetY, 2.5, TWEEN.Easing.Cubic.Out);
+  await rotating(instances, targetY, 2, TWEEN.Easing.Cubic.Out);
 
 
+  const positions = calcWinnerPositions(winners.length);
+  console.log('handleFinish positions: ', positions);
 
   const { xTable, yTable, scale } = calcWinnerCoord(
     1,
@@ -98,7 +99,7 @@ export async function handleFinish(instances, objects) {
   const winner = objects[0];
 
   new TWEEN.Tween(winner.position)
-    .to({ x: xTable, y: yTable, z: 1000 }, 1200)
+    .to({ x: xTable, y: yTable, z: 1000 }, 1000)
     .easing(TWEEN.Easing.Exponential.InOut)
     .onUpdate(() => {
       render(renderer, scene, camera);

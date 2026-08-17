@@ -76,7 +76,7 @@ export default function init(instances, objects, targets) {
 
   const buttonLottery = document.getElementById('lottery');
   buttonLottery.addEventListener('click', () => {
-    handleLottery(instances);
+    handleLottery(instances, objects);
   });
 
   const buttonFinish = document.getElementById('finish');
