@@ -1,14 +1,12 @@
 import * as THREE from 'three';
-import TWEEN from 'three/addons/libs/tween.module.js';
 import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 
 import data from '../data.js';
 
 import transform from './transform.js';
-import rotating from './rotating.js';
 import render from './render.js';
-import { calcWinnerCoord, calcLayout } from './index.js';
+import { calcLayout } from './index.js';
 import {
   handleWindowResize,
   handlePagehide,
@@ -18,6 +16,7 @@ import {
   handleGrid,
   handleLottery,
   handleFinish,
+  handleRelottery,
 } from './handles.js';
 
 console.log(`共有 ${data.length} 个元素.`);
@@ -52,6 +51,8 @@ export default function init(instances, objects, targets) {
   instances.controls = new TrackballControls(instances.camera, instances.renderer.domElement);
   instances.controls.minDistance = 500;
   instances.controls.maxDistance = 6000;
+  instances.controls.noRotate = true; // 禁用旋转（鼠标左键拖拽旋转）.
+  instances.controls.noPan = true; // 禁用平移（鼠标右键拖拽平移）.
   instances.controls.addEventListener('change', () => render(instances.renderer, instances.scene, instances.camera));
 
   const buttonTable = document.getElementById('table');
@@ -84,6 +85,11 @@ export default function init(instances, objects, targets) {
     handleFinish(instances, objects);
   });
 
+  const buttonRelottery = document.getElementById('relottery');
+  buttonRelottery.addEventListener('click', () => {
+    handleRelottery(instances, objects, targets);
+  });
+
   transform(instances, objects, targets.table, 2000);
 
   window.addEventListener('resize', () => handleWindowResize(instances));
@@ -93,7 +99,7 @@ export default function init(instances, objects, targets) {
 function initCard(scene, member, objects) {
   const element = document.createElement('div');
   element.className = 'element';
-  element.style.backgroundColor = 'rgba(0,127,127,' + (Math.random() * 0.5 + 0.25) + ')';
+  element.style.setProperty('--rand-alpha', `${Math.random() * 0.5 + 0.25}`);
 
   // .
   const number = document.createElement('div');

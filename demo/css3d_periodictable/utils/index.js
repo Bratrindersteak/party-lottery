@@ -30,10 +30,10 @@ export default function shuffle(members, count) {
  */
 export function calcWinnerPositions(total, config = {}) {
   const {
-    cardWidth = 160,   // 卡片宽度
-    cardHeight = 220,  // 卡片高度
-    gapX = 30,         // 横向间距
-    gapY = 30,         // 纵向间距
+    width = 120,   // 卡片宽度
+    height = 160,  // 卡片高度
+    gapX = 50,         // 横向间距
+    gapY = 50,         // 纵向间距
     maxCols = 6        // 单行最大列数
   } = config;
 
@@ -43,8 +43,8 @@ export function calcWinnerPositions(total, config = {}) {
   if (total === 9) cols = 3; // 9人时 3x3 布局
 
   const rows = Math.ceil(total / cols);
-  const stepX = cardWidth + gapX;
-  const stepY = cardHeight + gapY;
+  const stepX = width + gapX;
+  const stepY = height + gapY;
 
   // 2. 整体阵列的居中偏移量 (基于完整网格)
   const totalWidth = (cols - 1) * stepX;

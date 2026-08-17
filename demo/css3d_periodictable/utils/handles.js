@@ -42,7 +42,7 @@ export async function handleSphere(instances, objects, targets) {
   //   rotating(instances, 0, 500),
   // ]);
 
-  await transform(instances, objects, targets.sphere, 2000);
+  await transform(instances, objects, targets.sphere, 2000, winners);
 
   rotating(instances, 100, 2 * 60 * 60);
 }
@@ -62,7 +62,7 @@ export async function handleGrid(instances, objects, targets) {
 }
 
 export async function handleLottery(instances, objects) {
-  winners = shuffle(objects, 5);
+  winners = shuffle(objects, 13);
 
   // 1. ⚡ 【第一阶段：狂暴冲刺】
   // 2秒钟疯狂空转 40 圈，用 Linear（匀速）或者 Exponential.In（指数加速）
@@ -70,6 +70,8 @@ export async function handleLottery(instances, objects) {
   const fastTargetY = startY + 1000;
   await rotating(instances, fastTargetY, 500, TWEEN.Easing.Linear.None);
 }
+
+let winnersInstance = null;
 
 export async function handleFinish(instances, objects) {
   const { renderer, scene, camera } = instances;
@@ -86,40 +88,70 @@ export async function handleFinish(instances, objects) {
   await rotating(instances, targetY, 2, TWEEN.Easing.Cubic.Out);
 
 
-  const positions = calcWinnerPositions(winners.length);
+  const positions = calcWinnerPositions(winners.length, { width: 240, height: 320 });
   console.log('handleFinish positions: ', positions);
 
-  const { xTable, yTable, scale } = calcWinnerCoord(
-    1,
-    { width: 120, height: 160 },
-    { width: window.innerWidth, height: window.innerHeight },
-    0
-  );
+  if (winnersInstance) {
+    winnersInstance.stop();
+    winnersInstance = null;
+  }
 
-  const winner = objects[0];
+  winners.forEach((winner, index) => {
+    if (winner._positionTween) {
+      winner._positionTween.stop();
+      winner._positionTween = null;
+    }
+    if (winner._rotationTween) {
+      winner._rotationTween.stop();
+      winner._rotationTween = null;
+    }
+    if (winner._scaleTween) {
+      winner._scaleTween.stop();
+      winner._scaleTween = null;
+    }
 
-  new TWEEN.Tween(winner.position)
-    .to({ x: xTable, y: yTable, z: 1000 }, 1000)
-    .easing(TWEEN.Easing.Exponential.InOut)
+    const position = positions[index];
+
+    new TWEEN.Tween(winner.position)
+      .to({ x: position.x, y: position.y, z: 1000 }, 1500)
+      .easing(TWEEN.Easing.Exponential.Out)
+      .onComplete(() => { winner._positionTween = null })
+      .onStop(() => { winner._positionTween = null })
+      .start();
+
+    new TWEEN.Tween(winner.rotation)
+      .to({ x: 0, y: 0, z: 0 }, 1500)
+      .easing(TWEEN.Easing.Exponential.Out)
+      .onComplete(() => { winner._rotationTween = null })
+      .onStop(() => { winner._rotationTween = null })
+      .start();
+
+    new TWEEN.Tween(winner.scale)
+      .to({ x: 2, y: 2, z: 2 }, 1500)
+      .easing(TWEEN.Easing.Exponential.Out)
+      .onStart(() => {
+        winner.element.classList.add('element-winner');
+      })
+      .onComplete(() => { winner._scaleTween = null })
+      .onStop(() => { winner._positionTween = null })
+      .start();
+  });
+
+  winnersInstance = new TWEEN.Tween({})
+    .to({}, 1500)
     .onUpdate(() => {
       render(renderer, scene, camera);
     })
-    .onStart(() => {
-      // const ele = winner.element;
-      // ele.style.width = '240px';
-      // ele.style.width = '320px';
-      //
-      // winner.element = ele;
+    .onComplete(() => {
+      winnersInstance = null;
     })
-    .start()
-    .onComplete(() => {});
+    .onStop(() => {
+      winnersInstance = null;
+    });
 
-  new TWEEN.Tween(winner.rotation)
-    .to({ x: 0, y: 0, z: 0 }, 900)
-    .onUpdate(() => {
-      render(renderer, scene, camera);
-    })
-    .easing(TWEEN.Easing.Exponential.InOut)
-    .start()
-    .onComplete(() => {});
+  winnersInstance.start();
+}
+
+export async function handleRelottery(instances, objects, targets) {
+  handleSphere(instances, objects, targets);
 }
