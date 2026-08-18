@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import TWEEN from 'three/addons/libs/tween.module.js'; // 引入老牌轻量动画引擎
 
 import { useThreeStore } from '@/store/three.ts';

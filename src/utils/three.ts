@@ -25,10 +25,8 @@ export function tween(source: any, target: any, duration: number, easingFn: TWEE
  * @param scene - .
  * @param camera - .
  */
-export function render(renderer: CSS3DRenderer | null, scene: THREE.Scene | null, camera: THREE.PerspectiveCamera | null) {
-  if (renderer && scene && camera) {
-    renderer.render(scene, camera);
-  }
+export function render(renderer: CSS3DRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera) {
+  renderer.render(scene, camera);
 }
 
 /**
