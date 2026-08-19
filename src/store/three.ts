@@ -19,12 +19,12 @@ interface ThreeStore {
   init: (container: HTMLDivElement, styles: Record<string, string>, members: Member[]) => Promise<void>;
   resizeListener: () => void;
 
-  setScene: (scene: THREE.Scene | null) => Promise<void>;
-  setCamera: (camera: THREE.PerspectiveCamera | null) => Promise<void>;
-  setRenderer: (renderer: CSS3DRenderer | null) => Promise<void>;
-  setControls: (controls: TrackballControls | null) => Promise<void>;
-  setObjects: (objects: CSS3DObject[]) => Promise<void>;
-  setTargets: (targets: Targets) => Promise<void>;
+  setScene: (scene: THREE.Scene | null) => void;
+  setCamera: (camera: THREE.PerspectiveCamera | null) => void;
+  setRenderer: (renderer: CSS3DRenderer | null) => void;
+  setControls: (controls: TrackballControls | null) => void;
+  setObjects: (objects: CSS3DObject[]) => void;
+  setTargets: (targets: Targets) => void;
 }
 
 export const useThreeStore = create<ThreeStore>()((set, get) => ({
@@ -96,27 +96,27 @@ export const useThreeStore = create<ThreeStore>()((set, get) => ({
     render(renderer, scene, camera);
   },
 
-  setScene: async (scene: THREE.Scene | null) => {
+  setScene: (scene: THREE.Scene | null) => {
     set(() => ({ scene }));
   },
 
-  setCamera: async (camera: THREE.PerspectiveCamera | null) => {
+  setCamera: (camera: THREE.PerspectiveCamera | null) => {
     set(() => ({ camera }));
   },
 
-  setRenderer: async (renderer: CSS3DRenderer | null) => {
+  setRenderer: (renderer: CSS3DRenderer | null) => {
     set(() => ({ renderer }));
   },
 
-  setControls: async (controls: TrackballControls | null) => {
+  setControls: (controls: TrackballControls | null) => {
     set(() => ({ controls }));
   },
 
-  setObjects: async (objects: CSS3DObject[]) => {
+  setObjects: (objects: CSS3DObject[]) => {
     set(() => ({ objects }));
   },
 
-  setTargets: async (targets: Targets) => {
+  setTargets: (targets: Targets) => {
     set(() => ({ targets }));
   },
 }));

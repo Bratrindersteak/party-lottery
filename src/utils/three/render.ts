@@ -4,11 +4,11 @@ import type { CSS3DRenderer } from 'three/addons';
 /**
  * .
  *
- * @param renderer - .
  * @param scene - .
  * @param camera - .
+ * @param renderer - .
  */
-function render(renderer: CSS3DRenderer, scene: Scene, camera: PerspectiveCamera) {
+function render(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRenderer) {
   renderer.render(scene, camera);
 }
 
