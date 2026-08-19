@@ -1,5 +1,3 @@
-import TWEEN from 'three/addons/libs/tween.module.js';
-
 import render from './render.ts';
 
 export function handleWindowResize(scene, camera, renderer) {

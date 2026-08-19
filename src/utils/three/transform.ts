@@ -1,8 +1,8 @@
-import TWEEN from '@tweenjs/tween.js';
+import TWEEN from 'three/addons/libs/tween.module.js';
 
 import type { Scene, PerspectiveCamera, Object3D } from 'three';
 import type { CSS3DRenderer, CSS3DObject } from 'three/addons';
-import type { Tween } from '@tweenjs/tween.js';
+import type { Tween } from 'three/addons/libs/tween.module.js';
 
 import render from './render.js';
 
@@ -75,7 +75,7 @@ function transform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRende
     transformInstance = new TWEEN.Tween({})
       .to({}, duration)
       .onUpdate(() => {
-        render(renderer, scene, camera);
+        render(scene, camera, renderer);
       })
       .onComplete(() => {
         transformInstance = null; // 正常播完，释放引用

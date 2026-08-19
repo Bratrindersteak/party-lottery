@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from "three";
 import { CSS3DRenderer, TrackballControls, CSS3DObject } from 'three/addons';
-import TWEEN from '@tweenjs/tween.js';
+import TWEEN from 'three/addons/libs/tween.module.js';
 
 import { useThreeStore } from "@/store/three.ts";
 import { useMemberStore } from '@/store/member.ts';
@@ -16,29 +16,10 @@ import { handleWindowResize } from '@/utils/three/handles.ts';
 
 import styles from './styles.module.css';
 
-import type { Scene, PerspectiveCamera, Object3D } from 'three';
-
-interface ThreeInstances {
-  scene: Scene | null;
-  camera: PerspectiveCamera | null;
-  renderer: CSS3DRenderer | null;
-  controls: TrackballControls | null;
-  objects: CSS3DObject[];
-  targets: Targets;
-}
-
-interface Targets {
-  table: Object3D[];
-  sphere: Object3D[];
-}
+import type { Scene, PerspectiveCamera } from 'three';
+import type { Targets } from '@/types/3d.ts';
 
 export function useThree() {
-  const scene = useThreeStore((state) => state.scene);
-  const camera = useThreeStore((state) => state.camera);
-  const renderer = useThreeStore((state) => state.renderer);
-  const controls = useThreeStore((state) => state.controls);
-  const objects = useThreeStore((state) => state.objects);
-  const targets = useThreeStore((state) => state.targets);
   const setScene = useThreeStore((state) => state.setScene);
   const setCamera = useThreeStore((state) => state.setCamera);
   const setRenderer = useThreeStore((state) => state.setRenderer);
@@ -70,6 +51,8 @@ export function useThree() {
     const controls = new TrackballControls(camera, renderer.domElement)
     controls.minDistance = 500;
     controls.maxDistance = 6000;
+    controls.noRotate = true; // 禁用旋转（鼠标左键拖拽旋转）.
+    controls.noPan = true; // 禁用平移（鼠标右键拖拽平移）.
     controls.addEventListener('change', () => { render(scene, camera, renderer) });
     setControls(controls);
 
@@ -86,7 +69,7 @@ export function useThree() {
     const { col, row, offsetX, offsetY } = cardLayout(length, gapX, gapY);
 
     for (let i = 0; i < length; i += 1) {
-      initCard(scene, objects, members[i]);
+      initCard(scene, objects, members[i], styles);
       initTable(i, col, gapX, gapY, offsetX, offsetY, targets.table);
       initSphere(i, length, vector, targets.sphere);
     }
@@ -119,7 +102,7 @@ export function useThree() {
       setRenderer(null);
       setControls(null);
     }
-  }, [members]);
+  }, [members, setCamera, setControls, setObjects, setRenderer, setScene, setTargets]);
 
   return { containerRef };
 }

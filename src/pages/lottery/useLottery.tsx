@@ -9,7 +9,7 @@ import { useLotteryStore } from '@/store/lottery.ts';
 import { useAwardStore } from '@/store/award.ts';
 import { shuffle } from '@/utils/algorithm';
 import { FINISHED, INIT, READY, RUNNING } from '@/config/constants.ts';
-import { rotating, render, transform } from '@/utils/three.ts';
+import { rotating, render, transform } from '@/utils/three';
 
 import type { Award, Member, Record } from '@/types/lottery.ts';
 
@@ -53,14 +53,9 @@ export function useLottery() {
 
     // openingAudio.value?.play();
 
-    await transform(objects, targets.sphere, 1000, () => { render(renderer, scene, camera) });
+    await transform(scene, camera, renderer, objects, targets.sphere, 1000);
 
-
-    // const newScene = scene.copy(scene);
-    // newScene.rotation.y = 0;
-    // setScene(newScene);
-
-    await rotating(scene as THREE.Scene, 0.1, 2000, () => { render(renderer, scene, camera) });
+    await rotating(scene, camera, renderer, 100, 2 * 60 * 60);
 
   }, [lotteryStatus, setLotteryStatus, objects, targets, scene, camera, renderer]);
 
@@ -79,8 +74,7 @@ export function useLottery() {
 
     console.log('handlePlay: ', { currAward, currWinners: currWinnersRef.current });
 
-    // (scene as THREE.Scene).rotation.y = 0;
-    await rotating(scene as THREE.Scene, 10, 3000, () => { render(renderer, scene, camera) });
+    await rotating(scene, camera, renderer, 1000, 500);
   }, [lotteryStatus, setLotteryStatus, currAward, members, message, renderer, scene, camera]);
 
   // 停止动效并开奖.
@@ -101,7 +95,11 @@ export function useLottery() {
 
     bulkCreateRecord(records);
 
-    await rotating(scene as THREE.Scene, 0, 0.1, () => { render(renderer, scene, camera) });
+    const currentY = scene.rotation.y; // 2. 获取当前停下的弧度值
+    const TWO_PI = Math.PI * 2; // 3. 计算下一个正面的目标弧度（保证顺时针继续滑动到正面）
+    const currentRounds = Math.floor(currentY / TWO_PI); // Math.ceil 确保总是往前找最近的正面；+ 1 可以在当前位置基础上再多转 1 圈作为缓冲减速
+    const rotations = (currentRounds + 3);
+    await rotating(scene, camera, renderer, rotations, 2);
   }, [lotteryStatus, setLotteryStatus, currAward, updateAward, bulkCreateRecord, scene, camera, renderer]);
 
   // 重新抽取当前奖项.

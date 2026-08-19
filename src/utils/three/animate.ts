@@ -1,4 +1,4 @@
-import TWEEN from '@tweenjs/tween.js';
+import TWEEN from 'three/addons/libs/tween.module.js';
 
 import type { TrackballControls } from 'three/addons';
 

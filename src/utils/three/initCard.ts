@@ -3,26 +3,26 @@ import { CSS3DObject } from 'three/addons';
 import type { Scene } from 'three';
 import type { Member } from '@/types/lottery.ts';
 
-function initCard(scene: Scene, objects: CSS3DObject[], member: Member) {
+function initCard(scene: Scene, objects: CSS3DObject[], member: Member, styles: Record<string, string>) {
   const element = document.createElement('div');
-  element.className = 'element';
+  element.className = styles.element;
   element.style.setProperty('--rand-alpha', `${Math.random() * 0.5 + 0.25}`);
 
   // .
   const number = document.createElement('div');
-  number.className = 'number';
+  number.className = styles.number;
   number.textContent = member.employeeId;
   element.appendChild(number);
 
   // .
   const symbol = document.createElement('div');
-  symbol.className = 'symbol';
+  symbol.className = styles.name;
   symbol.textContent = member.name;
   element.appendChild(symbol);
 
   // .
   const details = document.createElement('div');
-  details.className = 'details';
+  details.className = styles.department;
   details.innerHTML = member.department;
   element.appendChild(details);
 

@@ -1,8 +1,8 @@
-import TWEEN from '@tweenjs/tween.js';
+import TWEEN from 'three/addons/libs/tween.module.js';
 
 import type { Scene, PerspectiveCamera } from 'three';
 import type { CSS3DRenderer } from 'three/addons';
-import type { Tween } from '@tweenjs/tween.js';
+import type { Tween } from 'three/addons/libs/tween.module.js';
 
 import render from './render.js';
 
@@ -32,7 +32,7 @@ export default function rotating(scene: Scene, camera: PerspectiveCamera, render
       .to({ x: 0, y: Math.PI * 2 * rotations, z: 0 }, duration * 1000)
       .easing(easing)
       .onUpdate(() => {
-        render(renderer, scene, camera);
+        render(scene, camera, renderer);
       })
       .onComplete(() => {
         rotatingInstance = null;
