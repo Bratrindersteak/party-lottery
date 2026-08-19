@@ -1,4 +1,9 @@
-function initCard(scene, member, objects) {
+import { CSS3DObject } from 'three/addons';
+
+import type { Scene } from 'three';
+import type { Member } from '@/types/lottery.ts';
+
+function initCard(scene: Scene, objects: CSS3DObject[], member: Member) {
   const element = document.createElement('div');
   element.className = 'element';
   element.style.setProperty('--rand-alpha', `${Math.random() * 0.5 + 0.25}`);
@@ -30,3 +35,5 @@ function initCard(scene, member, objects) {
   scene.add(objectCSS);
   objects.push(objectCSS);
 }
+
+export default initCard;

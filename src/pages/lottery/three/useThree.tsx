@@ -1,12 +1,27 @@
 import { useEffect, useRef } from 'react';
-import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
-import TWEEN from 'three/addons/libs/tween.module.js'; // 引入老牌轻量动画引擎
+import TWEEN from '@tweenjs/tween.js';
 
-import { useThreeStore } from '@/store/three.ts';
 import { useMemberStore } from '@/store/member.ts';
 import { animate } from '@/utils/three.ts';
 
 import styles from './styles.module.css';
+
+import type { Scene, PerspectiveCamera, Object3D } from 'three';
+import type { CSS3DRenderer, TrackballControls } from 'three/addons';
+
+interface ThreeInstances {
+  scene: Scene | null;
+  camera: PerspectiveCamera | null;
+  renderer: CSS3DRenderer | null;
+  controls: TrackballControls | null;
+}
+
+interface Targets {
+  table: Object3D[];
+  sphere: Object3D[];
+  helix: Object3D[];
+  grid: Object3D[];
+}
 
 export function useThree() {
   // 🚀 1. 承载 3D 视窗的 DOM 锚点
@@ -14,13 +29,35 @@ export function useThree() {
 
   const members = useMemberStore((state) => state.members);
 
-  const controls = useThreeStore((state) => state.controls);
-  const init = useThreeStore((state) => state.init);
-  const resizeListener = useThreeStore((state) => state.resizeListener);
-  const setRenderer = useThreeStore((state) => state.setRenderer);
-  const setControls = useThreeStore((state) => state.setControls);
+  const threeRef = useRef<ThreeInstances>(null);
+
+  const scene =  useRef<Scene>(null);
+  const camera =  useRef<PerspectiveCamera>(null);
+  const renderer =  useRef<CSS3DRenderer>(null);
+  const controls =  useRef<TrackballControls>(null);
+
+  const objects = [];
+  const targets: Targets = { table: [], sphere: [], helix: [], grid: [] };
+
+  const length = members.length;
+
+
 
   useEffect(() => {
+
+
+    if (length <= 0) { return }
+
+
+
+
+    init(instances, objects, targets);
+    animate(instances);
+
+
+
+
+
     if (members.length > 0) {
 
       console.log('new init: ');
