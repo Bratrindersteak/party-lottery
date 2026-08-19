@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useRef } from 'react';
 import { App } from 'antd';
-import * as THREE from 'three';
 
 import { useMemberStore } from '@/store/member.ts';
 import { useThreeStore } from '@/store/three.ts';
@@ -9,7 +8,7 @@ import { useLotteryStore } from '@/store/lottery.ts';
 import { useAwardStore } from '@/store/award.ts';
 import { shuffle } from '@/utils/algorithm';
 import { FINISHED, INIT, READY, RUNNING } from '@/config/constants.ts';
-import { rotating, render, transform } from '@/utils/three';
+import { rotating, transform } from '@/utils/three';
 
 import type { Award, Member, Record } from '@/types/lottery.ts';
 

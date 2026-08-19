@@ -5,13 +5,11 @@ import TWEEN from 'three/addons/libs/tween.module.js';
 
 import { useThreeStore } from "@/store/three.ts";
 import { useMemberStore } from '@/store/member.ts';
-import render from '@/utils/three/render.ts';
+import { render, transform, animate } from '@/utils/three'
 import initCard from '@/utils/three/initCard.ts';
 import initTable from '@/utils/three/initTable.ts';
 import initSphere from '@/utils/three/initSphere.ts';
-import animate from '@/utils/three/animate.ts';
 import cardLayout from '@/utils/three/cardLayout.ts';
-import transform from '@/utils/three/transform.ts';
 import { handleWindowResize } from '@/utils/three/handles.ts';
 
 import styles from './styles.module.css';
@@ -66,7 +64,7 @@ export function useThree() {
 
     const gapX = 140;
     const gapY = 180;
-    const { col, row, offsetX, offsetY } = cardLayout(length, gapX, gapY);
+    const { col, offsetX, offsetY } = cardLayout(length, gapX, gapY);
 
     for (let i = 0; i < length; i += 1) {
       initCard(scene, objects, members[i], styles);

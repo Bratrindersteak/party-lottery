@@ -22,7 +22,7 @@ interface ThreeStore {
   setTargets: (targets: Targets) => void;
 }
 
-export const useThreeStore = create<ThreeStore>()((set, get) => ({
+export const useThreeStore = create<ThreeStore>()((set) => ({
   scene: null,
   camera: null,
   renderer: null,
