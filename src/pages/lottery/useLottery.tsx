@@ -11,6 +11,8 @@ import { FINISHED, INIT, READY, RUNNING } from '@/config/constants.ts';
 import { rotating, transform } from '@/utils/three';
 import winnerPosition from '@/utils/three/winnerPosition.ts';
 
+import threeStyles from './three/styles.module.css';
+
 import type { Award, Member, Record } from '@/types/lottery.ts';
 import winnerTransform from "@/utils/three/winnerTransform.ts";
 
@@ -103,7 +105,7 @@ export function useLottery() {
     await rotating(scene, camera, renderer, rotations, 2);
 
     const positions = winnerPosition(currWinnersRef.current.length, { width: 240, height: 320 });
-    await winnerTransform(scene, camera, renderer, objects, 1500, positions, currWinnersRef.current);
+    await winnerTransform(scene, camera, renderer, objects, 1500, positions, currWinnersRef.current, threeStyles);
   }, [lotteryStatus, setLotteryStatus, currAward, updateAward, bulkCreateRecord, scene, camera, renderer]);
 
   // 重新抽取当前奖项.
@@ -123,7 +125,7 @@ export function useLottery() {
     // 重置当前奖项为未开奖.
     updateAward({ ...currAward, isFinished: false });
 
-    await transform(scene, camera, renderer, objects, targets.sphere, 2000, currWinnersRef.current);
+    await transform(scene, camera, renderer, objects, targets.sphere, 2000, currWinnersRef.current, threeStyles);
     await rotating(scene, camera, renderer, 100, 2 * 60 * 60);
 
     currWinnersRef.current = [];

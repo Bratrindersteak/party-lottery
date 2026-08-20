@@ -72,11 +72,10 @@ export function useThree() {
       initSphere(i, length, vector, targets.sphere);
     }
 
-    transform(scene, camera, renderer, objects, targets.table, 2000);
-
     const windowResizeListener = () => handleWindowResize(scene, camera, renderer);
     window.addEventListener('resize', windowResizeListener);
 
+    transform(scene, camera, renderer, objects, targets.table, 2000);
     animate(controls);
 
     return () => {

@@ -16,7 +16,7 @@ type ObjectItem = CSS3DObject & {
 
 let winnersInstance = null;
 
-function winnerTransform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRenderer, objects: CSS3DObject[], duration: number, positions: ObjectPosition[], winners: Member[] = []) {
+function winnerTransform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRenderer, objects: CSS3DObject[], duration: number, positions: ObjectPosition[], winners: Member[] = [], styles: Record<string, string>) {
   if (winnersInstance) {
     winnersInstance.stop();
     winnersInstance = null;
@@ -58,7 +58,7 @@ function winnerTransform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3
       .to({ x: 2, y: 2, z: 2 }, duration)
       .easing(TWEEN.Easing.Exponential.Out)
       .onStart(() => {
-        object.element.classList.add('element-winner');
+        object.element.classList.add(styles['element-winner']);
       })
       .onComplete(() => { object._scaleTween = null })
       .onStop(() => { object._positionTween = null })
