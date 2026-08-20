@@ -36,15 +36,15 @@ export default function transform(instances, objects, targets, duration, winners
       .to({ x: target.position.x, y: target.position.y, z: target.position.z }, (0.5 + Math.random() * 0.5) * duration)
       .easing(TWEEN.Easing.Exponential.InOut)
       .onComplete(() => { object._positionTween = null })
-      .onStop(() => { object._positionTween = null })
-      .start();
+      .onStop(() => { object._positionTween = null });
+    object._positionTween.start();
 
     object._rotationTween = new TWEEN.Tween(object.rotation)
       .to({ x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, (0.5 + Math.random() * 0.5) * duration)
       .easing(TWEEN.Easing.Exponential.InOut)
       .onComplete(() => { object._rotationTween = null })
-      .onStop(() => { object._rotationTween = null })
-      .start();
+      .onStop(() => { object._rotationTween = null });
+    object._rotationTween.start();
 
     if (winners.includes(object)) {
       object._scaleTween = new TWEEN.Tween(object.scale)
@@ -57,8 +57,8 @@ export default function transform(instances, objects, targets, duration, winners
         .onStop(() => {
           object._scaleTween = null;
           object.element.classList.remove('element-winner');
-        })
-        .start();
+        });
+      object._scaleTween.start();
     }
   }
 

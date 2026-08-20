@@ -9,8 +9,10 @@ import { useAwardStore } from '@/store/award.ts';
 import { shuffle } from '@/utils/algorithm';
 import { FINISHED, INIT, READY, RUNNING } from '@/config/constants.ts';
 import { rotating, transform } from '@/utils/three';
+import winnerPosition from '@/utils/three/winnerPosition.ts';
 
 import type { Award, Member, Record } from '@/types/lottery.ts';
+import winnerTransform from "@/utils/three/winnerTransform.ts";
 
 export function useLottery() {
   const { message } = App.useApp();
@@ -52,7 +54,7 @@ export function useLottery() {
 
     // openingAudio.value?.play();
 
-    await transform(scene, camera, renderer, objects, targets.sphere, 1000);
+    await transform(scene, camera, renderer, objects, targets.sphere, 2000);
 
     await rotating(scene, camera, renderer, 100, 2 * 60 * 60);
 
@@ -73,7 +75,7 @@ export function useLottery() {
 
     console.log('handlePlay: ', { currAward, currWinners: currWinnersRef.current });
 
-    await rotating(scene, camera, renderer, 1000, 500);
+    await rotating(scene, camera, renderer, 1000, 800);
   }, [lotteryStatus, setLotteryStatus, currAward, members, message, renderer, scene, camera]);
 
   // 停止动效并开奖.
@@ -99,6 +101,9 @@ export function useLottery() {
     const currentRounds = Math.floor(currentY / TWO_PI); // Math.ceil 确保总是往前找最近的正面；+ 1 可以在当前位置基础上再多转 1 圈作为缓冲减速
     const rotations = (currentRounds + 3);
     await rotating(scene, camera, renderer, rotations, 2);
+
+    const positions = winnerPosition(currWinnersRef.current.length, { width: 240, height: 320 });
+    await winnerTransform(scene, camera, renderer, objects, 1500, positions, currWinnersRef.current);
   }, [lotteryStatus, setLotteryStatus, currAward, updateAward, bulkCreateRecord, scene, camera, renderer]);
 
   // 重新抽取当前奖项.
@@ -117,6 +122,11 @@ export function useLottery() {
 
     // 重置当前奖项为未开奖.
     updateAward({ ...currAward, isFinished: false });
+
+    await transform(scene, camera, renderer, objects, targets.sphere, 2000, currWinnersRef.current);
+    await rotating(scene, camera, renderer, 100, 2 * 60 * 60);
+
+    currWinnersRef.current = [];
   }, [lotteryStatus, setLotteryStatus, currAward, records, bulkDeleteRecord, updateAward]);
 
   return { currAward, handleEnter, handlePlay, handleFinish, handleReplay };

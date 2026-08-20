@@ -6,11 +6,7 @@ interface Config {
   maxCols?: number; // 单行最大列数.
 }
 
-interface Position {
-  x: number;
-  y: number;
-  z: number;
-}
+import type { ObjectPosition } from '@/types/3d.ts';
 
 /**
  * 计算每一个 CSS3DObject 在 3D 空间中的目标位置 (x, y, z).
@@ -18,7 +14,7 @@ interface Position {
  * @param {number} total - 中奖总人数
  * @param {object} config - 卡片与间距配置
  */
-function winnerPosition(total: number, config: Config = {}): Position[] {
+function winnerPosition(total: number, config: Config = {}): ObjectPosition[] {
   const { width = 120, height = 160, gapX = 50, gapY = 50, maxCols = 6 } = config;
 
   // 1. 根据总人数动态决定列数

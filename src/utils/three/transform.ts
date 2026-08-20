@@ -3,6 +3,7 @@ import TWEEN from 'three/addons/libs/tween.module.js';
 import type { Scene, PerspectiveCamera, Object3D } from 'three';
 import type { CSS3DRenderer, CSS3DObject } from 'three/addons';
 import type { Tween } from 'three/addons/libs/tween.module.js';
+import type { Member } from '@/types/lottery';
 
 import render from './render.js';
 
@@ -14,7 +15,7 @@ type ObjectItem = CSS3DObject & {
   _scaleTween?: Tween | null;
 };
 
-function transform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRenderer, objects: CSS3DObject[], targets: Object3D[], duration: number, winners: CSS3DObject[] = []): Promise<void> {
+function transform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRenderer, objects: CSS3DObject[], targets: Object3D[], duration: number, winners: Member[] = []): Promise<void> {
   // 1. 🚨 核心优化：如果上一次的全局渲染计时器还没跑完，立刻叫停它！
   // 这会直接触发上一个 Tween 的 .onStop()，妥善释放上一个 Promise
   if (transformInstance) {
@@ -54,7 +55,8 @@ function transform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRende
       .onStop(() => { object._rotationTween = null });
     object._rotationTween.start();
 
-    if (winners.includes(object)) {
+    const winnerIndex = winners.findIndex(winner => winner.id === object.userData.memberId);
+    if (winnerIndex !== -1) {
       object._scaleTween = new TWEEN.Tween(object.scale)
         .to({ x: 1, y: 1, z: 1 }, (0.5 + Math.random() * 0.5) * duration)
         .easing(TWEEN.Easing.Exponential.InOut)

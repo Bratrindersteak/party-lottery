@@ -30,10 +30,8 @@ export function handlePagehide(event) {
 }
 
 export async function handleTable(instances, objects, targets) {
-  await Promise.all([
-    transform(instances, objects, targets.table, 2000),
-    rotating(instances, 0, 0.5),
-  ]);
+  await rotating(instances, 0, 0);
+  await transform(instances, objects, targets.table, 2000);
 }
 
 export async function handleSphere(instances, objects, targets) {

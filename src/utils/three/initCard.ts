@@ -32,6 +32,8 @@ function initCard(scene: Scene, objects: CSS3DObject[], member: Member, styles: 
   objectCSS.position.y = Math.random() * 4000 - 2000;
   objectCSS.position.z = Math.random() * 4000 - 2000;
 
+  objectCSS.userData.memberId = member.id;
+
   scene.add(objectCSS);
   objects.push(objectCSS);
 }
