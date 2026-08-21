@@ -9,7 +9,7 @@ import './App.css'
 import { useLotteryStore } from './store/lottery.ts'
 import { useMemberStore } from '@/store/member.ts';
 import { useMusicStore } from '@/store/music.ts';
-import LotteryPage from './pages/lottery'
+import Lottery from './pages/lottery'
 import Setting from '@/pages/setting/Setting.tsx'
 import { LOTTERY, SETTING } from '@/config/constants.ts';
 
@@ -47,7 +47,7 @@ function App() {
         <div className="app-root" style={{ width: '100vw', height: '100vh', position: 'relative' }}>
           {/* 大屏抽奖页 */}
           <div style={{ display: currentScreen === LOTTERY ? 'block' : 'none', width: '100%', height: '100%' }}>
-            <LotteryPage />
+            <Lottery />
           </div>
           {/* 后台配置页 */}
           <div style={{ display: currentScreen === SETTING ? 'block' : 'none', width: '100%', height: '100%' }}>

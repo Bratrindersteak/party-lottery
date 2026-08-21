@@ -6,7 +6,6 @@ import type { Tween } from 'three/addons/libs/tween.module.js';
 import type { Member } from '@/types/lottery';
 
 import render from './render.js';
-import threeStyles from "@/pages/lottery/three/styles.module.css";
 
 let transformInstance: Tween | null = null;
 
@@ -16,7 +15,7 @@ type ObjectItem = CSS3DObject & {
   _scaleTween?: Tween | null;
 };
 
-function transform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRenderer, objects: CSS3DObject[], targets: Object3D[], duration: number, winners: Member[] = [], threeStyles?: Record<string, string>): Promise<void> {
+function transform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRenderer, objects: CSS3DObject[], targets: Object3D[], duration: number, winners: Member[] = [], threeStyles: Record<string, string> = {}): Promise<void> {
   // 1. 🚨 核心优化：如果上一次的全局渲染计时器还没跑完，立刻叫停它！
   // 这会直接触发上一个 Tween 的 .onStop()，妥善释放上一个 Promise
   if (transformInstance) {

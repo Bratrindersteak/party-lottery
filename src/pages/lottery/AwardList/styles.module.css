@@ -1,0 +1,82 @@
+.award-drawer {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 1px solid #9ca3af;
+  border-radius: 5px;
+
+  & .award-list {
+    width: 450px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden; /* 必须加，否则内部文字会撑开 */
+    white-space: nowrap; /* 防止宽度缩小时文字换行导致抖动 */
+
+    &.award-closed {
+      width: 0px;
+    }
+  }
+
+  & .award-item {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: 434px;
+    margin: 8px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+
+    &.award-active, &:hover {
+      background-color: #E7F6FE;
+      border-color: #1677ff;
+      color: #1677ff;
+      cursor: pointer;
+    }
+  }
+
+  & .award-right {
+
+  }
+
+  & .award-image {
+
+  }
+
+  & .award-title {
+    line-height: 32px;
+    font-weight: bold;
+  }
+
+  & .award-content {
+    line-height: 48px;
+  }
+
+  & .award-prize {
+    display: inline;
+  }
+
+  & .award-count {
+    display: inline;
+    margin-left: 16px;
+  }
+
+  & .award-status {
+    align-self: center;
+    margin-right: 8px;
+  }
+
+  & .award-handle {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(100%, -50%);
+    border:  1px solid #9ca3af;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+      color: #1677ff;
+    }
+  }
+}

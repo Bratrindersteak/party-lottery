@@ -1,0 +1,40 @@
+.top-bar {
+  position: fixed;
+  top: 16px;
+  right: 32px;
+  display: flex;
+}
+
+.music {
+  cursor: pointer;
+
+  &:hover {
+    color: #ffffff;
+  }
+}
+
+.languages {
+  margin-left: 16px;
+  color: white;
+
+  span {
+    opacity: 0.6;
+  }
+
+  .language {
+    cursor: pointer;
+
+    &.active {
+      opacity: 1;
+      cursor: default;
+    }
+  }
+}
+
+.setting {
+  margin-left: 16px;
+
+  &:hover {
+    color: #ffffff;
+  }
+}
