@@ -1,4 +1,14 @@
-import type { Object3D } from 'three';
+import type { Object3D, PerspectiveCamera, Scene } from 'three';
+import type { CSS3DRenderer, CSS3DObject, TrackballControls } from 'three/addons';
+
+export interface ThreeInstances {
+  scene: Scene | null;
+  camera: PerspectiveCamera | null;
+  renderer: CSS3DRenderer | null;
+  controls: TrackballControls | null;
+  objects: CSS3DObject[];
+  targets: Targets;
+}
 
 export interface Targets {
   table: Object3D[];
@@ -10,6 +20,3 @@ export interface ObjectPosition {
   y: number;
   z: number;
 }
-
-// 约束：动画完成的回调
-export type Render = () => void;

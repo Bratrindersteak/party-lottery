@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from 'react';
+import { useState, useCallback, useMemo, useRef } from 'react';
 import { App } from 'antd';
 
 import { useMemberStore } from '@/store/member.ts';
@@ -10,11 +10,9 @@ import { shuffle } from '@/utils/algorithm';
 import { FINISHED, INIT, READY, RUNNING } from '@/config/constants.ts';
 import { rotating, transform } from '@/utils/three';
 import winnerPosition from '@/utils/three/winnerPosition.ts';
-
-import threeStyles from './three/styles.module.css';
+import winnerTransform from "@/utils/three/winnerTransform.ts";
 
 import type { Award, Member, Record } from '@/types/lottery.ts';
-import winnerTransform from "@/utils/three/winnerTransform.ts";
 
 export function useLottery() {
   const { message } = App.useApp();
@@ -38,6 +36,8 @@ export function useLottery() {
   const awards = useAwardStore((state) => state.awards);
   const updateAward = useAwardStore((state) => state.update);
 
+  const [isAnimating, setIsAnimating] = useState(false);
+
   const currWinnersRef = useRef<Member[]>([]);
 
   const currAward = useMemo<Award | null>(() => {
@@ -48,16 +48,33 @@ export function useLottery() {
     return award;
   }, [currAwardId, awards]);
 
+  const ableEnter = useMemo<boolean>(() => {
+    return !isAnimating && lotteryStatus === INIT && currAward !== null && !currAward.isFinished;
+  }, [isAnimating, currAward, lotteryStatus]);
+
+  const ablePlay = useMemo<boolean>(() => {
+    return !isAnimating && lotteryStatus === READY && currAward !== null && !currAward.isFinished;
+  }, [isAnimating, currAward, lotteryStatus]);
+
+  const ableFinish = useMemo<boolean>(() => {
+    return !isAnimating && lotteryStatus === RUNNING && currAward !== null && !currAward.isFinished;
+  }, [isAnimating, currAward, lotteryStatus]);
+
+  const ableReplay = useMemo<boolean>(() => {
+    return !isAnimating && lotteryStatus === FINISHED && currAward !== null && currAward.isFinished;
+  }, [isAnimating, currAward, lotteryStatus]);
+
   // 进入抽奖环节.
   const handleEnter = useCallback(async () => {
     if (lotteryStatus !== INIT) { return }
 
+    setIsAnimating(true);
     setLotteryStatus(READY);
 
     // openingAudio.value?.play();
 
     await transform(scene, camera, renderer, objects, targets.sphere, 2000);
-
+    setIsAnimating(false);
     await rotating(scene, camera, renderer, 100, 2 * 60 * 60);
 
   }, [lotteryStatus, setLotteryStatus, objects, targets, scene, camera, renderer]);
@@ -85,6 +102,7 @@ export function useLottery() {
     if (lotteryStatus !== RUNNING) { return }
     if (!currAward) { return }
 
+    setIsAnimating(true);
     setLotteryStatus(FINISHED);
 
     // TODO 开奖动效.
@@ -105,14 +123,16 @@ export function useLottery() {
     await rotating(scene, camera, renderer, rotations, 2);
 
     const positions = winnerPosition(currWinnersRef.current.length, { width: 240, height: 320 });
-    await winnerTransform(scene, camera, renderer, objects, 1500, positions, currWinnersRef.current, threeStyles);
-  }, [lotteryStatus, setLotteryStatus, currAward, updateAward, bulkCreateRecord, scene, camera, renderer]);
+    await winnerTransform(scene, camera, renderer, objects, 1500, positions, currWinnersRef.current);
+    setIsAnimating(false);
+  }, [lotteryStatus, currAward, setLotteryStatus, updateAward, bulkCreateRecord, scene, camera, renderer, objects]);
 
   // 重新抽取当前奖项.
   const handleReplay = useCallback(async () => {
     if (lotteryStatus !== FINISHED) { return }
     if (!currAward) { return }
 
+    setIsAnimating(true);
     // 更新抽奖状态.
     setLotteryStatus(READY);
 
@@ -125,11 +145,16 @@ export function useLottery() {
     // 重置当前奖项为未开奖.
     updateAward({ ...currAward, isFinished: false });
 
-    await transform(scene, camera, renderer, objects, targets.sphere, 2000, currWinnersRef.current, threeStyles);
+    await transform(scene, camera, renderer, objects, targets.sphere, 2000, currWinnersRef.current);
+    setIsAnimating(false);
     await rotating(scene, camera, renderer, 100, 2 * 60 * 60);
 
+    // TODO 这里要改，应该接上 handleEnter 才对.
     currWinnersRef.current = [];
-  }, [lotteryStatus, setLotteryStatus, currAward, records, bulkDeleteRecord, updateAward]);
+  }, [lotteryStatus, currAward, setLotteryStatus, records, bulkDeleteRecord, updateAward, scene, camera, renderer, objects, targets.sphere]);
 
-  return { currAward, handleEnter, handlePlay, handleFinish, handleReplay };
+  return {
+    ableEnter, ablePlay, ableFinish, ableReplay,
+    handleEnter, handlePlay, handleFinish, handleReplay,
+  };
 }

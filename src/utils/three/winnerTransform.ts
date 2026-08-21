@@ -1,8 +1,9 @@
 import TWEEN from 'three/addons/libs/tween.module.js';
 
 import render from './render.js';
+import threeStyles from '@/pages/lottery/three/styles.module.css';
 
-import type { Scene, PerspectiveCamera, Object3D } from 'three';
+import type { Scene, PerspectiveCamera } from 'three';
 import type { CSS3DRenderer, CSS3DObject } from 'three/addons';
 import type { Tween } from 'three/addons/libs/tween.module.js';
 import type { Member } from '@/types/lottery.ts';
@@ -16,7 +17,7 @@ type ObjectItem = CSS3DObject & {
 
 let winnersInstance = null;
 
-function winnerTransform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRenderer, objects: CSS3DObject[], duration: number, positions: ObjectPosition[], winners: Member[] = [], styles: Record<string, string>) {
+function winnerTransform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRenderer, objects: CSS3DObject[], duration: number, positions: ObjectPosition[], winners: Member[] = []): Promise<void> {
   if (winnersInstance) {
     winnersInstance.stop();
     winnersInstance = null;
@@ -58,26 +59,29 @@ function winnerTransform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3
       .to({ x: 2, y: 2, z: 2 }, duration)
       .easing(TWEEN.Easing.Exponential.Out)
       .onStart(() => {
-        object.element.classList.add(styles['element-winner']);
+        object.element.classList.add(threeStyles['element-winner']);
       })
       .onComplete(() => { object._scaleTween = null })
       .onStop(() => { object._positionTween = null })
       .start();
   });
 
-  winnersInstance = new TWEEN.Tween({})
-    .to({}, duration)
-    .onUpdate(() => {
-      render(scene, camera, renderer);
-    })
-    .onComplete(() => {
-      winnersInstance = null;
-    })
-    .onStop(() => {
-      winnersInstance = null;
-    });
-
-  winnersInstance.start();
+  return new Promise((resolve) => {
+    winnersInstance = new TWEEN.Tween({})
+      .to({}, duration)
+      .onUpdate(() => {
+        render(scene, camera, renderer);
+      })
+      .onComplete(() => {
+        winnersInstance = null;
+        resolve();
+      })
+      .onStop(() => {
+        winnersInstance = null;
+        resolve();
+      });
+    winnersInstance.start();
+  });
 }
 
 export default winnerTransform;

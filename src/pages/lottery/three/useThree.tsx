@@ -5,7 +5,7 @@ import TWEEN from 'three/addons/libs/tween.module.js';
 
 import { useThreeStore } from "@/store/three.ts";
 import { useMemberStore } from '@/store/member.ts';
-import { render, transform, animate } from '@/utils/three'
+import { render, transform, animate } from '@/utils/three';
 import initCard from '@/utils/three/initCard.ts';
 import initTable from '@/utils/three/initTable.ts';
 import initSphere from '@/utils/three/initSphere.ts';
@@ -46,7 +46,7 @@ export function useThree() {
 
     containerRef.current.appendChild(renderer.domElement);
 
-    const controls = new TrackballControls(camera, renderer.domElement)
+    const controls = new TrackballControls(camera, renderer.domElement);
     controls.minDistance = 500;
     controls.maxDistance = 6000;
     controls.noRotate = true; // 禁用旋转（鼠标左键拖拽旋转）.

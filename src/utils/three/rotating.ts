@@ -23,7 +23,6 @@ export default function rotating(scene: Scene, camera: PerspectiveCamera, render
   // 1. 🚨 进来先定点清除前任旋转动画，绝对不打架
   if (rotatingInstance) {
     rotatingInstance.stop();
-    rotatingInstance = null;
   }
 
   // 3. 返回 Promise
@@ -35,10 +34,12 @@ export default function rotating(scene: Scene, camera: PerspectiveCamera, render
         render(scene, camera, renderer);
       })
       .onComplete(() => {
+        console.log('rotating was completed');
         rotatingInstance = null;
         resolve();
       })
       .onStop(() => {
+        console.log('rotating was stopped');
         rotatingInstance = null;
         resolve();
       });

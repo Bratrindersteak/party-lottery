@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import * as THREE from 'three';
 import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 
@@ -30,11 +29,11 @@ export const useThreeStore = create<ThreeStore>()((set) => ({
   objects: [],
   targets: { table: [], sphere: [], helix: [], grid: [] },
 
-  setScene: (scene: THREE.Scene | null) => {
+  setScene: (scene: Scene | null) => {
     set(() => ({ scene }));
   },
 
-  setCamera: (camera: THREE.PerspectiveCamera | null) => {
+  setCamera: (camera: PerspectiveCamera | null) => {
     set(() => ({ camera }));
   },
 

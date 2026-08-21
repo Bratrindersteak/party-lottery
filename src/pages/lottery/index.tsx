@@ -16,7 +16,10 @@ export default function Lottery() {
   const { t } = useTranslation();
   const title = useLotteryStore((state) => state.title);
   const lotteryStatus = useLotteryStore((state) => state.lotteryStatus);
-  const { currAward, handleEnter, handlePlay, handleFinish, handleReplay } = useLottery();
+  const {
+    ableEnter, ablePlay, ableFinish, ableReplay,
+    handleEnter, handlePlay, handleFinish, handleReplay,
+  } = useLottery();
 
   return (
     <>
@@ -27,10 +30,25 @@ export default function Lottery() {
 
       <div className={styles['title']}>{title}</div>
 
-      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === INIT ? 'block' : 'none' }} color="pink" variant="filled" size="large" onClick={handleEnter}>{t('lottery.enter')}</Button>
-      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === READY ? 'block' : 'none' }} color="pink" variant="filled" size="large" onClick={handlePlay} disabled={!!(currAward && currAward.isFinished)}>{t('lottery.play')}</Button>
-      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === RUNNING ? 'block' : 'none' }} color="pink" variant="filled" size="large" onClick={handleFinish} disabled={!!(currAward && currAward.isFinished)}>{t('lottery.finish')}</Button>
-      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === FINISHED ? 'block' : 'none' }} color="pink" variant="filled" size="large" onClick={handleReplay} disabled={!!(currAward && !currAward.isFinished)}>{t('lottery.replay')}</Button>
+      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === INIT ? 'block' : 'none' }}
+              color="pink" variant="filled" size="large" disabled={!ableEnter}
+              onClick={handleEnter}
+      >{t('lottery.enter')}</Button>
+
+      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === READY ? 'block' : 'none' }}
+              color="pink" variant="filled" size="large" disabled={!ablePlay}
+              onClick={handlePlay}
+      >{t('lottery.play')}</Button>
+
+      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === RUNNING ? 'block' : 'none' }}
+              color="pink" variant="filled" size="large" disabled={!ableFinish}
+              onClick={handleFinish}
+      >{t('lottery.finish')}</Button>
+
+      <Button className={styles['operation-btn']} style={{ display: lotteryStatus === FINISHED ? 'block' : 'none' }}
+              color="pink" variant="filled" size="large" disabled={!ableReplay}
+              onClick={handleReplay}
+      >{t('lottery.replay')}</Button>
     </>
   )
 }
