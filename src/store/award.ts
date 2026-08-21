@@ -6,7 +6,6 @@ import type { Award } from '@/types/lottery';
 interface AwardStore {
   id: number;
   awards: Award[];
-  currAward: Award | null;
 
   create: (item: Omit<Award, 'id'>) => Promise<void>; // 💡 新建音乐时，入参通常是不带 id 的
   update: (item: Award) => Promise<void>;
@@ -20,7 +19,6 @@ export const useAwardStore = create<AwardStore>()(
     (set) => ({
       id: 0,
       awards: [],
-      currAward: null,
 
       create: async (item: Award) => {
         set((state) => ({ awards: [...state.awards, { id: state.id++, ...item }] }));
