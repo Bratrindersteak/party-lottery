@@ -109,6 +109,8 @@ export function useLottery() {
 
     updateAward({ ...currAward, isFinished: true });
 
+    console.log('handleFinish: ', currWinnersRef.current);
+
     const records: Record[] = currWinnersRef.current.map((winner) => ({
       awardId: currAward.id as number,
       memberId: winner.id as number,
@@ -146,11 +148,9 @@ export function useLottery() {
     updateAward({ ...currAward, isFinished: false });
 
     await transform(scene, camera, renderer, objects, targets.sphere, 2000, currWinnersRef.current);
+    currWinnersRef.current = [];
     setIsAnimating(false);
     await rotating(scene, camera, renderer, 100, 2 * 60 * 60);
-
-    // TODO 这里要改，应该接上 handleEnter 才对.
-    currWinnersRef.current = [];
   }, [lotteryStatus, currAward, setLotteryStatus, records, bulkDeleteRecord, updateAward, scene, camera, renderer, objects, targets.sphere]);
 
   return {
