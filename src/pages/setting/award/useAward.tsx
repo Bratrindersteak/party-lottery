@@ -4,6 +4,7 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
 import { useAwardStore } from '@/store/award.ts';
+import { useRecordStore } from '@/store/record.ts';
 import { ADD, EDIT } from '@/config/constants.ts';
 import defaultAwardUrl from '@/assets/images/default-award.png';
 
@@ -21,6 +22,9 @@ export function useAward(form) {
   const remove = useAwardStore((state) => state.delete);
   const bulkRemove = useAwardStore((state) => state.bulkDelete);
   const clear = useAwardStore((state) => state.clear);
+
+  const records = useRecordStore((state) => state.records);
+  const bulkDeleteRecord = useRecordStore((state) => state.bulkDelete);
 
   const { t } = useTranslation();
 
@@ -132,6 +136,14 @@ export function useAward(form) {
     form.resetFields([id]);
   }, [remove, update, form]);
 
+  const handleReplay = useCallback((item: Award) => {
+    const targetRecords = records.filter(({ awardId }) => (awardId === item.id));
+    const targetRecordIds = targetRecords.map((record) => record.id);
+    bulkDeleteRecord(targetRecordIds as number[]);
+
+    update({ ...item, isFinished: false });
+  }, [bulkDeleteRecord, records, update]);
+
   const handleDelete = useCallback((item: Award) => {
     console.log('handleDelete: ', item);
     remove(item);
@@ -234,6 +246,16 @@ export function useAward(form) {
           <>
             <Button color="primary" variant="outlined" size="small" className={styles['table-btn']} onClick={() => { handleEdit(record) }}>{t('operation.edit')}</Button>
             <Popconfirm
+              title="确认重新抽取?"
+              icon={<DeleteOutlined style={{ color: '#F56C6C' }}/>}
+              onConfirm={() => { handleReplay(record) }}
+              okButtonProps={{ danger: true }}
+              okText="重新抽取"
+              cancelText="取消"
+            >
+              <Button color="danger" variant="outlined" size="small" className={styles['table-btn']}>{t('lottery.replay')}</Button>
+            </Popconfirm>
+            <Popconfirm
               title="确认删除?"
               icon={<DeleteOutlined style={{ color: '#F56C6C' }}/>}
               onConfirm={() => { handleDelete(record) }}
@@ -247,7 +269,7 @@ export function useAward(form) {
         );
       },
     },
-  ], [t, handleSave, handleCancel, handleEdit, handleDelete]);
+  ], [t, handleSave, handleCancel, handleEdit, handleReplay, handleDelete]);
 
   return { awards, columns, rowSelection, handleAdd, handleBulkDelete, handleClear, messageHolder };
 }
