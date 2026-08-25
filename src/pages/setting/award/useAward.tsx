@@ -235,7 +235,7 @@ export function useAward(form) {
       title: '操作',
       key: 'operation',
       fixed: 'end',
-      width: 200,
+      width: 300,
       render: (value, record, index: number) => {
         return record._isEdit ? (
           <>
@@ -245,7 +245,7 @@ export function useAward(form) {
         ) : (
           <>
             <Button color="primary" variant="outlined" size="small" className={styles['table-btn']} onClick={() => { handleEdit(record) }}>{t('operation.edit')}</Button>
-            <Popconfirm
+            {record.isFinished && <Popconfirm
               title="确认重新抽取?"
               icon={<DeleteOutlined style={{ color: '#F56C6C' }}/>}
               onConfirm={() => { handleReplay(record) }}
@@ -254,7 +254,7 @@ export function useAward(form) {
               cancelText="取消"
             >
               <Button color="danger" variant="outlined" size="small" className={styles['table-btn']}>{t('lottery.replay')}</Button>
-            </Popconfirm>
+            </Popconfirm>}
             <Popconfirm
               title="确认删除?"
               icon={<DeleteOutlined style={{ color: '#F56C6C' }}/>}

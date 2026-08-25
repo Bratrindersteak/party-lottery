@@ -11,6 +11,7 @@ import { FINISHED, INIT, READY, RUNNING } from '@/config/constants.ts';
 import { rotating, transform } from '@/utils/three';
 import winnerPosition from '@/utils/three/winnerPosition.ts';
 import winnerTransform from "@/utils/three/winnerTransform.ts";
+import isNullish from '@/utils/isNullish.ts';
 
 import type { Award, Member, Record } from '@/types/lottery.ts';
 
@@ -155,31 +156,35 @@ export function useLottery() {
   }, [lotteryStatus, currAward, setLotteryStatus, records, bulkDeleteRecord, updateAward, scene, camera, renderer, objects, targets.sphere]);
 
   const handleContinue = useCallback(async () => {
-    /* TODO 继续抽奖
-     * 1、指定 currAward 为 awards 列表中的下一个，若没有可用的下一个则考虑从头筛选
-     * 2、若 awards 列表均抽取完毕，则给 tip 提示
-     */
+    if (lotteryStatus !== FINISHED) { return }
+    if (!currAward) { return }
 
-    const unfinishAwardIds: number[] = [];
+    const unfinishAwardIds1: number[] = [];
+    const unfinishAwardIds2: number[] = [];
     const currIndex = awards.findIndex(award => award.id === currAwardId);
     awards.forEach(({ id, isFinished }, index) => {
       if (!isFinished) {
         if (index > currIndex) {
-          unfinishAwardIds.push(id);
+          unfinishAwardIds1.push(id);
         } else if (index < currIndex) {
-          unfinishAwardIds.unshift(id);
+          unfinishAwardIds2.push(id);
         }
       }
     });
 
-    const nextAwardId = unfinishAwardIds[0];
-
-    if (nextAwardId !== undefined) {
+    const nextAwardId = unfinishAwardIds1[0] ?? unfinishAwardIds2[0];
+    if (!isNullish(nextAwardId)) {
+      setIsAnimating(true);
+      setLotteryStatus(READY);
       setCurrAwardId(nextAwardId);
+      await transform(scene, camera, renderer, objects, targets.sphere, 2000, currWinnersRef.current);
+      currWinnersRef.current = [];
+      rotating(scene, camera, renderer, 100, 2 * 60 * 60);
     } else {
       message.warning('当前所有奖项均已抽取完毕！');
     }
-  }, [awards, currAwardId, setCurrAwardId, message]);
+    setIsAnimating(false);
+  }, [lotteryStatus, currAward, setLotteryStatus, awards, currAwardId, setCurrAwardId, scene, camera, renderer, objects, targets.sphere, message]);
 
   return {
     ableEnter, ablePlay, ableFinish, ableReplay,
