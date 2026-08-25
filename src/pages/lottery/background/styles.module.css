@@ -4,47 +4,136 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: -1;
-  overflow: hidden;
-
-  /* 🚀 核心绝杀：径向渐变，中心亮、四周暗，天然自带星系引力场的视觉汇聚感 */
   background: radial-gradient(
     circle at center,
     #180b30 0%,    /* 中心是神秘的暗紫 */
     #0c051a 50%,   /* 逐渐过渡到深邃紫黑 */
     #020105 100%   /* 边缘是无尽的死黑 */
   );
-
   /* 🛡️ 硬件加速，大屏多媒体抗锯齿防抖*/
   transform: translate3d(0, 0, 0);
+  overflow: hidden;
+  z-index: -1;
 }
 
-.starCanvas {
+/* ================= 1. 星星闪烁层 ================= */
+.stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  background: transparent;
+  will-change: opacity;
+  transform: translateZ(0);
+}
+
+/* 1. 小星星：从 1px 放大到 2px，增加微弱发光 */
+.starsSmall {
+  width: 2px;
+  height: 2px;
+  /* 💡 格式：X轴 Y轴 模糊半径 扩展半径 颜色 */
+  box-shadow:
+    10vw 15vh 1px 0.5px #fff, 25vw 35vh 1px 0.5px #fff, 40vw 10vh 1px 0.5px #fff,
+    55vw 80vh 1px 0.5px #fff, 70vw 25vh 1px 0.5px #fff, 85vw 60vh 1px 0.5px #fff,
+    15vw 70vh 1px 0.5px #fff, 30vw 90vh 1px 0.5px #fff, 45vw 45vh 1px 0.5px #fff;
+  animation: blink 4s ease-in-out infinite alternate;
+}
+
+/* 2. 中星星：从 2px 放大到 4px */
+.starsMedium {
+  width: 4px;
+  height: 4px;
+  box-shadow:
+    12vw 28vh 2px 1px #fff, 38vw 12vh 2px 1px #fff, 58vw 68vh 2px 1px #fff,
+    78vw 42vh 2px 1px #fff, 22vw 82vh 2px 1px #fff, 48vw 52vh 2px 1px #fff,
+    68vw 18vh 2px 1px #fff, 88vw 88vh 2px 1px #fff;
+  animation: blink 3s ease-in-out infinite alternate 1s;
+}
+
+/* 3. 大星星：从 3px 放大到 6px，加上明显的梦幻光晕 */
+.starsLarge {
+  width: 6px;
+  height: 6px;
+  box-shadow:
+    18vw 48vh 3px 1.5px #fff, 42vw 78vh 3px 1.5px #fff,
+    64vw 28vh 3px 1.5px #fff, 82vw 18vh 3px 1.5px #fff;
+  animation: blink 2s ease-in-out infinite alternate 0.5s;
+}
+
+@keyframes blink {
+  0% { opacity: 0.2; }
+  100% { opacity: 1; }
+}
+
+/* ================= 2. 纯 CSS 流星层 ================= */
+.meteorContainer {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none; /* 💡 细节：让鼠标事件穿透过去，绝不阻挡你中间 3D 头像卡片的点击！ */
 }
 
+.meteor {
+  position: absolute;
+  width: 120px;
+  height: 2px;
+  /* 前亮后暗渐变拖尾 + 发光效果 */
+  background: linear-gradient(90deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+  border-radius: 999px;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
+  opacity: 0;
+  will-change: transform, opacity;
+  /* 旋转 -35 度作为斜向下划落轨道 */
+  transform: rotate(-35deg) translate3d(0, 0, 0);
+  animation: meteorPass 5s linear infinite;
+}
+
+/* 伪元素做头部极亮的“流星核” */
+.meteor::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 8px 2px #fff;
+}
+
+/* 错落分布式：起点位置、动画时长与延时 */
+.m1 { top: 10%; left: 60%; animation-delay: 0s; animation-duration: 4s; }
+.m2 { top: 25%; left: 80%; animation-delay: 2.5s; animation-duration: 6s; }
+.m3 { top: 5%;  left: 40%; animation-delay: 4.2s; animation-duration: 5s; }
+.m4 { top: 35%; left: 90%; animation-delay: 6s; animation-duration: 4.5s; }
+.m5 { top: 15%; left: 50%; animation-delay: 8.5s; animation-duration: 7s; }
+
+/* 纯 GPU 位移与淡入淡出动画 */
+@keyframes meteorPass {
+  0% {
+    opacity: 0;
+    transform: rotate(-35deg) translate3d(0, 0, 0);
+  }
+  10% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 0;
+    /* 沿着 -35 度方向平移出屏幕以外 */
+    transform: rotate(-35deg) translate3d(-800px, 0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(-35deg) translate3d(-800px, 0, 0);
+  }
+}
+
+/* ================= 3. 柔和星云背景 ================= */
 .nebulaCloud {
   position: absolute;
-  top: -20%;
-  left: -20%;
-  width: 140vw;
-  height: 140vh;
-  background:
-    radial-gradient(circle at 30% 40%, rgba(24, 144, 255, 0.12) 0%, transparent 40%), /* 科技蓝星云 */
-    radial-gradient(circle at 70% 60%, rgba(114, 46, 209, 0.15) 0%, transparent 50%); /* 华丽紫星云 */
-  filter: blur(80px); /* 爆表级别的毛玻璃模糊，直接化作轻柔的气体 */
-  mix-blend-mode: screen; /* 🚀 屏幕滤色混合模式，让颜色完美融合叠加 */
-  animation: nebulaRotate 40s linear infinite; /* 极其缓慢的自转 */
-  pointer-events: none;
-}
-
-@keyframes nebulaRotate {
-  0% { transform: rotate(0deg) scale(1); }
-  50% { transform: rotate(180deg) scale(1.05); } /* 微微涨缩，感觉是有生命的宇宙 */
-  100% { transform: rotate(360deg) scale(1); }
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 50%, rgba(76, 29, 149, 0.15), transparent 60%);
+  filter: blur(40px);
 }

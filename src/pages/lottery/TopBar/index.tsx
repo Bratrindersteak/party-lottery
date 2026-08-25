@@ -7,7 +7,7 @@ import { useTopBar } from './useTopBar.ts';
 import styles from './styles.module.css';
 
 export default function TopBar() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const mute = useSettingStore((state) => state.mute);
 
@@ -15,15 +15,15 @@ export default function TopBar() {
 
   return (
     <div className={styles['top-bar']}>
-      <div className={styles['music']} onClick={handleMute}>
-        { mute ? <AudioMutedOutlined /> : <AudioOutlined />}
+      <div className={styles['music']} title={ mute ? t('music.mute') : t('music.play') } onClick={handleMute}>
+        {mute ? <AudioMutedOutlined /> : <AudioOutlined />}
       </div>
       <div className={styles.languages}>
         <span className={`${styles.language} ${styles.cn} ${i18n.language === 'zhCN' ? styles.active : '' }`} onClick={() => { handleLanguageChange('zhCN') }}>中</span>
         <span className={styles.separator}>&nbsp;/&nbsp;</span>
         <span className={`${styles.language} ${styles.en} ${i18n.language === 'enUS' ? styles.active : '' }`} onClick={() => { handleLanguageChange('enUS') }}>EN</span>
       </div>
-      <SettingOutlined className={styles.setting} title="设置" onClick={handleSetting} />
+      <SettingOutlined className={styles.setting} title={t('setting')} onClick={handleSetting} />
     </div>
   );
 }

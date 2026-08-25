@@ -3,7 +3,7 @@
   left: 0;
   top: 50%;
   transform: translateY(-50%);
-  border: 1px solid #9ca3af;
+  background-color: #ffffff;
   border-radius: 5px;
 
   & .award-list {
@@ -70,7 +70,7 @@
     right: 0;
     top: 50%;
     transform: translate(100%, -50%);
-    border:  1px solid #9ca3af;
+    background-color: #ffffff;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
     cursor: pointer;

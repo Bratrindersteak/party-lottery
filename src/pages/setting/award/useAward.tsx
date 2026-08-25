@@ -121,7 +121,7 @@ export function useAward(form) {
         message.error(`保存失败：${firstError || '请检查输入项！'}`);
       }
     }
-  }, [update, form]);
+  }, [form, update, message]);
 
   const handleCancel = useCallback((item: Award) => {
     const { _type, _backup, id } = item;

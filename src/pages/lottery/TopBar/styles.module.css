@@ -6,11 +6,9 @@
 }
 
 .music {
+  color: #ffffff;
   cursor: pointer;
-
-  &:hover {
-    color: #ffffff;
-  }
+  font-size: 18px;
 }
 
 .languages {
@@ -18,6 +16,7 @@
   color: white;
 
   span {
+    font-size: 18px;
     opacity: 0.6;
   }
 
@@ -32,9 +31,7 @@
 }
 
 .setting {
+  color: #ffffff;
   margin-left: 16px;
-
-  &:hover {
-    color: #ffffff;
-  }
+  font-size: 18px;
 }
