@@ -51,8 +51,8 @@ export function useLottery() {
   }, [currAwardId, awards]);
 
   const ableEnter = useMemo<boolean>(() => {
-    return !isAnimating && lotteryStatus === INIT && currAward !== null && !currAward.isFinished;
-  }, [isAnimating, currAward, lotteryStatus]);
+    return !isAnimating && lotteryStatus === INIT;
+  }, [isAnimating, lotteryStatus]);
 
   const ablePlay = useMemo<boolean>(() => {
     return !isAnimating && lotteryStatus === READY && currAward !== null && !currAward.isFinished;
@@ -70,6 +70,16 @@ export function useLottery() {
   const handleEnter = useCallback(async () => {
     if (lotteryStatus !== INIT) { return }
 
+    if (!currAward) {
+      message.warning('请选择要抽取的奖项！');
+      return;
+    }
+
+    if (currAward?.isFinished) {
+      message.warning('当前奖项已抽取完毕！');
+      return;
+    }
+
     setIsAnimating(true);
     setLotteryStatus(READY);
 
@@ -79,7 +89,7 @@ export function useLottery() {
     setIsAnimating(false);
     await rotating(scene, camera, renderer, 100, 2 * 60 * 60);
 
-  }, [lotteryStatus, setLotteryStatus, objects, targets, scene, camera, renderer]);
+  }, [lotteryStatus, currAward, setLotteryStatus, scene, camera, renderer, objects, targets.sphere, message]);
 
   // 开始抽取当前奖项.
   const handlePlay = useCallback(async () => {
@@ -87,6 +97,11 @@ export function useLottery() {
 
     if (!currAward) {
       message.warning('请选择要抽取的奖项！');
+      return;
+    }
+
+    if (currAward?.isFinished) {
+      message.warning('当前奖项已抽取完毕！');
       return;
     }
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useCallback, useState } from 'react';
-import { Button, Popconfirm, message, Table, Tag, type UploadProps, Upload } from 'antd';
+import { Button, Popconfirm, Table, Tag, type UploadProps, Upload, App } from 'antd';
 import { DeleteOutlined, PlayCircleOutlined, PauseCircleOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
@@ -15,6 +15,7 @@ import type { Music } from '@/types/lottery';
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
 
 export function useMusic(form) {
+  const { message } = App.useApp();
   const musics = useMusicStore((state) => state.musics);
   const openingId = useMusicStore((state) => state.openingId);
   const lotteryId = useMusicStore((state) => state.lotteryId);
@@ -39,8 +40,6 @@ export function useMusic(form) {
   }, [setMusic]);
 
   const { t } = useTranslation();
-
-  const [messageApi, messageHolder] = message.useMessage();
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const rowSelection: TableRowSelection<Music> = {
@@ -123,7 +122,7 @@ export function useMusic(form) {
       return false;
     }, // ⚙️ 挂载拦截看门狗
     showUploadList: false,    // 既然不上传，我们可以隐藏那个自带的进度条列表
-  }), [create]);
+  }), [create, message]);
 
   // 🚀 2. 最高指挥部：定义当前播放状态
   const [currAudioId, setCurrAudioId] = useState<number | null>(null); // 当前正在播哪首歌
@@ -256,5 +255,5 @@ export function useMusic(form) {
     },
   ], [t, handleDelete, currAudioId, isPlaying, handlePlayMusic, handlePauseMusic]);
 
-  return { musics, openingId, handleOpeningChange, lotteryId, handleLotteryChange, winningId, handleWinningChange, columns, rowSelection, uploadProps, handleBulkDelete, handleClear, messageHolder };
+  return { musics, openingId, handleOpeningChange, lotteryId, handleLotteryChange, winningId, handleWinningChange, columns, rowSelection, uploadProps, handleBulkDelete, handleClear };
 }

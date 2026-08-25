@@ -16,12 +16,11 @@ interface MemberManagementProps {
 function MemberManagement({ style }: MemberManagementProps) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const { sortedMembers: dataSource, columns, rowSelection, uploadProps, handleDownloadTemplate, handleAdd, handleBulkDelete, handleClear, messageHolder } = useMember(form);
+  const { sortedMembers: dataSource, columns, rowSelection, uploadProps, handleDownloadTemplate, handleAdd, handleBulkDelete, handleClear } = useMember(form);
 
   return (
     <div style={style}>
       <div className={styles.operations}>
-        {messageHolder}
         <Button type="primary" className={styles['operation-btn']} onClick={handleAdd}>{t('operation.add')}</Button>
         <Upload {...uploadProps}>
           <Button icon={<UploadOutlined />} color="green" variant="solid" className={styles['operation-btn']}>{t('member.excelImport')}</Button>

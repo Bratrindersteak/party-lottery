@@ -16,12 +16,11 @@ interface AwardRecordProps {
 function AwardRecord({ style }: AwardRecordProps) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const { records: dataSource, columns, rowSelection, handleDownload, handleBulkDelete, handleClear, messageHolder } = useRecord(form);
+  const { records: dataSource, columns, rowSelection, handleDownload, handleBulkDelete, handleClear } = useRecord(form);
 
   return (
     <div style={style}>
       <div className={styles.operations}>
-        {messageHolder}
         <Button icon={<DownloadOutlined />} color="green" variant="solid" className={styles['operation-btn']} onClick={handleDownload}>{t('record.excelExport')}</Button>
         <Popconfirm
           title="确认批量删除？"

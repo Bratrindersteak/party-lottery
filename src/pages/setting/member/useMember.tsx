@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useState } from 'react';
-import { Form, Input, Button, Popconfirm, type UploadProps, message, Upload, Table } from 'antd';
+import { Form, Input, Button, Popconfirm, type UploadProps, Upload, Table, App } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
@@ -18,6 +18,7 @@ import type { Member } from '@/types/lottery';
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
 
 export function useMember(form) {
+  const { message } = App.useApp();
   const members = useMemberStore((state) => state.members);
   const get = useMemberStore((state) => state.get);
   const create = useMemberStore((state) => state.create);
@@ -30,8 +31,6 @@ export function useMember(form) {
   const bulkRemove = useMemberStore((state) => state.bulkDelete);
   const clear = useMemberStore((state) => state.clear);
   const { t } = useTranslation();
-
-  const [messageApi, messageHolder] = message.useMessage();
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const rowSelection: TableRowSelection<Member> = {
@@ -121,7 +120,7 @@ export function useMember(form) {
         message.error(`保存失败：${firstError || '请检查输入项！'}`);
       }
     }
-  }, [create, update, form]);
+  }, [form, create, update, message]);
 
   const handleCancel = useCallback((item: Member) => {
     const { _type, _backup, id } = item;
@@ -187,7 +186,7 @@ export function useMember(form) {
       return false;
     }, // ⚙️ 挂载拦截看门狗
     showUploadList: false,    // 既然不上传，我们可以隐藏那个自带的进度条列表
-  }), [bulkCreate]);
+  }), [bulkCreate, message]);
 
   const columns = useMemo<TableColumnsType<Member>>(() => [
     {
@@ -274,5 +273,5 @@ export function useMember(form) {
     });
   }, [members]);
 
-  return { sortedMembers, columns, setColumns, rowSelection, uploadProps, getMemberById, handleDownloadTemplate, handleAdd, handleBulkDelete, handleClear, messageHolder };
+  return { sortedMembers, columns, setColumns, rowSelection, uploadProps, getMemberById, handleDownloadTemplate, handleAdd, handleBulkDelete, handleClear };
 }

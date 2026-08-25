@@ -16,11 +16,10 @@ interface MusicConfigProps {
 function MusicConfig({ style }: MusicConfigProps) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const { musics: dataSource, openingId, handleOpeningChange, lotteryId, handleLotteryChange, winningId, handleWinningChange, columns, rowSelection, uploadProps, handleBulkDelete, handleClear, messageHolder } = useMusic(form);
+  const { musics: dataSource, openingId, handleOpeningChange, lotteryId, handleLotteryChange, winningId, handleWinningChange, columns, rowSelection, uploadProps, handleBulkDelete, handleClear } = useMusic(form);
 
   return (
     <div style={style}>
-      {messageHolder}
       <div className={styles.operations}>
         <div>
           <Upload {...uploadProps} className={styles['operation-btn']}>

@@ -16,12 +16,11 @@ interface AwardConfigProps {
 function AwardConfig({ style }: AwardConfigProps) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const { awards: dataSource, columns, rowSelection, handleAdd, handleBulkDelete, handleClear, messageHolder } = useAward(form);
+  const { awards: dataSource, columns, rowSelection, handleAdd, handleBulkDelete, handleClear } = useAward(form);
 
   return (
     <div style={style}>
       <div className={styles.operations}>
-        {messageHolder}
         <Button type="primary" className={styles['operation-btn']} onClick={handleAdd}>{t('operation.add')}</Button>
         <Popconfirm
           title="确认批量删除？"

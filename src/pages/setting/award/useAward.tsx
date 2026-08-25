@@ -1,5 +1,5 @@
-import React, { useMemo, useEffect, useCallback, useState } from 'react';
-import { Form, Input, InputNumber, Button, Popconfirm, Table, Tag, Image, message } from 'antd';
+import React, { useMemo, useCallback, useState } from 'react';
+import { Form, Input, InputNumber, Button, Popconfirm, Table, Tag, Image, App } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
@@ -16,6 +16,7 @@ import type { Award } from '@/types/lottery';
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
 
 export function useAward(form) {
+  const { message } = App.useApp();
   const awards = useAwardStore((state) => state.awards);
   const create = useAwardStore((state) => state.create);
   const update = useAwardStore((state) => state.update);
@@ -27,8 +28,6 @@ export function useAward(form) {
   const bulkDeleteRecord = useRecordStore((state) => state.bulkDelete);
 
   const { t } = useTranslation();
-
-  const [messageApi, messageHolder] = message.useMessage();
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const rowSelection: TableRowSelection<Award> = {
@@ -245,16 +244,6 @@ export function useAward(form) {
         ) : (
           <>
             <Button color="primary" variant="outlined" size="small" className={styles['table-btn']} onClick={() => { handleEdit(record) }}>{t('operation.edit')}</Button>
-            {record.isFinished && <Popconfirm
-              title="确认重新抽取?"
-              icon={<DeleteOutlined style={{ color: '#F56C6C' }}/>}
-              onConfirm={() => { handleReplay(record) }}
-              okButtonProps={{ danger: true }}
-              okText="重新抽取"
-              cancelText="取消"
-            >
-              <Button color="danger" variant="outlined" size="small" className={styles['table-btn']}>{t('lottery.replay')}</Button>
-            </Popconfirm>}
             <Popconfirm
               title="确认删除?"
               icon={<DeleteOutlined style={{ color: '#F56C6C' }}/>}
@@ -265,11 +254,21 @@ export function useAward(form) {
             >
               <Button color="danger" variant="outlined" size="small" className={styles['table-btn']}>{t('operation.delete')}</Button>
             </Popconfirm>
+            {record.isFinished && <Popconfirm
+              title="确认重新抽取?"
+              icon={<DeleteOutlined style={{ color: '#F56C6C' }}/>}
+              onConfirm={() => { handleReplay(record) }}
+              okButtonProps={{ danger: true }}
+              okText="重新抽取"
+              cancelText="取消"
+            >
+              <Button color="yellow" variant="outlined" size="small" className={styles['table-btn']}>{t('lottery.replay')}</Button>
+            </Popconfirm>}
           </>
         );
       },
     },
   ], [t, handleSave, handleCancel, handleEdit, handleReplay, handleDelete]);
 
-  return { awards, columns, rowSelection, handleAdd, handleBulkDelete, handleClear, messageHolder };
+  return { awards, columns, rowSelection, handleAdd, handleBulkDelete, handleClear };
 }

@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useState } from 'react';
-import { Button, Popconfirm, Table, message } from 'antd';
+import { Button, Popconfirm, Table } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
@@ -28,8 +28,6 @@ export function useRecord() {
   const members = useMemberStore((state) => state.members);
 
   const { t } = useTranslation();
-
-  const [, messageHolder] = message.useMessage();
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const rowSelection: TableRowSelection<Record> = {
@@ -181,5 +179,5 @@ export function useRecord() {
     },
   ], [t, handleDelete, awards, members]);
 
-  return { records, columns, rowSelection, handleDownload, handleAdd, handleBulkAdd, handleBulkDelete, handleClear, messageHolder };
+  return { records, columns, rowSelection, handleDownload, handleAdd, handleBulkAdd, handleBulkDelete, handleClear };
 }
