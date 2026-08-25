@@ -2,7 +2,7 @@ import ExcelJS from 'exceljs';
 import * as XLSX from 'xlsx';
 
 import type { RcFile } from 'antd/es/upload';
-import type { Member } from '@/types/lottery.ts';
+import type { ExportColumns, Member } from '@/types/lottery.ts';
 
 /**
  * 异步解析 Excel 文件.
@@ -72,6 +72,49 @@ export async function parseExcel2(file: RcFile): Promise<Member[]> {
 
     reader.onerror = (err) => reject(err);
   });
+}
+
+export async function exportToExcel(data: ExportColumns[]) {
+  // 1. 创建工作簿和工作表
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet('数据表');
+
+  // 2. 设置表头
+  worksheet.columns = [
+    { header: '奖项', key: 'award', width: 15 },
+    { header: '工号', key: 'employeeId', width: 15 },
+    { header: '姓名', key: 'name', width: 15 },
+    { header: '部门', key: 'department', width: 20 },
+  ];
+
+  // 3. 添加数据
+  data.forEach(({ award, employeeId, name, department }) => {
+    worksheet.addRow({ award, employeeId, name, department });
+  });
+
+  // 4. 加样式（设置表头背景色与加粗）
+  const headerRow = worksheet.getRow(1);
+  headerRow.font = { bold: true, color: { argb: 'FFFFFF' } };
+  headerRow.fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    fgColor: { argb: '4F81BD' }
+  };
+
+  // 5. 生成 Buffer 并触发浏览器下载
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  });
+
+  const url = window.URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = `抽奖结果.xlsx`;
+  anchor.click();
+
+  // 释放内存
+  window.URL.revokeObjectURL(url);
 }
 
 /**

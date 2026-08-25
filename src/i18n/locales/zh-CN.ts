@@ -6,6 +6,7 @@ export default {
     play: '开始抽奖',
     finish: '停止并开奖',
     replay: '重新抽奖',
+    continue: '继续抽奖',
   },
   general: {
     title: '通用配置',

@@ -8,7 +8,10 @@
   color: #ffffff;
 }
 
-.operation-btn {
+.operation-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   position: fixed;
   bottom: 6%;
   left: 50%;
@@ -17,4 +20,9 @@
   height: 48px;
   font-size: 24px;
   font-weight: bold;
+}
+
+.operation-btn {
+  flex-grow: 1;
+  margin: 8px;
 }

@@ -2,10 +2,11 @@ export default {
   setting: 'Setting',
   pleaseInput: 'Please Input',
   lottery: {
-    enter: '进入抽奖',
-    play: '开始抽奖',
+    enter: 'Enter',
+    play: 'Play',
     finish: 'Stop and Announce',
-    replay: '重新抽奖',
+    replay: 'Replay',
+    continue: 'Continue',
   },
   general: {
     title: 'General Config',

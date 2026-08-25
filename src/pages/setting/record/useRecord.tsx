@@ -1,24 +1,23 @@
-import React, { useMemo, useEffect, useCallback, useState } from 'react';
-import { Form, Input, InputNumber, Button, Popconfirm, Table, Tag, message } from 'antd';
+import React, { useMemo, useCallback, useState } from 'react';
+import { Button, Popconfirm, Table, message } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
 import { useRecordStore } from '@/store/record.ts';
 import { useAwardStore } from '@/store/award.ts';
 import { useMemberStore } from '@/store/member.ts';
+import { exportToExcel } from '@/utils/excel.ts';
 
 import styles from './styles.module.css';
 
 import type { TableProps, TableColumnsType } from 'antd';
-import type { Record, Award, Member } from '@/types/lottery';
+import type { Record, Award, Member, ExportColumns } from '@/types/lottery';
 
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
 
-export function useRecord(form) {
+export function useRecord() {
   const records = useRecordStore((state) => state.records);
   const create = useRecordStore((state) => state.create);
-  const bulkCreate = useRecordStore((state) => state.bulkCreate);
-  const update = useRecordStore((state) => state.update);
   const remove = useRecordStore((state) => state.delete);
   const bulkRemove = useRecordStore((state) => state.bulkDelete);
   const clear = useRecordStore((state) => state.clear);
@@ -30,7 +29,7 @@ export function useRecord(form) {
 
   const { t } = useTranslation();
 
-  const [messageApi, messageHolder] = message.useMessage();
+  const [, messageHolder] = message.useMessage();
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const rowSelection: TableRowSelection<Record> = {
@@ -68,7 +67,29 @@ export function useRecord(form) {
 
   const handleDownload = useCallback(() => {
     // TODO 抽奖结果导出.
-  }, []);
+
+    const data = records.map(({ awardId, memberId }) => {
+      const award = awards.find(award => award.id === awardId);
+
+      const member = members.find(member => member.id === memberId);
+
+      const item: ExportColumns = {};
+
+      if (award) {
+        item.award = award.name;
+      }
+
+      if (member) {
+        item.employeeId = member.employeeId;
+        item.name = member.name;
+        item.department = member.department;
+      }
+
+      return item;
+    });
+
+    exportToExcel(data);
+  }, [awards, members, records]);
 
   const handleAdd = useCallback((item) => {
     const timestamp = Date.now();

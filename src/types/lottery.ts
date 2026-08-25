@@ -41,6 +41,13 @@ export interface Record {
   updatedAt?: string;
 }
 
+export interface ExportColumns {
+  award?: string;
+  employeeId?: string;
+  name?: string;
+  department?: string;
+}
+
 export interface Music {
   id?: number;
   name: string;         // 名称.

@@ -20,6 +20,7 @@ export function useLottery() {
   const members = useMemberStore((state) => state.members);
 
   const currAwardId = useLotteryStore((state) => state.currAwardId);
+  const setCurrAwardId = useLotteryStore((state) => state.setCurrAwardId);
   const lotteryStatus = useLotteryStore((state) => state.lotteryStatus);
   const setLotteryStatus = useLotteryStore((state) => state.setLotteryStatus);
 
@@ -153,8 +154,35 @@ export function useLottery() {
     await rotating(scene, camera, renderer, 100, 2 * 60 * 60);
   }, [lotteryStatus, currAward, setLotteryStatus, records, bulkDeleteRecord, updateAward, scene, camera, renderer, objects, targets.sphere]);
 
+  const handleContinue = useCallback(async () => {
+    /* TODO 继续抽奖
+     * 1、指定 currAward 为 awards 列表中的下一个，若没有可用的下一个则考虑从头筛选
+     * 2、若 awards 列表均抽取完毕，则给 tip 提示
+     */
+
+    const unfinishAwardIds: number[] = [];
+    const currIndex = awards.findIndex(award => award.id === currAwardId);
+    awards.forEach(({ id, isFinished }, index) => {
+      if (!isFinished) {
+        if (index > currIndex) {
+          unfinishAwardIds.push(id);
+        } else if (index < currIndex) {
+          unfinishAwardIds.unshift(id);
+        }
+      }
+    });
+
+    const nextAwardId = unfinishAwardIds[0];
+
+    if (nextAwardId !== undefined) {
+      setCurrAwardId(nextAwardId);
+    } else {
+      message.warning('当前所有奖项均已抽取完毕！');
+    }
+  }, [awards, currAwardId, setCurrAwardId, message]);
+
   return {
     ableEnter, ablePlay, ableFinish, ableReplay,
-    handleEnter, handlePlay, handleFinish, handleReplay,
+    handleEnter, handlePlay, handleFinish, handleReplay, handleContinue,
   };
 }
