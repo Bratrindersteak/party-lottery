@@ -3,7 +3,10 @@
   left: 0;
   top: 50%;
   transform: translateY(-50%);
-  background-color: #ffffff;
+  background: rgba(15, 23, 42, 0.65); /* 暗蓝灰色，带有高透感 */
+  backdrop-filter: blur(12px); /* 关键：毛玻璃磨砂效果 */
+  border: 1px solid rgba(0, 242, 254, 0.2); /* 极细的青蓝色发光边框 */
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   border-radius: 5px;
 
   & .award-list {
@@ -23,12 +26,13 @@
     justify-content: space-between;
     width: 434px;
     margin: 8px;
-    border: 1px solid transparent;
+    border: 1px solid rgba(0, 242, 254, 0.1);
     border-radius: 5px;
 
     &.award-active, &:hover {
-      background-color: #E7F6FE;
-      border-color: #1677ff;
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.2) 0%, rgba(79, 70, 229, 0.2) 100%);
+      border: 1px solid rgba(0, 242, 254, 0.6);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); /* 青色霓虹呼吸发光 */
       color: #1677ff;
       cursor: pointer;
     }
@@ -45,10 +49,12 @@
   & .award-title {
     line-height: 32px;
     font-weight: bold;
+    color: #00f2fe;
   }
 
   & .award-content {
     line-height: 48px;
+    color: #9493b8;
   }
 
   & .award-prize {
@@ -70,7 +76,11 @@
     right: 0;
     top: 50%;
     transform: translate(100%, -50%);
-    background-color: #ffffff;
+    background: rgba(15, 23, 42, 0.65); /* 暗蓝灰色，带有高透感 */
+    backdrop-filter: blur(12px); /* 关键：毛玻璃磨砂效果 */
+    border: 1px solid rgba(0, 242, 254, 0.2); /* 极细的青蓝色发光边框 */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    color: #00f2fe;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
     cursor: pointer;

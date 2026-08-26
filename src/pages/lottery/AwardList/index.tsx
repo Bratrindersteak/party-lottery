@@ -39,7 +39,7 @@ export default function AwardList() {
                 <div className={styles['award-count']}>{award.count}名</div>
               </div>
             </div>
-            <Tag className={styles['award-status']} color={award.isFinished ? 'lime' : 'cyan'} variant="outlined">{award.isFinished ? '已开奖' : '进行中'}</Tag>
+            <Tag className={styles['award-status']} color={award.isFinished ? '#64748b' : '#10b981'} variant="outlined">{award.isFinished ? '已开奖' : '进行中'}</Tag>
           </li>
         ))}
       </ul>
