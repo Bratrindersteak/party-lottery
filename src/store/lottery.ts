@@ -17,6 +17,9 @@ interface LotteryStore {
   currAwardId: number | null;
   setCurrAwardId: (id: number) => void;
 
+  isAwardListExpanded: boolean;
+  setIsAwardListExpanded: (expanded: boolean) => void;
+
   lotteryStatus: LotteryStatus;
   setLotteryStatus: (lotteryStatus: LotteryStatus) => void;
 }
@@ -33,6 +36,9 @@ export const useLotteryStore = create<LotteryStore>()(
       currAwardId: null,
       setCurrAwardId: (id: number) => set({ currAwardId: id }),
 
+      isAwardListExpanded: false,
+      setIsAwardListExpanded: (expanded: boolean) => set({ isAwardListExpanded: expanded }),
+
       lotteryStatus: INIT,
       setLotteryStatus: (lotteryStatus: LotteryStatus) => set({ lotteryStatus }),
     }),
@@ -43,6 +49,7 @@ export const useLotteryStore = create<LotteryStore>()(
         currentScreen: state.currentScreen,
         title: state.title,
         currAwardId: state.currAwardId,
+        isAwardListExpanded: state.isAwardListExpanded,
       }),
     }
   )

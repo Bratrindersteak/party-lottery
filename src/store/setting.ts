@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware'; // 🚀 1. 核心：请出持久化门神
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 import { GENERAL, MEMBER, AWARD, RECORD, MUSIC, INSTRUCTION } from '@/config/constants.ts';
 

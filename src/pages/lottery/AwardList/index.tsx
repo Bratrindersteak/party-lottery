@@ -10,14 +10,16 @@ import styles from './styles.module.css';
 
 export default function AwardList() {
   const currAwardId = useLotteryStore((state) => state.currAwardId);
+  const isAwardListExpanded = useLotteryStore((state) => state.isAwardListExpanded);
+  const setIsAwardListExpanded = useLotteryStore((state) => state.setIsAwardListExpanded);
 
   const awards = useAwardStore((state) => state.awards);
 
-  const { awardHandle, setAwardHandle, handleAwardClick } = useAwardList();
+  const { handleAwardClick } = useAwardList();
 
   return (
     <div className={styles['award-drawer']}>
-      <ul className={`${styles['award-list']} ${awardHandle ? styles['award-closed'] : ''}`}>
+      <ul className={`${styles['award-list']} ${!isAwardListExpanded && styles['award-closed']}`}>
         {awards.map((award) => (
           // 🚨 注意：这里必须显式绑定一个全局唯一的 key！
           <li key={award.id} className={`${styles['award-item']} ${currAwardId === award.id ? styles['award-active'] : ''}`} onClick={() => handleAwardClick(award)}>
@@ -41,8 +43,8 @@ export default function AwardList() {
           </li>
         ))}
       </ul>
-      <div className={styles['award-handle']} onClick={() => setAwardHandle(!awardHandle)}>
-        {awardHandle ? <RightOutlined/> : <LeftOutlined/>}
+      <div className={styles['award-handle']} onClick={() => setIsAwardListExpanded(!isAwardListExpanded)}>
+        {isAwardListExpanded ? <LeftOutlined/> : <RightOutlined/>}
       </div>
     </div>
   );

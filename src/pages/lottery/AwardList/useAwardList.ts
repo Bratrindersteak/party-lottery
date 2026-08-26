@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { App } from 'antd';
 
 import { useLotteryStore } from '@/store/lottery.ts';
@@ -11,8 +11,6 @@ export function useAwardList() {
   const lotteryStatus = useLotteryStore((state) => state.lotteryStatus);
   const currAwardId = useLotteryStore((state) => state.currAwardId);
   const setCurrAwardId = useLotteryStore((state) => state.setCurrAwardId);
-
-  const [awardHandle, setAwardHandle] = useState<boolean>(true);
 
   const handleAwardClick = useCallback((award: Award) => {
     const nextAwardId = award.id as number;
@@ -28,7 +26,6 @@ export function useAwardList() {
   }, [currAwardId, lotteryStatus, message, setCurrAwardId]);
 
   return {
-    awardHandle, setAwardHandle,
     handleAwardClick,
   };
 }
