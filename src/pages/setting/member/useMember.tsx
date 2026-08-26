@@ -11,13 +11,13 @@ import { ADD, EDIT } from '@/config/constants.ts';
 
 import styles from './styles.module.css';
 
-import type { TableProps, TableColumnsType } from 'antd';
+import type { TableProps, TableColumnsType, FormInstance } from 'antd';
 import type { RcFile } from 'antd/es/upload';
 import type { Member } from '@/types/lottery';
 
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
 
-export function useMember(form) {
+export function useMember(form: FormInstance) {
   const { message } = App.useApp();
   const members = useMemberStore((state) => state.members);
   const get = useMemberStore((state) => state.get);
@@ -125,10 +125,10 @@ export function useMember(form) {
   const handleCancel = useCallback((item: Member) => {
     const { _type, _backup, id } = item;
 
-    if (_type === 'add') {
+    if (_type === ADD) {
       removeInMemory(item);
-    } else if (_type === 'edit') {
-      updateInMemory(_backup);
+    } else if (_type === EDIT) {
+      updateInMemory(_backup as Member);
     }
 
     form.resetFields([id]);

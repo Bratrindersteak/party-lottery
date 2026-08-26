@@ -14,7 +14,7 @@ import type { Music } from '@/types/lottery';
 
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
 
-export function useMusic(form) {
+export function useMusic() {
   const { message } = App.useApp();
   const musics = useMusicStore((state) => state.musics);
   const openingId = useMusicStore((state) => state.openingId);
@@ -22,7 +22,6 @@ export function useMusic(form) {
   const winningId = useMusicStore((state) => state.winningId);
   const setMusic = useMusicStore((state) => state.setMusic);
   const create = useMusicStore((state) => state.create);
-  const update = useMusicStore((state) => state.update);
   const remove = useMusicStore((state) => state.delete);
   const bulkRemove = useMusicStore((state) => state.bulkDelete);
   const clear = useMusicStore((state) => state.clear);
@@ -156,19 +155,19 @@ export function useMusic(form) {
   const handlePlayMusic = useCallback((music: Music) => {
 
     if (music.id !== currAudioId) {
-      audioRef.current.pause();           // 切歌前先掐断上一首
+      audioRef.current?.pause();           // 切歌前先掐断上一首
       audioRef.current.src = URL.createObjectURL(music.file);  // 换子弹（切歌直链）
-      audioRef.current.load();
+      audioRef.current?.load();
       setCurrAudioId(music.id as number);
     }
 
-    audioRef.current.play();
+    audioRef.current?.play();
 
     setIsPlaying(true);
   }, [currAudioId]);
 
   const handlePauseMusic = useCallback((music: Music) => {
-    audioRef.current.pause(); // 暂停
+    audioRef.current?.pause(); // 暂停
     setIsPlaying(false);
   }, []);
 

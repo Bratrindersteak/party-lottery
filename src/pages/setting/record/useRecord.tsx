@@ -64,8 +64,6 @@ export function useRecord() {
   };
 
   const handleDownload = useCallback(() => {
-    // TODO 抽奖结果导出.
-
     const data = records.map(({ awardId, memberId }) => {
       const award = awards.find(award => award.id === awardId);
 

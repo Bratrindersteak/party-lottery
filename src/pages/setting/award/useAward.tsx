@@ -10,12 +10,12 @@ import defaultAwardUrl from '@/assets/images/default-award.png';
 
 import styles from './styles.module.css';
 
-import type { TableProps, TableColumnsType } from 'antd';
+import type { TableProps, TableColumnsType, FormInstance } from 'antd';
 import type { Award } from '@/types/lottery';
 
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
 
-export function useAward(form) {
+export function useAward(form: FormInstance) {
   const { message } = App.useApp();
   const awards = useAwardStore((state) => state.awards);
   const create = useAwardStore((state) => state.create);

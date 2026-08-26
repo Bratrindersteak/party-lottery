@@ -1,8 +1,10 @@
-import React, { useMemo, useEffect, useCallback, useState } from 'react';
+import { useCallback } from 'react';
 
 import { useLotteryStore } from '@/store/lottery.ts';
 
-export function useGeneral(form) {
+import type { FormInstance } from 'antd';
+
+export function useGeneral(form: FormInstance) {
   const title = useLotteryStore((state) => state.title);
   const setTitle = useLotteryStore((state) => state.setTitle);
 
