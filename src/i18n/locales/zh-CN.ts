@@ -1,5 +1,6 @@
 export default {
   setting: '设置',
+  backToLottery: '返回抽奖',
   pleaseInput: '请输入',
   lottery: {
     enter: '进入抽奖',

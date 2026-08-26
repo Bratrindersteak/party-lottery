@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { Button, Col, Row, Menu } from 'antd';
-import { RollbackOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next'
 
 import type { GetProp, MenuProps } from 'antd';
@@ -47,10 +47,9 @@ function Setting() {
   }, [setModule]);
 
   return (
-    <Row>
-      <Col span={3}>
+    <Row className={styles.setting} wrap={false}>
+      <Col className={styles['left-menu']} span={3}>
         <div className={styles.header}>
-          <Button className={styles.back} icon={<RollbackOutlined />} title="返回抽奖" onClick={handleBack} />
           <h3 className={styles.title}>{t('setting')}</h3>
         </div>
         <Menu defaultSelectedKeys={[currentModule]}
@@ -58,8 +57,9 @@ function Setting() {
           theme="light"
           items={items}
           onClick={handleMenuClick} />
+        <Button className={styles.back} icon={<ArrowLeftOutlined />} title="返回抽奖" onClick={handleBack}>{t('backToLottery')}</Button>
       </Col>
-      <Col span={21} className={styles['right-content']}>
+      <Col className={styles['right-content']} flex="1 1 auto">
         <General style={{ display: currentModule === GENERAL ? 'block' : 'none' }} />
         <Member style={{ display: currentModule === MEMBER ? 'block' : 'none' }} />
         <Award style={{ display: currentModule === AWARD ? 'block' : 'none' }} />

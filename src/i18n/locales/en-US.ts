@@ -1,5 +1,6 @@
 export default {
   setting: 'Setting',
+  backToLottery: 'Back To Lottery',
   pleaseInput: 'Please Input',
   lottery: {
     enter: 'Enter',

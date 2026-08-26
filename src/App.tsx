@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next'
-import { ConfigProvider, App as AntDesign } from 'antd'
+import { ConfigProvider, App as AntDesign, theme } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import enUS from 'antd/locale/en_US'
 
@@ -42,7 +42,9 @@ function App() {
   const currentScreen = useLotteryStore((state) => state.currentScreen)
 
   return (
-    <ConfigProvider locale={antdLocale}>
+    <ConfigProvider locale={antdLocale} theme={{
+      algorithm: theme.darkAlgorithm,
+    }}>
       <AntDesign>
         <div className="app-root" style={{ width: '100vw', height: '100vh', position: 'relative' }}>
           {/* 大屏抽奖页 */}

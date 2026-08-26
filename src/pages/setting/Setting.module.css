@@ -1,19 +1,30 @@
-.header {
-  position: relative;
-  text-align: center;
+.setting {
+  height: 100%;
+  background-color: #141414;
 }
 
-.back {
-  position: absolute;
-  top: 50%;
-  left: 16px;
-  margin-top: -16px;
+.left-menu {
+  position: relative;
+  min-width: 180px;
+}
+
+.header {
+  text-align: center;
 }
 
 .title {
   font-size: 24px;
 }
 
+.back {
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.85);
+}
+
 .right-content {
   padding: 0 16px;
+  overflow-y: scroll;
 }
