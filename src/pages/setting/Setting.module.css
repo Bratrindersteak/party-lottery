@@ -16,6 +16,10 @@
   font-size: 24px;
 }
 
+.menu {
+  text-align: left;
+}
+
 .back {
   position: absolute;
   bottom: 5%;

@@ -132,7 +132,7 @@ export function useRecord() {
     {
       title: '奖项',
       dataIndex: 'awardId',
-      key: 'awardId',
+      key: 'award',
       render: (value, record, index: number) => {
         const award: Award = awards.find(award => award.id === value);
 
@@ -142,14 +142,38 @@ export function useRecord() {
       },
     },
     {
-      title: '获奖者',
+      title: '工号',
       dataIndex: 'memberId',
-      key: 'memberId',
+      key: 'employeeId',
+      render: (value, record, index: number) => {
+        const member: Member = members.find(member => member.id === value);
+
+        return (
+          <>{member ? member.employeeId : ''}</>
+        );
+      },
+    },
+    {
+      title: '姓名',
+      dataIndex: 'memberId',
+      key: 'name',
       render: (value, record, index: number) => {
         const member: Member = members.find(member => member.id === value);
 
         return (
           <>{member ? member.name : ''}</>
+        );
+      },
+    },
+    {
+      title: '部门',
+      dataIndex: 'memberId',
+      key: 'department',
+      render: (value, record, index: number) => {
+        const member: Member = members.find(member => member.id === value);
+
+        return (
+          <>{member ? member.department : ''}</>
         );
       },
     },

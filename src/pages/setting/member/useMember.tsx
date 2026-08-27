@@ -140,8 +140,13 @@ export function useMember(form: FormInstance) {
   }, [remove]);
 
   const handleBulkDelete = useCallback(() => {
+    if (selectedRowKeys.length < 1) {
+      message.error('请勾选删除项！');
+      return;
+    }
+
     bulkRemove(selectedRowKeys);
-  }, [bulkRemove, selectedRowKeys]);
+  }, [bulkRemove, message, selectedRowKeys]);
 
   const handleClear = useCallback(() => {
     clear();

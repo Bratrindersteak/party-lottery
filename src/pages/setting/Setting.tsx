@@ -1,13 +1,13 @@
 import { useCallback } from 'react';
 import { Button, Col, Row, Menu } from 'antd';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { UserOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next'
 
 import type { GetProp, MenuProps } from 'antd';
 
 import { useLotteryStore } from '@/store/lottery.ts';
 import { useSettingStore } from '@/store/setting.ts';
-import { LOTTERY, SETTING, GENERAL, MEMBER, AWARD, RECORD, MUSIC, INSTRUCTION } from '@/config/constants.ts';
+import { LOTTERY, GENERAL, MEMBER, AWARD, RECORD, MUSIC, INSTRUCTION } from '@/config/constants.ts';
 
 import styles from './Setting.module.css';
 
@@ -34,7 +34,7 @@ function Setting() {
 
   const items: MenuItem[] = [
     { key: GENERAL, label: t('general.title'), icon: '' },
-    { key: MEMBER, label: t('member.title'), icon: '' },
+    { key: MEMBER, label: t('member.title'), icon: <UserOutlined /> },
     { key: AWARD, label: t('award.title'), icon: '' },
     { key: RECORD, label: t('record.title'), icon: '' },
     { key: MUSIC, label: t('music.title'), icon: '' },
@@ -52,9 +52,8 @@ function Setting() {
         <div className={styles.header}>
           <h3 className={styles.title}>{t('setting')}</h3>
         </div>
-        <Menu defaultSelectedKeys={[currentModule]}
+        <Menu className={styles.menu} defaultSelectedKeys={[currentModule]}
           mode="vertical"
-          theme="light"
           items={items}
           onClick={handleMenuClick} />
         <Button className={styles.back} icon={<ArrowLeftOutlined />} title="返回抽奖" onClick={handleBack}>{t('backToLottery')}</Button>
