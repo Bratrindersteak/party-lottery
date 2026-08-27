@@ -42,7 +42,6 @@ function Setting() {
   ];
 
   const handleMenuClick = useCallback(({ key, keyPath, domEvent }) => {
-    console.log('handleMenuClick: ', { key, keyPath, domEvent });
     setModule(key);
   }, [setModule]);
 

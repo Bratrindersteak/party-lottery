@@ -3,10 +3,14 @@
   left: 0;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(15, 23, 42, 0.65); /* 暗蓝灰色，带有高透感 */
-  backdrop-filter: blur(12px); /* 关键：毛玻璃磨砂效果 */
-  border: 1px solid rgba(0, 242, 254, 0.2); /* 极细的青蓝色发光边框 */
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.92) 0%,
+    rgba(10, 15, 30, 0.85) 100%
+  ); /* 带有 Alpha 通道的极深蓝黑渐变，兼顾透光与不遮挡 */
+  border: 1px solid rgba(0, 242, 254, 0.3); /* 微调边框亮感 */
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5),
+  inset 0 0 12px rgba(0, 242, 254, 0.1); /* 增加微弱内发光 */
   border-radius: 5px;
 
   & .award-list {
@@ -28,13 +32,17 @@
     margin: 8px;
     border: 1px solid rgba(0, 242, 254, 0.1);
     border-radius: 5px;
+    cursor: pointer;
+
+    &.award-active {
+      cursor: default;
+    }
 
     &.award-active, &:hover {
       background: linear-gradient(135deg, rgba(0, 242, 254, 0.2) 0%, rgba(79, 70, 229, 0.2) 100%);
       border: 1px solid rgba(0, 242, 254, 0.6);
       box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); /* 青色霓虹呼吸发光 */
       color: #1677ff;
-      cursor: pointer;
     }
   }
 
@@ -76,17 +84,24 @@
     right: 0;
     top: 50%;
     transform: translate(100%, -50%);
-    background: rgba(15, 23, 42, 0.65); /* 暗蓝灰色，带有高透感 */
-    backdrop-filter: blur(12px); /* 关键：毛玻璃磨砂效果 */
-    border: 1px solid rgba(0, 242, 254, 0.2); /* 极细的青蓝色发光边框 */
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    background: linear-gradient(
+      135deg,
+      rgba(15, 23, 42, 0.92) 0%,
+      rgba(10, 15, 30, 0.85) 100%
+    );
+    border: 1px solid rgba(0, 242, 254, 0.3); /* 极细的青蓝色发光边框 */
+    border-left-width: 0;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5),
+    inset 0 0 12px rgba(0, 242, 254, 0.1); /* 增加微弱内发光 */
     color: #00f2fe;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
     cursor: pointer;
 
     &:hover {
-      color: #1677ff;
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.2) 0%, rgba(79, 70, 229, 0.2) 100%);
+      border-color: rgba(0, 242, 254, 0.6);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); /* 青色霓虹呼吸发光 */
     }
   }
 }
