@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback, useState } from 'react';
-import { Form, Input, InputNumber, Button, Popconfirm, Table, Tag, Image, App } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { Form, Input, InputNumber, Button, Checkbox, Popconfirm, Table, Tag, Image, Tooltip, App } from 'antd';
+import { DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
 import { useAwardStore } from '@/store/award.ts';
@@ -10,7 +10,7 @@ import defaultAwardUrl from '@/assets/images/default-award.png';
 
 import styles from './styles.module.css';
 
-import type { TableProps, TableColumnsType, FormInstance } from 'antd';
+import type { TableProps, TableColumnsType, FormInstance, CheckboxChangeEvent } from 'antd';
 import type { Award } from '@/types/lottery';
 
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
@@ -70,6 +70,7 @@ export function useAward(form: FormInstance) {
       url: null,
       count: 0,
       isFinished: false,
+      allowRepeat: false,
       createdAt: Date.now(),
       _isEdit: true,
       _type: ADD,
@@ -156,6 +157,11 @@ export function useAward(form: FormInstance) {
     clear();
   }, [clear]);
 
+  const handleRepeat = useCallback((event: CheckboxChangeEvent, item: Award) => {
+    const allowRepeat = event.target.checked ?? false;
+    update({ ...item, allowRepeat });
+  }, [update]);
+
   const columns = useMemo<TableColumnsType<Award>>(() => [
     {
       title: '奖项',
@@ -219,7 +225,26 @@ export function useAward(form: FormInstance) {
       },
     },
     {
-      title: '是否开奖',
+      title: () => {
+        return (
+          <>
+            <>重复抽取 </>
+            <Tooltip placement="top" title='是否允许已获奖人员继续抽取此奖项'>
+              <QuestionCircleOutlined />
+            </Tooltip>
+          </>
+        );
+      },
+      dataIndex: 'allowRepeat',
+      key: 'allowRepeat',
+      render: (value, record, index: number) => {
+        return (
+          <Checkbox checked={value} onChange={(e) => { handleRepeat(e, record) }} />
+        );
+      },
+    },
+    {
+      title: '状态',
       dataIndex: 'isFinished',
       key: 'isFinished',
       render: (value, record, index: number) => {
@@ -268,7 +293,7 @@ export function useAward(form: FormInstance) {
         );
       },
     },
-  ], [t, handleSave, handleCancel, handleEdit, handleReplay, handleDelete]);
+  ], [handleRepeat, t, handleSave, handleCancel, handleEdit, handleDelete, handleReplay]);
 
   return { awards, columns, rowSelection, handleAdd, handleBulkDelete, handleClear };
 }
