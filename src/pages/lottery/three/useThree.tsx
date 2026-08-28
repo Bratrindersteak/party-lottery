@@ -37,6 +37,9 @@ export function useThree() {
     setScene(scene);
 
     const camera: PerspectiveCamera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+
+    // TODO 这里要好好计算一下，根据卡片数量调整数值.
+    // (行数 * 卡片高度) + ((行数-1) * 纵向间距).
     camera.position.z = 3000;
     setCamera(camera);
 
