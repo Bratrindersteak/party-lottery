@@ -25,3 +25,4 @@ export const CARD_WIDTH = 120;
 export const CARD_HEIGHT = 160;
 export const GAP_X = 20;
 export const GAP_Y = 20;
+export const WINNER_SCALE = 1.1;

@@ -19,8 +19,7 @@ let rotatingInstance: Tween | null = null;
  * @param easing - 运动速率函数.
  */
 export default function rotating(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRenderer, rotations: number, duration: number, easing = TWEEN.Easing.Cubic.Out): Promise<void> {
-
-  // 1. 🚨 进来先定点清除前任旋转动画，绝对不打架
+  // 1.先定点清除前任旋转动画，绝对不打架
   if (rotatingInstance) {
     rotatingInstance.stop();
   }

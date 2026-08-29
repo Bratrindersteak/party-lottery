@@ -1,3 +1,5 @@
+import { WINNER_SCALE } from '@/config/constants.ts';
+
 interface Config {
   width?: number;   // 卡片宽度.
   height?: number;  // 卡片高度.
@@ -23,8 +25,8 @@ function winnerPosition(total: number, config: Config = {}): ObjectPosition[] {
   if (total === 9) cols = 3; // 9人时 3x3 布局
 
   const rows = Math.ceil(total / cols);
-  const stepX = (width + gapX) * 2;
-  const stepY = (height + gapY) * 2;
+  const stepX = (width + gapX) * WINNER_SCALE;
+  const stepY = (height + gapY) * WINNER_SCALE;
 
   // 2. 整体阵列的居中偏移量 (基于完整网格)
   const totalWidth = (cols - 1) * stepX;

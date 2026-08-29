@@ -2,6 +2,7 @@ import TWEEN from 'three/addons/libs/tween.module.js';
 
 import render from './render.js';
 import threeStyles from '@/pages/lottery/three/styles.module.css';
+import { WINNER_SCALE } from '@/config/constants.ts';
 
 import type { Scene, PerspectiveCamera } from 'three';
 import type { CSS3DRenderer, CSS3DObject } from 'three/addons';
@@ -56,7 +57,7 @@ function winnerTransform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3
       .start();
 
     new TWEEN.Tween(object.scale)
-      .to({ x: 2, y: 2, z: 2 }, duration)
+      .to({ x: WINNER_SCALE, y: WINNER_SCALE, z: WINNER_SCALE }, duration)
       .easing(TWEEN.Easing.Exponential.Out)
       .onStart(() => {
         object.element.classList.add(threeStyles['element-winner']);
