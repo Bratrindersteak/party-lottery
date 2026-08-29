@@ -44,6 +44,10 @@
       box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); /* 青色霓虹呼吸发光 */
       color: #1677ff;
     }
+
+    &.award-disabled:not(.award-active) {
+      cursor: not-allowed;
+    }
   }
 
   & .award-right {

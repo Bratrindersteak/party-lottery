@@ -15,14 +15,14 @@ export default function AwardList() {
 
   const awards = useAwardStore((state) => state.awards);
 
-  const { handleAwardClick } = useAwardList();
+  const { ableClick, handleClick } = useAwardList();
 
   return (
     <div className={styles['award-drawer']}>
       <ul className={`${styles['award-list']} ${!isAwardListExpanded && styles['award-closed']}`}>
         {awards.map((award) => (
           // 🚨 注意：这里必须显式绑定一个全局唯一的 key！
-          <li key={award.id} className={`${styles['award-item']} ${currAwardId === award.id ? styles['award-active'] : ''}`} onClick={() => handleAwardClick(award)}>
+          <li key={award.id} className={`${styles['award-item']} ${(currAwardId === award.id) && styles['award-active']} ${!ableClick && styles['award-disabled']}`} onClick={() => handleClick(award)}>
             <div className={styles['award-left']}>
               <Image
                 className={styles['award-image']}
