@@ -1,3 +1,4 @@
+import calcCameraZ from '@/utils/three/calcCameraZ.ts';
 import { useEffect, useRef } from 'react';
 import * as THREE from "three";
 import { CSS3DRenderer, TrackballControls, CSS3DObject } from 'three/addons';
@@ -33,6 +34,10 @@ export function useThree() {
 
     if (length <= 0) { return }
 
+    const gapX = 140;
+    const gapY = 180;
+    const { col, row, offsetX, offsetY } = cardLayout(length, gapX, gapY);
+
     const scene: Scene = new THREE.Scene();
     setScene(scene);
 
@@ -40,7 +45,7 @@ export function useThree() {
 
     // TODO 这里要好好计算一下，根据卡片数量调整数值.
     // (行数 * 卡片高度) + ((行数-1) * 纵向间距).
-    camera.position.z = 3000;
+    camera.position.z = calcCameraZ(row);
     setCamera(camera);
 
     const renderer = new CSS3DRenderer();
@@ -64,10 +69,6 @@ export function useThree() {
     setTargets(targets);
 
     const vector = new THREE.Vector3();
-
-    const gapX = 140;
-    const gapY = 180;
-    const { col, offsetX, offsetY } = cardLayout(length, gapX, gapY);
 
     for (let i = 0; i < length; i += 1) {
       initCard(scene, objects, members[i], styles);
