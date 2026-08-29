@@ -141,7 +141,7 @@ export function useLottery() {
     const rotations = (currentRounds + 3);
     await rotating(scene, camera, renderer, rotations, 2);
 
-    const positions = winnerPosition(currWinnersRef.current.length, { width: 240, height: 320 });
+    const positions = winnerPosition(currWinnersRef.current.length);
     await winnerTransform(scene, camera, renderer, objects, 1500, positions, currWinnersRef.current);
     setIsAnimating(false);
   }, [lotteryStatus, currAward, setLotteryStatus, updateAward, bulkCreateRecord, scene, camera, renderer, objects]);

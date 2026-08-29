@@ -18,7 +18,8 @@ function calcCameraZ(rows: number, fov = 40, ratio = 0.75): number {
   // 3. 计算所需的 z 距离
   const cameraZ = Math.ceil(totalCardsHeight / (2 * ratio * Math.tan(fovRad / 2)));
 
-  return Math.max(1500, cameraZ);
+  // 4. 设置最小值，防御卡片过少时被放得过大.
+  return Math.max(2000, cameraZ);
 }
 
 export default calcCameraZ;
