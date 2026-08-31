@@ -6,32 +6,40 @@
 .element {
   width: 120px;
   height: 160px;
-  background-color: rgba(6, 182, 202, var(--rand-alpha, 0.5));
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: cover;
   box-shadow: 0px 0px 12px rgba(0, 255, 255, 0.5);
   border: 1px solid rgba(127, 255, 255, 0.25);
+  border-radius: 5px;
   font-family: Helvetica, sans-serif;
+
+  &:before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30%;
+    background-color: rgba(0, 0, 0, 0.65);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    z-index: -1;
+  }
 }
 
 .element-winner {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 215, 0, 0.25) 0%,   /* 亮金色半透 */
-    rgba(20, 20, 35, 0.75) 50%,    /* 深暗色过度 */
-    rgba(255, 165, 0, 0.25) 100%   /* 暖橙色半透 */
-  );
-
-  /* 2. 强效毛玻璃：透出背后的 3D 粒子球 */
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-
-  /* 3. 耀眼的金边与霓虹外发光 */
   border: 1.5px solid rgba(255, 215, 0, 0.8);
   box-shadow:
     0 0 20px rgba(255, 215, 0, 0.4),        /* 金色外发光 */
     inset 0 0 15px rgba(255, 215, 0, 0.2);  /* 内侧高光 */
-
   border-radius: 10px;
   color: #ffffff;
+
+  &:before {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
 }
 
 .element:hover {
@@ -44,46 +52,6 @@
     0 0 20px rgba(255, 215, 0, 0.8),
     inset 0 0 15px rgba(255, 215, 0, 0.75);
   border-color: rgba(255, 215, 0, 1);
-}
-
-.element .avatar-wrapper {
-  width: 60px;
-  height: 60px;
-  margin-top: 5px;
-  margin-left: 28px;
-  border: 2px solid #00f2fe;
-  box-shadow: 0 0 12px #00f2fe;
-  border-radius: 50%;
-  overflow: hidden;
-}
-
-.element-winner .avatar-wrapper {
-  border-color: rgba(255, 215, 0, 0.8);
-  box-shadow:
-    0 0 20px rgba(255, 215, 0, 0.4),        /* 金色外发光 */
-    inset 0 0 15px rgba(255, 215, 0, 0.2);
-}
-
-.element .avatar-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* 等比例缩放并填满容器，自动裁剪多余部分，绝不拉伸变形 */
-  object-position: center; /* 默认以图片正中心为基准进行裁剪 */
-}
-
-.element .employee-id {
-  height: 24px;
-  line-height: 24px;
-  font-size: 12px;
-  color: rgba(127, 255, 255, 0.75);
-  letter-spacing: 1px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.element-winner .employee-id {
-  color: rgba(255, 235, 180, 0.8);
 }
 
 .element .name {
@@ -106,10 +74,26 @@
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(255, 165, 0, 0.5);
 }
 
+.element .employee-id {
+  height: 24px;
+  line-height: 24px;
+  font-size: 15px;
+  color: rgba(127, 255, 255, 0.75);
+  letter-spacing: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 70px;
+}
+
+.element-winner .employee-id {
+  color: rgba(255, 235, 180, 0.8);
+}
+
 .element .department {
   height: 24px;
   line-height: 24px;
-  font-size: 12px;
+  font-size: 15px;
   color: rgba(127, 255, 255, 0.75);
   white-space: nowrap;
   overflow: hidden;

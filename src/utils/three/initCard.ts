@@ -8,21 +8,18 @@ import type { Member } from '@/types/lottery.ts';
 function initCard(scene: Scene, objects: CSS3DObject[], member: Member, styles: Record<string, string>) {
   const element = document.createElement('div');
   element.className = styles.element;
-  element.style.setProperty('--rand-alpha', `${Math.random() * 0.3 + 0.15}`);
 
-  const avatarWrapper = document.createElement('div');
-  avatarWrapper.className = styles['avatar-wrapper'];
-  const avatarImg = document.createElement('img');
-  avatarImg.className = styles['avatar-img'];
-  avatarImg.src = member.avatar || defaultAvatar;
-  avatarImg.alt = member.name;
-  // 如果链接加载失败，自动换成默认头像.
-  avatarImg.onerror = () => {
-    avatarImg.src = defaultAvatar;
-    avatarImg.onerror = null; // 防止默认图也加载失败造成死循环.
+  const img = new Image();
+  img.referrerPolicy = 'no-referrer';
+  img.src = member.avatar as string;
+  // 加载成功：设置真实头像
+  img.onload = () => {
+    element.style.setProperty('background-image', `url('${member.avatar}')`);
   };
-  avatarWrapper.appendChild(avatarImg);
-  element.appendChild(avatarWrapper);
+  // 如果链接加载失败，自动换成默认头像.
+  img.onerror = () => {
+    element.style.setProperty('background-image', `url('${defaultAvatar}')`);
+  };
 
   const name = document.createElement('div');
   name.className = styles.name;

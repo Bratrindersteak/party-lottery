@@ -13,5 +13,4 @@ export const db = new Dexie('PartyLottery') as Dexie & {
 db.version(1).stores({
   member: '++id, employeeId, name, department', // 只有列出的字段可以被 .where() 查询.
   music: '++id, name, data, size',
-  image: '++id, url, file',
 });

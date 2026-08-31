@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useState } from 'react';
-import { Form, Input, Button, Popconfirm, type UploadProps, Upload, Table, App } from 'antd';
+import { Form, Input, Button, Popconfirm, type UploadProps, Upload, Table, App, Image } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
@@ -8,6 +8,7 @@ import { parseExcel, parseExcel2 } from '@/utils/excel.ts';
 import { triggerDownload } from '@/utils/download.ts';
 import { generateTempId } from '@/utils/uuid.ts';
 import { ADD, EDIT } from '@/config/constants.ts';
+import defaultAwardUrl from '@/assets/images/default-award.png';
 
 import styles from './styles.module.css';
 
@@ -205,6 +206,25 @@ export function useMember(form: FormInstance) {
           </Form.Item>
         ) : (
           <>{value}</>
+        );
+      },
+    },
+    {
+      title: '头像',
+      dataIndex: 'avatar',
+      key: 'avatar',
+      render: (value, record, index: number) => {
+        return record._isEdit ? (
+          <Form.Item name={[record.id as number, 'avatar']} initialValue={value} className={styles['table-edit-item']}>
+            <Input placeholder="请输入"/>
+          </Form.Item>
+        ) : (
+          <Image
+            height={32}
+            referrerPolicy="no-referrer"
+            src={value}
+            fallback={defaultAwardUrl}
+          />
         );
       },
     },
