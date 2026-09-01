@@ -1,6 +1,6 @@
 import { CSS3DObject } from 'three/addons';
 
-import defaultAvatar from '@/assets/images/zhu_hou_cong.webp';
+import defaultAvatar from '@/assets/images/default-avatar.jpg';
 
 import type { Scene } from 'three';
 import type { Member } from '@/types/lottery.ts';

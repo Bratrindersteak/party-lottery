@@ -107,7 +107,8 @@ export function useLottery() {
 
     setLotteryStatus(RUNNING);
 
-    currWinnersRef.current = shuffle(members, currAward.count);
+    const excludedIds: number[] = currAward.allowRepeat ? [] : records.map(record => record.memberId);
+    currWinnersRef.current = shuffle(members, currAward.count, excludedIds);
 
     console.log('handlePlay: ', { currAward, currWinners: currWinnersRef.current });
 

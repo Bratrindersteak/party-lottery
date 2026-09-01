@@ -10,61 +10,87 @@ import type { ExportColumns, Member } from '@/types/lottery.ts';
  * @param file - .
  * @returns .
  */
-export async function parseExcel2(file: RcFile): Promise<Member[]> {
+export async function parseExcel(file: RcFile): Promise<Member[]> {
   return new Promise((resolve, reject) => {
     if (!file) resolve([]);
 
     const reader = new FileReader();
-
-    // ① 把用户上传的文件以二进制阵列（ArrayBuffer）的形式读进内存
+    // 把用户上传的文件以二进制阵列（ArrayBuffer）的形式读进内存.
     reader.readAsArrayBuffer(file);
 
     reader.onload = async (e) => {
       try {
         const buffer = e.target?.result as ArrayBuffer;
-
-        // ② 实例化 ExcelJS 工作簿，并强行把二进制流啃下去
+        // 实例化 ExcelJS 工作簿，并强行把二进制流啃下去.
         const workbook = new ExcelJS.Workbook();
         await workbook.xlsx.load(buffer);
 
-        // ③ 捞出第一张工作表（也就是 HR 填写的名单表）
+        // 捞出第一张工作表（也就是 HR 填写的名单表）.
         const worksheet = workbook.getWorksheet(1);
         if (!worksheet) {
-          throw new Error('未找到有效的工作表（Sheet）！');
+          console.error('未找到有效的工作表（Sheet）！');
+          return resolve([]);
         }
 
-        const resultData: Member[] = [];
+        // 1. 定义期望字段及可能匹配的表头别名（大小写与空格无关）
+        const headerAliases: Record<keyof Omit<Member, 'id'> | 'employeeId', string[]> = {
+          employeeId: ['工号', '员工工号', '员工编号', '编号', 'id', 'employeeId'],
+          name: ['姓名', '名字', '员工姓名', '称呼', 'name'],
+          department: ['部门', '所属部门', '架构', '部门名称', 'department'],
+          avatar: ['头像', '头像地址', '头像链接', '照片', 'avatar'],
+        };
 
-        // 🚀 ④ 核心迭代：逐行扫描 Excel 单元格
-        worksheet.eachRow((row, rowNumber) => {
+        // 2. 扫描第 1 行建立列号映射：{ employeeId: 1, name: 2, ... }
+        const colMap: Partial<Record<keyof Member, number>> = {};
+        const headerRow = worksheet.getRow(1);
 
-          console.log('row: ', row);
+        headerRow.eachCell({ includeEmpty: false }, (cell, colNumber) => {
+          // 清理表头字符串：去除两侧空格并转小写
+          const rawHeader = cell.text.trim().toLowerCase();
 
-          // 💡 防御心智：第一行通常是表头（"工号"、"姓名"、"部门"），直接略过
-          if (rowNumber === 1) return;
+          if (!rawHeader) return;
 
-          // 捞出每一列的单元格原始值
-          // 🚨 隐形地雷：ExcelJS 的 values 数组下标是从 1 开始的！
-          const rowValues = row.values as any[];
-
-          if (rowValues && rowValues.length > 0) {
-            // 揉成规规矩矩的 JSON 对象
-            const member: Member = {
-              employeeId: String(rowValues[1] || '').trim(),     // 第一列：工号
-              name: String(rowValues[2] || '').trim(),       // 第二列：姓名
-              department: String(rowValues[3] || '').trim(), // 第三列：部门
-            };
-
-            // 过滤掉那些空行
-            if (member.employeeId && member.name) {
-              resultData.push(member);
+          // 匹配别名
+          for (const [field, aliases] of Object.entries(headerAliases)) {
+            if (aliases.some(alias => alias.toLowerCase() === rawHeader)) {
+              colMap[field as keyof Member] = colNumber;
+              break;
             }
           }
         });
 
-        console.log('resultData: ', resultData);
+        // 校验是否至少识别到了关键字段（如：姓名）
+        if (!colMap.name) {
+          console.warn('未能识别到“姓名”列，请检查 Excel 表头！');
+        }
 
-        resolve(resultData);
+        const members: Member[] = [];
+        // 辅助获取指定列的纯文本内容.
+        const getCellValue = (field: keyof Member, rowNumber: number): string => {
+          const colIndex = colMap[field];
+          if (!colIndex) return '';
+          // 使用 getCell(colIndex).text 保证拿到的绝对是纯文本字符串
+          return worksheet.getCell(rowNumber, colIndex).text.trim();
+        };
+
+        // 🚀 ④ 核心迭代：逐行扫描 Excel 单元格
+        worksheet.eachRow((row, rowNumber) => {
+          if (rowNumber === 1) { return } // 略过表头.
+
+          const name = getCellValue('name', rowNumber);
+          // 基础校验：如果没有姓名则跳过该有效行
+          if (name) {
+            const member: Member = {
+              employeeId: getCellValue('employeeId', rowNumber),
+              name,
+              department: getCellValue('department', rowNumber) || '...',
+              avatar: getCellValue('avatar', rowNumber),
+            };
+            members.push(member);
+          }
+        });
+
+        resolve(members);
       } catch (error) {
         reject(error);
       }
@@ -123,7 +149,7 @@ export async function exportToExcel(data: ExportColumns[]) {
  * @param file - .
  * @returns .
  */
-export async function parseExcel(file: RcFile): Promise<Member[]> {
+export async function parseExcel2(file: RcFile): Promise<Member[]> {
   return new Promise((resolve, reject) => {
     if (!file) resolve([]);
 
