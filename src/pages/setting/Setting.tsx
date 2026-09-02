@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { Button, Col, Row, Menu } from 'antd';
-import { UserOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import { UserOutlined, GiftOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next'
 
 import type { GetProp, MenuProps } from 'antd';
@@ -35,7 +35,7 @@ function Setting() {
   const items: MenuItem[] = [
     { key: GENERAL, label: t('general.title'), icon: '' },
     { key: MEMBER, label: t('member.title'), icon: <UserOutlined /> },
-    { key: AWARD, label: t('award.title'), icon: '' },
+    { key: AWARD, label: t('award.title'), icon: <GiftOutlined /> },
     { key: RECORD, label: t('record.title'), icon: '' },
     { key: MUSIC, label: t('music.title'), icon: '' },
     { key: INSTRUCTION, label: t('instruction.title'), icon: '' },
