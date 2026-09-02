@@ -158,10 +158,10 @@ export function useMember(form: FormInstance) {
   }, []);
 
   const uploadProps = useMemo<UploadProps<never>>(() => ({
-    accept: '.xlsx, .xls, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel',      // 浏览器文件选择框层面的防御
-    maxCount: 1,              // 每次只允许传一个文件
+    accept: '.xlsx, .xls, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel', // 浏览器文件选择框层面的防御.
+    maxCount: 1, // 每次只允许传一个文件.
     beforeUpload: async (file: RcFile, fileList: RcFile[]) => {
-      // 1. 🛡️ 严格看门狗：先验一下是不是 Excel 文件，防止 HR 误传一张照片进来
+      // 1. 🛡️ 严格看门狗：先验一下是不是 Excel 文件，防止 HR 误传一张照片进来.
       const isExcel =
         file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
         file.name.endsWith('.xlsx') ||
@@ -173,12 +173,12 @@ export function useMember(form: FormInstance) {
       }
 
       try {
-        // 2. ⚡ 趁热打铁：直接调用我们写好的解析工具
+        // 2. ⚡ 趁热打铁：直接调用我们写好的解析工具.
         message.loading({ content: '正在拼命解析千人名单...', key: 'importing' })
         const members = await parseExcel(file);
         const timestamp = Date.now();
         const newMembers = members.map(member => ({ ...member, createdAt: timestamp, updatedAt: timestamp }));
-        // 3. 📦 兵分两路送进全局状态中心（和本地数据库）
+        // 3. 📦 兵分两路送进全局状态中心（和本地数据库）.
         await bulkCreate(newMembers);
         message.success({ content: `成功导入${members.length}人！`, key: 'importing' });
       } catch (error) {
