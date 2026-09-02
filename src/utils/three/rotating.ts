@@ -18,8 +18,9 @@ let rotatingInstance: Tween | null = null;
  * @param rotations - 自转圈数.
  * @param duration - 动画耗时（秒）.
  * @param easing - 运动速率函数.
+ * @param times - 重复执行次数.
  */
-export default function rotating(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRenderer, rotations: number, duration: number, easing = TWEEN.Easing.Cubic.Out): Promise<void> {
+export default function rotating(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRenderer, rotations: number, duration: number, easing = TWEEN.Easing.Linear.None, times: number = 0): Promise<void> {
   // 1.先定点清除前任旋转动画，绝对不打架
   if (rotatingInstance) {
     rotatingInstance.stop();
@@ -27,9 +28,14 @@ export default function rotating(scene: Scene, camera: PerspectiveCamera, render
 
   // 3. 返回 Promise
   return new Promise((resolve) => {
+    // 关键点：基于当前 scene.rotation.y 计算增量目标，绝不倒转.
+    const currentY = scene.rotation.y;
+    const targetY = currentY + Math.PI * 2 * rotations;
+
     rotatingInstance = new TWEEN.Tween(scene.rotation, mainGroup)
-      .to({ x: 0, y: Math.PI * 2 * rotations, z: 0 }, duration * 1000)
+      .to({ x: 0, y: targetY, z: 0 }, duration * 1000)
       .easing(easing)
+      .repeat(times)
       .onUpdate(() => {
         render(scene, camera, renderer);
       })
@@ -43,6 +49,6 @@ export default function rotating(scene: Scene, camera: PerspectiveCamera, render
         rotatingInstance = null;
       });
 
-    rotatingInstance.start();
+    rotatingInstance.start(performance.now());
   });
 }

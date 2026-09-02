@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo, useRef } from 'react';
+import * as TWEEN from '@tweenjs/tween.js';
 import { App } from 'antd';
 
 import { useMemberStore } from '@/store/member.ts';
@@ -87,7 +88,7 @@ export function useLottery() {
 
     await transform(scene, camera, renderer, objects, targets.sphere, 2000);
     setIsAnimating(false);
-    await rotating(scene, camera, renderer, 100, 2 * 60 * 60);
+    await rotating(scene, camera, renderer, 100, 1 * 60 * 60, TWEEN.Easing.Linear.None);
 
   }, [lotteryStatus, currAward, setLotteryStatus, scene, camera, renderer, objects, targets.sphere, message]);
 
@@ -105,6 +106,7 @@ export function useLottery() {
       return;
     }
 
+    setIsAnimating(true);
     setLotteryStatus(RUNNING);
 
     const excludedIds: number[] = currAward.allowRepeat ? [] : records.map(record => record.memberId);
@@ -112,8 +114,10 @@ export function useLottery() {
 
     console.log('handlePlay: ', { currAward, currWinners: currWinnersRef.current });
 
-    await rotating(scene, camera, renderer, 1000, 800);
-  }, [lotteryStatus, setLotteryStatus, currAward, members, message, renderer, scene, camera]);
+    await rotating(scene, camera, renderer, 5, 2, TWEEN.Easing.Quadratic.In);
+    setIsAnimating(false);
+    rotating(scene, camera, renderer, 15, 8, TWEEN.Easing.Linear.None, Infinity);
+  }, [lotteryStatus, currAward, setLotteryStatus, records, members, scene, camera, renderer, message]);
 
   // 停止动效并开奖.
   const handleFinish = useCallback(async () => {
@@ -121,26 +125,25 @@ export function useLottery() {
     if (!currAward) { return }
 
     setIsAnimating(true);
+
+    const currentY = scene.rotation.y;
+    const TWO_PI = Math.PI * 2;
+    // 1. 计算当前这不足一圈的余数（处理负数/浮点数积累）
+    const remainder = ((currentY % TWO_PI) + TWO_PI) % TWO_PI;
+    // 2. 顺时针补齐到下一个正对屏幕位置所需的弧度占比（0 ~ 1 圈）
+    const restOfTurn = remainder > 0 ? (TWO_PI - remainder) / TWO_PI : 0;
+    // 3. 最终增量圈数 = 补齐当前圈 + 减速缓冲 3 圈
+    const rotations = restOfTurn + 3;
+    await rotating(scene, camera, renderer, rotations, 3.8, TWEEN.Easing.Cubic.Out);
+
     setLotteryStatus(FINISHED);
-
-    // TODO 开奖动效.
-
     updateAward({ ...currAward, isFinished: true });
-
-    console.log('handleFinish: ', currWinnersRef.current);
 
     const records: Record[] = currWinnersRef.current.map((winner) => ({
       awardId: currAward.id as number,
       memberId: winner.id as number,
     }));
-
     bulkCreateRecord(records);
-
-    const currentY = scene.rotation.y; // 2. 获取当前停下的弧度值
-    const TWO_PI = Math.PI * 2; // 3. 计算下一个正面的目标弧度（保证顺时针继续滑动到正面）
-    const currentRounds = Math.floor(currentY / TWO_PI); // Math.ceil 确保总是往前找最近的正面；+ 1 可以在当前位置基础上再多转 1 圈作为缓冲减速
-    const rotations = (currentRounds + 3);
-    await rotating(scene, camera, renderer, rotations, 2);
 
     const positions = winnerPosition(currWinnersRef.current.length);
     await winnerTransform(scene, camera, renderer, objects, 1500, positions, currWinnersRef.current);
@@ -168,7 +171,7 @@ export function useLottery() {
     await transform(scene, camera, renderer, objects, targets.sphere, 2000, currWinnersRef.current);
     currWinnersRef.current = [];
     setIsAnimating(false);
-    await rotating(scene, camera, renderer, 100, 2 * 60 * 60);
+    await rotating(scene, camera, renderer, 100, 1 * 60 * 60);
   }, [lotteryStatus, currAward, setLotteryStatus, records, bulkDeleteRecord, updateAward, scene, camera, renderer, objects, targets.sphere]);
 
   const handleContinue = useCallback(async () => {
@@ -195,7 +198,7 @@ export function useLottery() {
       setCurrAwardId(nextAwardId);
       await transform(scene, camera, renderer, objects, targets.sphere, 2000, currWinnersRef.current);
       currWinnersRef.current = [];
-      rotating(scene, camera, renderer, 100, 2 * 60 * 60);
+      rotating(scene, camera, renderer, 100, 1 * 60 * 60);
     } else {
       message.warning('当前所有奖项均已抽取完毕！');
     }
