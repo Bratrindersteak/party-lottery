@@ -1,4 +1,4 @@
-import TWEEN from 'three/addons/libs/tween.module.js';
+import { mainGroup } from './tweenManager.ts';
 
 import type { TrackballControls } from 'three/addons';
 
@@ -6,12 +6,12 @@ import type { TrackballControls } from 'three/addons';
 let animationFrameId: number | null = null;
 
 /**
- * .
+ * 动画渲染循环
  *
- * @param controls - .
+ * @param controls - TrackballControls 实例
  */
 function animate(controls: TrackballControls) {
-  TWEEN.update();
+  mainGroup.update(); // 暂不传 time，让它内部自己去获取 performance.now()
 
   controls.update();
 

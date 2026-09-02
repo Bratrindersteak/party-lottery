@@ -1,8 +1,7 @@
-import calcCameraZ from '@/utils/three/calcCameraZ.ts';
 import { useEffect, useRef } from 'react';
 import * as THREE from "three";
 import { CSS3DRenderer, TrackballControls, CSS3DObject } from 'three/addons';
-import TWEEN from 'three/addons/libs/tween.module.js';
+import * as TWEEN from '@tweenjs/tween.js';
 
 import { useThreeStore } from "@/store/three.ts";
 import { useMemberStore } from '@/store/member.ts';
@@ -12,6 +11,7 @@ import initTable from '@/utils/three/initTable.ts';
 import initSphere from '@/utils/three/initSphere.ts';
 import cardLayout from '@/utils/three/cardLayout.ts';
 import { handleWindowResize } from '@/utils/three/handles.ts';
+import calcCameraZ from '@/utils/three/calcCameraZ.ts';
 
 import styles from './styles.module.css';
 

@@ -1,10 +1,11 @@
-import TWEEN from 'three/addons/libs/tween.module.js';
-
-import type { Scene, PerspectiveCamera } from 'three';
-import type { CSS3DRenderer } from 'three/addons';
-import type { Tween } from 'three/addons/libs/tween.module.js';
+import * as TWEEN from '@tweenjs/tween.js';
 
 import render from './render.js';
+import { mainGroup } from './tweenManager.ts';
+
+import type { Tween } from '@tweenjs/tween.js';
+import type { Scene, PerspectiveCamera } from 'three';
+import type { CSS3DRenderer } from 'three/addons';
 
 let rotatingInstance: Tween | null = null;
 
@@ -26,7 +27,7 @@ export default function rotating(scene: Scene, camera: PerspectiveCamera, render
 
   // 3. 返回 Promise
   return new Promise((resolve) => {
-    rotatingInstance = new TWEEN.Tween(scene.rotation)
+    rotatingInstance = new TWEEN.Tween(scene.rotation, mainGroup)
       .to({ x: 0, y: Math.PI * 2 * rotations, z: 0 }, duration * 1000)
       .easing(easing)
       .onUpdate(() => {
@@ -40,7 +41,6 @@ export default function rotating(scene: Scene, camera: PerspectiveCamera, render
       .onStop(() => {
         console.log('rotating was stopped');
         rotatingInstance = null;
-        resolve();
       });
 
     rotatingInstance.start();
