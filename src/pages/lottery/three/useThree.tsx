@@ -2,7 +2,8 @@ import { useEffect, useRef } from 'react';
 import * as THREE from "three";
 import { CSS3DRenderer, TrackballControls, CSS3DObject } from 'three/addons';
 
-import { useThreeStore } from "@/store/three.ts";
+import { useThreeStore } from '@/store/three.ts';
+import { useLotteryStore } from '@/store/lottery.ts';
 import { useMemberStore } from '@/store/member.ts';
 import { render, transform, animate } from '@/utils/three';
 import initCard from '@/utils/three/initCard.ts';
@@ -26,6 +27,8 @@ export function useThree() {
   const setObjects = useThreeStore((state) => state.setObjects);
   const setTargets = useThreeStore((state) => state.setTargets);
 
+  const setIsAnimating = useLotteryStore((state) => state.setIsAnimating);
+
   const members = useMemberStore((state) => state.members);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -33,6 +36,8 @@ export function useThree() {
     const length = members.length;
 
     if (length <= 0) { return }
+
+    setIsAnimating(true);
 
     const { cols, rows, offsetX, offsetY } = cardLayout(length);
 
@@ -75,7 +80,8 @@ export function useThree() {
     const windowResizeListener = () => handleWindowResize(scene, camera, renderer);
     window.addEventListener('resize', windowResizeListener);
 
-    transform(scene, camera, renderer, objects, targets.table, 2000);
+    transform(scene, camera, renderer, objects, targets.table, 2000)
+      .then(() => { setIsAnimating(false) });
     animate(controls);
 
     return () => {
@@ -99,7 +105,7 @@ export function useThree() {
       setRenderer(null);
       setControls(null);
     }
-  }, [members, setCamera, setControls, setObjects, setRenderer, setScene, setTargets]);
+  }, [members, setCamera, setControls, setIsAnimating, setObjects, setRenderer, setScene, setTargets]);
 
   return { containerRef };
 }

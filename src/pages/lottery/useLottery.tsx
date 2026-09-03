@@ -25,6 +25,8 @@ export function useLottery() {
   const setCurrAwardId = useLotteryStore((state) => state.setCurrAwardId);
   const lotteryStatus = useLotteryStore((state) => state.lotteryStatus);
   const setLotteryStatus = useLotteryStore((state) => state.setLotteryStatus);
+  const isAnimating = useLotteryStore((state) => state.isAnimating);
+  const setIsAnimating = useLotteryStore((state) => state.setIsAnimating);
 
   const scene = useThreeStore((state) => state.scene);
   const camera = useThreeStore((state) => state.camera);
@@ -38,8 +40,6 @@ export function useLottery() {
 
   const awards = useAwardStore((state) => state.awards);
   const updateAward = useAwardStore((state) => state.update);
-
-  const [isAnimating, setIsAnimating] = useState(false);
 
   const currWinnersRef = useRef<Member[]>([]);
 
@@ -89,7 +89,7 @@ export function useLottery() {
     await transform(scene, camera, renderer, objects, targets.sphere, 2000);
     setIsAnimating(false);
     rotating(scene, camera, renderer, 1, 60, TWEEN.Easing.Linear.None, Infinity);
-  }, [lotteryStatus, currAward, setLotteryStatus, scene, camera, renderer, objects, targets.sphere, message]);
+  }, [lotteryStatus, currAward, setIsAnimating, setLotteryStatus, scene, camera, renderer, objects, targets.sphere, message]);
 
   // 开始抽取当前奖项.
   const handlePlay = useCallback(async () => {
@@ -111,12 +111,10 @@ export function useLottery() {
     const excludedIds: number[] = currAward.allowRepeat ? [] : records.map(record => record.memberId);
     currWinnersRef.current = shuffle(members, currAward.count, excludedIds);
 
-    console.log('handlePlay: ', { currAward, currWinners: currWinnersRef.current });
-
     await rotating(scene, camera, renderer, 5, 2, TWEEN.Easing.Cubic.In);
     setIsAnimating(false);
     rotating(scene, camera, renderer, 2, 1, TWEEN.Easing.Linear.None, Infinity);
-  }, [lotteryStatus, currAward, setLotteryStatus, records, members, scene, camera, renderer, message]);
+  }, [lotteryStatus, currAward, setIsAnimating, setLotteryStatus, records, members, scene, camera, renderer, message]);
 
   // 停止动效并开奖.
   const handleFinish = useCallback(async () => {
@@ -147,7 +145,7 @@ export function useLottery() {
     const positions = winnerPosition(currWinnersRef.current.length);
     await winnerTransform(scene, camera, renderer, objects, 1500, positions, currWinnersRef.current);
     setIsAnimating(false);
-  }, [lotteryStatus, currAward, setLotteryStatus, updateAward, bulkCreateRecord, scene, camera, renderer, objects]);
+  }, [lotteryStatus, currAward, setIsAnimating, scene, camera, renderer, setLotteryStatus, updateAward, bulkCreateRecord, objects]);
 
   // 重新抽取当前奖项.
   const handleReplay = useCallback(async () => {
@@ -171,7 +169,7 @@ export function useLottery() {
     currWinnersRef.current = [];
     setIsAnimating(false);
     rotating(scene, camera, renderer, 1, 60, TWEEN.Easing.Linear.None, Infinity);
-  }, [lotteryStatus, currAward, setLotteryStatus, records, bulkDeleteRecord, updateAward, scene, camera, renderer, objects, targets.sphere]);
+  }, [lotteryStatus, currAward, setIsAnimating, setLotteryStatus, records, bulkDeleteRecord, updateAward, scene, camera, renderer, objects, targets.sphere]);
 
   const handleContinue = useCallback(async () => {
     if (lotteryStatus !== FINISHED) { return }
@@ -202,7 +200,7 @@ export function useLottery() {
       message.warning('当前所有奖项均已抽取完毕！');
     }
     setIsAnimating(false);
-  }, [lotteryStatus, currAward, setLotteryStatus, awards, currAwardId, setCurrAwardId, scene, camera, renderer, objects, targets.sphere, message]);
+  }, [lotteryStatus, currAward, awards, setIsAnimating, currAwardId, setLotteryStatus, setCurrAwardId, scene, camera, renderer, objects, targets.sphere, message]);
 
   return {
     ableEnter, ablePlay, ableFinish, ableReplay,

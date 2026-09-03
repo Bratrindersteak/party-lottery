@@ -37,15 +37,24 @@ function transform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRende
     if (object._rotationTween) {
       object._rotationTween.stop();
     }
-    if (object._scaleTween) {
-      object._scaleTween.stop();
-    }
+
+    const winnerIndex = winners.findIndex(winner => winner.id === object.userData.memberId);
 
     object._positionTween = new TWEEN.Tween(object.position, mainGroup)
       .to({ x: target.position.x, y: target.position.y, z: target.position.z }, (0.5 + Math.random() * 0.5) * duration)
       .easing(TWEEN.Easing.Exponential.InOut)
-      .onComplete(() => { object._positionTween = null })
-      .onStop(() => { object._positionTween = null });
+      .onComplete(() => {
+        object._positionTween = null;
+        if (winnerIndex !== -1) {
+          object.element.classList.remove(threeStyles['element-winner']);
+        }
+      })
+      .onStop(() => {
+        object._positionTween = null;
+        if (winnerIndex !== -1) {
+          object.element.classList.remove(threeStyles['element-winner']);
+        }
+      });
     object._positionTween.start(now);
 
     object._rotationTween = new TWEEN.Tween(object.rotation, mainGroup)
@@ -54,22 +63,6 @@ function transform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRende
       .onComplete(() => { object._rotationTween = null })
       .onStop(() => { object._rotationTween = null });
     object._rotationTween.start(now);
-
-    const winnerIndex = winners.findIndex(winner => winner.id === object.userData.memberId);
-    if (winnerIndex !== -1) {
-      object._scaleTween = new TWEEN.Tween(object.scale, mainGroup)
-        .to({ x: 1, y: 1, z: 1 }, (0.5 + Math.random() * 0.5) * duration)
-        .easing(TWEEN.Easing.Exponential.InOut)
-        .onComplete(() => {
-          object._scaleTween = null;
-          object.element.classList.remove(threeStyles['element-winner']);
-        })
-        .onStop(() => {
-          object._scaleTween = null;
-          object.element.classList.remove(threeStyles['element-winner']);
-        });
-      object._scaleTween.start(now);
-    }
   }
 
   // 3. 将新创建的计时器赋给全局变量

@@ -42,14 +42,14 @@ function winnerTransform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3
 
     new TWEEN.Tween(object.position, mainGroup)
       .to({ x: position.x, y: position.y, z: 1000 }, duration)
-      .easing(TWEEN.Easing.Exponential.Out)
+      .easing(TWEEN.Easing.Exponential.InOut)
       .onComplete(() => { object._positionTween = null })
       .onStop(() => { object._positionTween = null })
       .start(now);
 
     new TWEEN.Tween(object.rotation, mainGroup)
       .to({ x: 0, y: 0, z: 0 }, duration)
-      .easing(TWEEN.Easing.Exponential.Out)
+      .easing(TWEEN.Easing.Exponential.InOut)
       .onStart(() => {
         object.element.classList.add(threeStyles['element-winner']);
       })
