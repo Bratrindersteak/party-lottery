@@ -27,7 +27,7 @@ export default function AwardList() {
               <Image
                 className={styles['award-image']}
                 alt="basic image"
-                width={80}
+                width={56}
                 src={award.url}
                 fallback={defaultAwardUrl}
               />
