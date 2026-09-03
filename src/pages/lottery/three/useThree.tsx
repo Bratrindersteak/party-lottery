@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from "three";
 import { CSS3DRenderer, TrackballControls, CSS3DObject } from 'three/addons';
-import * as TWEEN from '@tweenjs/tween.js';
 
 import { useThreeStore } from "@/store/three.ts";
 import { useMemberStore } from '@/store/member.ts';
@@ -12,6 +11,7 @@ import initSphere from '@/utils/three/initSphere.ts';
 import cardLayout from '@/utils/three/cardLayout.ts';
 import { handleWindowResize } from '@/utils/three/handles.ts';
 import calcCameraZ from '@/utils/three/calcCameraZ.ts';
+import { mainGroup } from '@/utils/three/tweenManager.ts';
 
 import styles from './styles.module.css';
 
@@ -41,8 +41,6 @@ export function useThree() {
 
     const camera: PerspectiveCamera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
 
-    // TODO 这里要好好计算一下，根据卡片数量调整数值.
-    // (行数 * 卡片高度) + ((行数-1) * 纵向间距).
     camera.position.z = calcCameraZ(rows);
     setCamera(camera);
 
@@ -82,7 +80,7 @@ export function useThree() {
 
     return () => {
       window.removeEventListener('resize', windowResizeListener);
-      TWEEN.removeAll();
+      mainGroup.removeAll();
 
       // if (animationFrameIdRef.current) {
       //   cancelAnimationFrame(animationFrameIdRef.current);
