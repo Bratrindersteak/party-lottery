@@ -88,7 +88,7 @@ export function useLottery() {
 
     await transform(scene, camera, renderer, objects, targets.sphere, 2000);
     setIsAnimating(false);
-    rotating(scene, camera, renderer, 1, 60, TWEEN.Easing.Linear.None, Infinity);
+    rotating(scene, camera, renderer, 1, 50, TWEEN.Easing.Linear.None, Infinity);
   }, [lotteryStatus, currAward, setIsAnimating, setLotteryStatus, scene, camera, renderer, objects, targets.sphere, message]);
 
   // 开始抽取当前奖项.
@@ -113,7 +113,7 @@ export function useLottery() {
 
     await rotating(scene, camera, renderer, 5, 2, TWEEN.Easing.Cubic.In);
     setIsAnimating(false);
-    rotating(scene, camera, renderer, 2, 1, TWEEN.Easing.Linear.None, Infinity);
+    rotating(scene, camera, renderer, 5, 2, TWEEN.Easing.Linear.None, Infinity);
   }, [lotteryStatus, currAward, setIsAnimating, setLotteryStatus, records, members, scene, camera, renderer, message]);
 
   // 停止动效并开奖.
@@ -168,7 +168,7 @@ export function useLottery() {
     await transform(scene, camera, renderer, objects, targets.sphere, 2000, currWinnersRef.current);
     currWinnersRef.current = [];
     setIsAnimating(false);
-    rotating(scene, camera, renderer, 1, 60, TWEEN.Easing.Linear.None, Infinity);
+    rotating(scene, camera, renderer, 1, 50, TWEEN.Easing.Linear.None, Infinity);
   }, [lotteryStatus, currAward, setIsAnimating, setLotteryStatus, records, bulkDeleteRecord, updateAward, scene, camera, renderer, objects, targets.sphere]);
 
   const handleContinue = useCallback(async () => {
@@ -195,7 +195,7 @@ export function useLottery() {
       setCurrAwardId(nextAwardId);
       await transform(scene, camera, renderer, objects, targets.sphere, 2000, currWinnersRef.current);
       currWinnersRef.current = [];
-      rotating(scene, camera, renderer, 1, 60, TWEEN.Easing.Linear.None, Infinity);
+      rotating(scene, camera, renderer, 1, 50, TWEEN.Easing.Linear.None, Infinity);
     } else {
       message.warning('当前所有奖项均已抽取完毕！');
     }

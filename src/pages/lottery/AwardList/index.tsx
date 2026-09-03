@@ -24,22 +24,21 @@ export default function AwardList() {
           // 🚨 注意：这里必须显式绑定一个全局唯一的 key！
           <li key={award.id} className={`${styles['award-item']} ${(currAwardId === award.id) && styles['award-active']} ${!ableClick && styles['award-disabled']}`} onClick={() => handleClick(award)}>
             <div className={styles['award-left']}>
-              <Image
-                className={styles['award-image']}
+              <Image className={styles['award-image']}
                 alt="basic image"
                 width={56}
                 src={award.url}
                 fallback={defaultAwardUrl}
               />
             </div>
-            <div className={styles['award-right']}>
-              <div className={styles['award-title']}>{award.name}</div>
-              <div className={styles['award-content']}>
-                <div className={styles['award-prize']}>{award.prize}</div>
-                <div className={styles['award-count']}>{award.count}名</div>
-              </div>
+            <div className={styles['award-middle']}>
+              <div className={styles['award-title']} title={award.name}>{award.name}</div>
+              <div className={styles['award-prize']} title={award.prize}>{award.prize}</div>
             </div>
-            <Tag className={styles['award-status']} color={award.isFinished ? '#64748b' : '#10b981'} variant="outlined">{award.isFinished ? '已开奖' : '进行中'}</Tag>
+            <div className={styles['award-right']}>
+              <div className={styles['award-count']}>{award.count}名</div>
+              <Tag className={styles['award-status']} color={award.isFinished ? '#64748b' : '#10b981'} variant="outlined">{award.isFinished ? '已开奖' : '进行中'}</Tag>
+            </div>
           </li>
         ))}
       </ul>

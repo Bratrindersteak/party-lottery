@@ -27,42 +27,64 @@
   transform: translateZ(0);
 }
 
-/* 1. 小星星：从 1px 放大到 2px，增加微弱发光 */
+/* 1. 远景小星星：数量最多，锐利微光，不加模糊以保持晶莹感 */
 .starsSmall {
-  width: 2px;
-  height: 2px;
-  /* 💡 格式：X轴 Y轴 模糊半径 扩展半径 颜色 */
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  /* 格式：X轴 Y轴 模糊 扩展 颜色 */
   box-shadow:
-    10vw 15vh 1px 0.5px #fff, 25vw 35vh 1px 0.5px #fff, 40vw 10vh 1px 0.5px #fff,
-    55vw 80vh 1px 0.5px #fff, 70vw 25vh 1px 0.5px #fff, 85vw 60vh 1px 0.5px #fff,
-    15vw 70vh 1px 0.5px #fff, 30vw 90vh 1px 0.5px #fff, 45vw 45vh 1px 0.5px #fff;
+    5vw 8vh 0 0 #fff, 12vw 35vh 0 0 rgba(255, 255, 255, 0.8), 18vw 72vh 0 0 #fff,
+    25vw 15vh 0 0 #fff, 28vw 55vh 0 0 rgba(255, 255, 255, 0.6), 33vw 88vh 0 0 #fff,
+    41vw 22vh 0 0 #fff, 47vw 62vh 0 0 #fff, 52vw 12vh 0 0 rgba(255, 255, 255, 0.9),
+    58vw 78vh 0 0 #fff, 63vw 38vh 0 0 #fff, 69vw 91vh 0 0 rgba(255, 255, 255, 0.7),
+    75vw 18vh 0 0 #fff, 81vw 52vh 0 0 #fff, 86vw 82vh 0 0 #fff,
+    91vw 29vh 0 0 rgba(255, 255, 255, 0.8), 96vw 68vh 0 0 #fff, 3vw 95vh 0 0 #fff,
+    15vw 48vh 0 0 #fff, 37vw 42vh 0 0 rgba(255, 255, 255, 0.5), 78vw 6vh 0 0 #fff,
+    84vw 39vh 0 0 #fff, 93vw 85vh 0 0 #fff, 49vw 95vh 0 0 rgba(255, 255, 255, 0.8);
   animation: blink 4s ease-in-out infinite alternate;
 }
 
-/* 2. 中星星：从 2px 放大到 4px */
+/* 2. 中景中星星：带微弱高光，加入微量青蓝色调，增加层次 */
 .starsMedium {
-  width: 4px;
-  height: 4px;
+  width: 2px;
+  height: 2px;
+  background: transparent;
   box-shadow:
-    12vw 28vh 2px 1px #fff, 38vw 12vh 2px 1px #fff, 58vw 68vh 2px 1px #fff,
-    78vw 42vh 2px 1px #fff, 22vw 82vh 2px 1px #fff, 48vw 52vh 2px 1px #fff,
-    68vw 18vh 2px 1px #fff, 88vw 88vh 2px 1px #fff;
+    8vw 18vh 1px 0 #fff, 15vw 62vh 1px 0 #a5f3fc, 22vw 38vh 1px 0 #fff,
+    31vw 82vh 1px 0 #fff, 39vw 28vh 1px 0 #38bdf8, 45vw 71vh 1px 0 #fff,
+    55vw 48vh 1px 0 #fff, 62vw 15vh 1px 0 #a5f3fc, 71vw 65vh 1px 0 #fff,
+    79vw 25vh 1px 0 #fff, 88vw 45vh 1px 0 #38bdf8, 94vw 78vh 1px 0 #fff,
+    4vw 42vh 1px 0 #fff, 51vw 89vh 1px 0 #a5f3fc, 67vw 82vh 1px 0 #fff,
+    83vw 12vh 1px 0 #fff;
   animation: blink 3s ease-in-out infinite alternate 1s;
 }
 
-/* 3. 大星星：从 3px 放大到 6px，加上明显的梦幻光晕 */
+/* 3. 近景大星星：利用双层多重阴影，制造出璀璨的光晕效果 */
 .starsLarge {
-  width: 6px;
-  height: 6px;
+  width: 3px;
+  height: 3px;
+  background: transparent;
+  /* 每颗大星配置两层阴影：1. 核心亮白 2. 外围科技蓝柔光散射 */
   box-shadow:
-    18vw 48vh 3px 1.5px #fff, 42vw 78vh 3px 1.5px #fff,
-    64vw 28vh 3px 1.5px #fff, 82vw 18vh 3px 1.5px #fff;
-  animation: blink 2s ease-in-out infinite alternate 0.5s;
+    10vw 45vh 0 0 #fff, 10vw 45vh 4px 1px rgba(56, 189, 248, 0.8),
+    27vw 75vh 0 0 #fff, 27vw 75vh 4px 1px rgba(56, 189, 248, 0.8),
+    42vw 18vh 0 0 #fff, 42vw 18vh 4px 1px rgba(165, 243, 252, 0.8),
+    60vw 62vh 0 0 #fff, 60vw 62vh 4px 1px rgba(56, 189, 248, 0.8),
+    74vw 32vh 0 0 #fff, 74vw 32vh 4px 1px rgba(165, 243, 252, 0.8),
+    89vw 81vh 0 0 #fff, 89vw 81vh 4px 1px rgba(56, 189, 248, 0.8),
+    20vw 20vh 0 0 #fff, 20vw 20vh 4px 1px rgba(56, 189, 248, 0.8);
+  animation: blink 2.5s ease-in-out infinite alternate 0.5s;
 }
 
+/* 闪烁 Keyframes */
 @keyframes blink {
-  0% { opacity: 0.2; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 /* ================= 2. 纯 CSS 流星层 ================= */

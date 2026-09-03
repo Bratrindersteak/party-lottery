@@ -3,24 +3,23 @@
   left: 0;
   top: 50%;
   transform: translateY(-50%);
-  background: linear-gradient(
-    135deg,
-    rgba(15, 23, 42, 0.92) 0%,
-    rgba(10, 15, 30, 0.85) 100%
-  ); /* 带有 Alpha 通道的极深蓝黑渐变，兼顾透光与不遮挡 */
-  border: 1px solid rgba(0, 242, 254, 0.3); /* 微调边框亮感 */
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5),
-  inset 0 0 12px rgba(0, 242, 254, 0.1); /* 增加微弱内发光 */
-  border-radius: 5px;
 
   & .award-list {
     width: 350px;
-    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: margin-left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden; /* 必须加，否则内部文字会撑开 */
     white-space: nowrap; /* 防止宽度缩小时文字换行导致抖动 */
+    background: linear-gradient(
+      135deg,
+      rgba(15, 23, 42, 0.92) 0%,
+      rgba(10, 15, 30, 0.85) 100%
+    );
+    border: 1px solid rgba(0, 242, 254, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 12px rgba(0, 242, 254, 0.1);
+    border-radius: 5px;
 
     &.award-closed {
-      width: 0px;
+      margin-left: -352px;
     }
   }
 
@@ -53,7 +52,12 @@
     }
   }
 
-  & .award-right {
+  & .award-middle {
+    overflow: hidden;
+    margin: 0 8px;
+  }
+
+  & .award-middle, & .award-right {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -65,29 +69,27 @@
 
   & .award-title {
     line-height: 22px;
-    font-size: 18px;
+    font-size: 19px;
     font-weight: bold;
     color: #00f2fe;
-  }
-
-  & .award-content {
-    line-height: 18px;
-    font-size: 14px;
-    color: #94a3b8;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   & .award-prize {
-    display: inline;
+    font-size: 14px;
+    color: #94a3b8;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   & .award-count {
-    display: inline;
-    margin-left: 16px;
+    font-size: 15px;
+    color: #ffffff;
   }
 
   & .award-status {
-    align-self: center;
-    margin-right: 8px;
+
   }
 
   & .award-handle {
