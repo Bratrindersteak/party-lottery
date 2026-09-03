@@ -3,7 +3,6 @@ import * as TWEEN from '@tweenjs/tween.js';
 import render from './render.js';
 import { mainGroup } from './tweenManager.ts';
 import threeStyles from '@/pages/lottery/three/styles.module.css';
-import { WINNER_SCALE } from '@/config/constants.ts';
 
 import type { Tween } from '@tweenjs/tween.js';
 import type { Scene, PerspectiveCamera } from 'three';
@@ -38,10 +37,6 @@ function winnerTransform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3
       object._rotationTween.stop();
       object._rotationTween = null;
     }
-    if (object._scaleTween) {
-      object._scaleTween.stop();
-      object._scaleTween = null;
-    }
 
     const position = positions[index];
 
@@ -55,18 +50,11 @@ function winnerTransform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3
     new TWEEN.Tween(object.rotation, mainGroup)
       .to({ x: 0, y: 0, z: 0 }, duration)
       .easing(TWEEN.Easing.Exponential.Out)
-      .onComplete(() => { object._rotationTween = null })
-      .onStop(() => { object._rotationTween = null })
-      .start(now);
-
-    new TWEEN.Tween(object.scale, mainGroup)
-      .to({ x: WINNER_SCALE, y: WINNER_SCALE, z: WINNER_SCALE }, duration)
-      .easing(TWEEN.Easing.Exponential.Out)
       .onStart(() => {
         object.element.classList.add(threeStyles['element-winner']);
       })
-      .onComplete(() => { object._scaleTween = null })
-      .onStop(() => { object._positionTween = null })
+      .onComplete(() => { object._rotationTween = null })
+      .onStop(() => { object._rotationTween = null })
       .start(now);
   });
 
