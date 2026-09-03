@@ -1,11 +1,16 @@
 .title {
   position: fixed;
-  top: 5%;
+  top: 5vh;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 3.8vh;
+  font-size: clamp(24px, 3.8vh, 56px);
   font-weight: bold;
+  letter-spacing: 0.1em;
   color: #ffffff;
+  text-shadow:
+    0 0 10px rgba(0, 198, 255, 0.6),
+    0 0 20px rgba(0, 198, 255, 0.4),
+    0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .operation-wrapper {
@@ -13,36 +18,35 @@
   justify-content: space-between;
   align-items: center;
   position: fixed;
-  bottom: 6%;
+  bottom: 5vh;
   left: 50%;
   transform: translateX(-50%);
-  width: 39.5vh;
-  height: 3.8vh;
+  width: clamp(160px, 40vh, 520px);
+  height: clamp(40px, 4vh, 64px);
 }
 
 .operation-btn {
   flex-grow: 1;
   height: 100%;
   margin: 8px;
-  font-size: 1.8vh;
+  font-size: clamp(14px, 1.8vh, 24px);
   font-weight: bold;
   letter-spacing: 5px; /* 字间距拉开，更有大屏感 */
   border-radius: 30px;
-  background: linear-gradient(135deg, #0a1120 0%, #1a2c4e 100%);
-  box-shadow: 0 0 15px rgba(0, 242, 254, 0.5),
-  0 0 30px rgba(168, 85, 247, 0.4);
+  background: linear-gradient(180deg, rgba(30, 60, 114, 0.6) 0%, rgba(42, 82, 152, 0.8) 100%);
+  border: 1px solid rgba(0, 198, 255, 0.6);
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.5), 0 0 30px rgba(168, 85, 247, 0.4);
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.65);
 
   & span {
     color: #ffffff;
   }
 
-  &:hover {
-    transform: translateY(-3px) scale(1.05); /* 向上浮动并微调放大 */
-    box-shadow: 0 0 30px rgba(0, 242, 254, 0.9),
-    0 0 60px rgba(168, 85, 247, 0.7);
+  &:hover:not([disabled]) {
+    transform: scale(1.05);
+    background: linear-gradient(180deg, rgba(42, 82, 152, 0.8) 0%, rgba(0, 198, 255, 0.8) 100%);
+    box-shadow: 0 0 25px rgba(0, 198, 255, 0.8), inset 0 0 15px rgba(255, 255, 255, 0.5);
     text-shadow: 0 0 10px rgba(255, 255, 255, 1);
-    filter: brightness(1.15); /* 增强亮度 */
   }
 
   &:active {

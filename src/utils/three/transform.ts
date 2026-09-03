@@ -24,6 +24,8 @@ function transform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRende
     transformInstance.stop();
   }
 
+  const now = performance.now();
+
   // 2. 遍历所有物体，让它们各自飞向新目标（保持不变）
   for (let i = 0; i < objects.length; i++) {
     const object: ObjectItem = objects[i];
@@ -44,14 +46,14 @@ function transform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRende
       .easing(TWEEN.Easing.Exponential.InOut)
       .onComplete(() => { object._positionTween = null })
       .onStop(() => { object._positionTween = null });
-    object._positionTween.start();
+    object._positionTween.start(now);
 
     object._rotationTween = new TWEEN.Tween(object.rotation, mainGroup)
       .to({ x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, (0.5 + Math.random() * 0.5) * duration)
       .easing(TWEEN.Easing.Exponential.InOut)
       .onComplete(() => { object._rotationTween = null })
       .onStop(() => { object._rotationTween = null });
-    object._rotationTween.start();
+    object._rotationTween.start(now);
 
     const winnerIndex = winners.findIndex(winner => winner.id === object.userData.memberId);
     if (winnerIndex !== -1) {
@@ -66,7 +68,7 @@ function transform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRende
           object._scaleTween = null;
           object.element.classList.remove(threeStyles['element-winner']);
         });
-      object._scaleTween.start();
+      object._scaleTween.start(now);
     }
   }
 
@@ -83,10 +85,9 @@ function transform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRende
       })
       .onStop(() => {
         transformInstance = null; // 被中途切断停下，也释放引用
-        resolve();
       });
 
-    transformInstance.start();
+    transformInstance.start(now);
   });
 }
 

@@ -25,6 +25,8 @@ function winnerTransform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3
     winnersInstance = null;
   }
 
+  const now = performance.now();
+
   winners.forEach((winner, index) => {
     const object: ObjectItem = objects.find(object => object.userData.memberId === winner.id);
 
@@ -48,14 +50,14 @@ function winnerTransform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3
       .easing(TWEEN.Easing.Exponential.Out)
       .onComplete(() => { object._positionTween = null })
       .onStop(() => { object._positionTween = null })
-      .start();
+      .start(now);
 
     new TWEEN.Tween(object.rotation, mainGroup)
       .to({ x: 0, y: 0, z: 0 }, duration)
       .easing(TWEEN.Easing.Exponential.Out)
       .onComplete(() => { object._rotationTween = null })
       .onStop(() => { object._rotationTween = null })
-      .start();
+      .start(now);
 
     new TWEEN.Tween(object.scale, mainGroup)
       .to({ x: WINNER_SCALE, y: WINNER_SCALE, z: WINNER_SCALE }, duration)
@@ -65,7 +67,7 @@ function winnerTransform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3
       })
       .onComplete(() => { object._scaleTween = null })
       .onStop(() => { object._positionTween = null })
-      .start();
+      .start(now);
   });
 
   return new Promise((resolve) => {
@@ -80,9 +82,8 @@ function winnerTransform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3
       })
       .onStop(() => {
         winnersInstance = null;
-        resolve();
       });
-    winnersInstance.start();
+    winnersInstance.start(now);
   });
 }
 
