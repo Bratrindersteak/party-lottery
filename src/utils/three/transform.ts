@@ -9,13 +9,12 @@ import type { Scene, PerspectiveCamera, Object3D } from 'three';
 import type { CSS3DRenderer, CSS3DObject } from 'three/addons';
 import type { Member } from '@/types/lottery';
 
-let transformInstance: Tween | null = null;
-
 type ObjectItem = CSS3DObject & {
   _positionTween?: Tween | null;
   _rotationTween?: Tween | null;
-  _scaleTween?: Tween | null;
 };
+
+let transformInstance: Tween | null = null;
 
 function transform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRenderer, objects: CSS3DObject[], targets: Object3D[], duration: number, winners: Member[] = []): Promise<void> {
   // 1. 🚨 核心优化：如果上一次的全局渲染计时器还没跑完，立刻叫停它！
