@@ -14,6 +14,7 @@ export const OPENING_MUSIC = 'OPENING_MUSIC';
 export const LOTTERY_MUSIC = 'LOTTERY_MUSIC';
 export const WINNING_MUSIC = 'WINNING_MUSIC';
 
+export const INIT_TITLE = '暂无数据';
 export const DEFAULT_TITLE = '大明嘉靖三十九年腊月廿九';
 export const DEFAULT_AWARDS = [
   { name: '三等奖', prize: '补发半年欠俸', url: undefined, count: 3, isFinished: false, allowRepeat: false },

@@ -154,7 +154,7 @@ export function useMember(form: FormInstance) {
   }, [clear]);
 
   const handleDownloadTemplate = useCallback(() => {
-    triggerDownload('/template.xlsx', '员工导入模板.xlsx');
+    triggerDownload('/template.xlsx', '成员导入模板.xlsx');
   }, []);
 
   const uploadProps = useMemo<UploadProps<never>>(() => ({

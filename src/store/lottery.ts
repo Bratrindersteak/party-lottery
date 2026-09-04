@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
-import { LOTTERY, SETTING, DEFAULT_TITLE, INIT } from '@/config/constants.ts';
+import { LOTTERY, SETTING, INIT, INIT_TITLE } from '@/config/constants.ts';
 
 import type { LotteryStatus } from '@/types/lottery.ts';
 
@@ -33,7 +33,7 @@ export const useLotteryStore = create<LotteryStore>()(
       currentScreen: LOTTERY, // 默认显示抽奖大屏
       setScreen: (screen) => set({ currentScreen: screen }),
 
-      title: '暂无数据',
+      title: INIT_TITLE,
       setTitle: (title: string) => set({ title }),
 
       currAwardId: null,
