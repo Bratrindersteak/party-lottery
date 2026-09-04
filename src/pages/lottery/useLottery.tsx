@@ -1,18 +1,18 @@
-import { useState, useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import * as TWEEN from '@tweenjs/tween.js';
 import { App } from 'antd';
 
-import { useMemberStore } from '@/store/member.ts';
-import { useThreeStore } from '@/store/three.ts';
-import { useRecordStore } from '@/store/record.ts';
-import { useLotteryStore } from '@/store/lottery.ts';
 import { useAwardStore } from '@/store/award.ts';
-import { shuffle } from '@/utils/algorithm';
+import { useLotteryStore } from '@/store/lottery.ts';
+import { useMemberStore } from '@/store/member.ts';
+import { useRecordStore } from '@/store/record.ts';
+import { useThreeStore } from '@/store/three.ts';
 import { FINISHED, INIT, READY, RUNNING } from '@/config/constants.ts';
+import { shuffle } from '@/utils/algorithm';
+import isNullish from '@/utils/isNullish.ts';
 import { rotating, transform } from '@/utils/three';
 import winnerPosition from '@/utils/three/winnerPosition.ts';
-import winnerTransform from "@/utils/three/winnerTransform.ts";
-import isNullish from '@/utils/isNullish.ts';
+import winnerTransform from '@/utils/three/winnerTransform.ts';
 
 import type { Award, Member, Record } from '@/types/lottery.ts';
 
@@ -44,12 +44,24 @@ export function useLottery() {
   const currWinnersRef = useRef<Member[]>([]);
 
   const currAward = useMemo<Award | null>(() => {
-    const award = awards.find((award: Award) => award.id === currAwardId) || null;
-
-    console.log('currAward: ', award);
-
-    return award;
+    return awards.find((award: Award) => award.id === currAwardId) || null;
   }, [currAwardId, awards]);
+
+  const showEnter = useMemo<boolean>(() => {
+    return members.length > 0 && lotteryStatus === INIT;
+  }, [members, lotteryStatus]);
+
+  const showPlay = useMemo<boolean>(() => {
+    return members.length > 0 && lotteryStatus === READY;
+  }, [members, lotteryStatus]);
+
+  const showFinish = useMemo<boolean>(() => {
+    return members.length > 0 && lotteryStatus === RUNNING;
+  }, [members, lotteryStatus]);
+
+  const showReplay = useMemo<boolean>(() => {
+    return members.length > 0 && lotteryStatus === FINISHED;
+  }, [members, lotteryStatus]);
 
   const ableEnter = useMemo<boolean>(() => {
     return !isAnimating && lotteryStatus === INIT;
@@ -203,6 +215,7 @@ export function useLottery() {
   }, [lotteryStatus, currAward, awards, setIsAnimating, currAwardId, setLotteryStatus, setCurrAwardId, scene, camera, renderer, objects, targets.sphere, message]);
 
   return {
+    showEnter, showPlay, showFinish, showReplay,
     ableEnter, ablePlay, ableFinish, ableReplay,
     handleEnter, handlePlay, handleFinish, handleReplay, handleContinue,
   };

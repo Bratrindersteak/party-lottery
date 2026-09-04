@@ -8,6 +8,8 @@ export default {
     finish: '停止并开奖',
     replay: '重新抽奖',
     continue: '继续抽奖',
+    gotoAddMember: '去添加成员',
+    useDefaultData: '使用默认数据',
   },
   general: {
     title: '通用配置',
@@ -17,7 +19,7 @@ export default {
   member: {
     title: '成员管理',
     excelImport: 'Excel 导入',
-    downloadTemplate: '下载 Excel 导入模版',
+    downloadTemplate: '下载导入模版',
   },
   award: {
     title: '奖项配置',

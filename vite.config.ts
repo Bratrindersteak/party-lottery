@@ -12,4 +12,5 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  assetsInclude: ['**/*.xlsx'] // 让 Vite 把 xlsx 当静态资源处理
 })

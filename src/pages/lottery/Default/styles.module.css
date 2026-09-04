@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  position: fixed;
+  top: 25vh;
+  left: 50%;
+  transform: translateX(-50%);
+
+  &.hide {
+    display: none;
+  }
+}
+
+.button {
+  width: clamp(160px, 20vh, 320px);
+  height: clamp(40px, 4vh, 64px);
+  margin: 8px;
+  font-size: clamp(14px, 1.8vh, 24px);
+  font-weight: bold;
+  letter-spacing: 5px; /* 字间距拉开，更有大屏感 */
+  border-radius: 5px;
+  background: linear-gradient(180deg, rgba(30, 60, 114, 0.6) 0%, rgba(42, 82, 152, 0.8) 100%);
+  border: 1px solid rgba(0, 198, 255, 0.6);
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.5), 0 0 30px rgba(168, 85, 247, 0.4);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.65);
+
+  & span {
+    color: #ffffff;
+  }
+
+  &:hover:not([disabled]) {
+    transform: scale(1.05);
+    background: linear-gradient(180deg, rgba(42, 82, 152, 0.8) 0%, rgba(0, 198, 255, 0.8) 100%);
+    box-shadow: 0 0 25px rgba(0, 198, 255, 0.8), inset 0 0 15px rgba(255, 255, 255, 0.5);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 1);
+  }
+}

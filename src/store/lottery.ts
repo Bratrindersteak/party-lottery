@@ -33,7 +33,7 @@ export const useLotteryStore = create<LotteryStore>()(
       currentScreen: LOTTERY, // 默认显示抽奖大屏
       setScreen: (screen) => set({ currentScreen: screen }),
 
-      title: DEFAULT_TITLE,
+      title: '暂无数据',
       setTitle: (title: string) => set({ title }),
 
       currAwardId: null,

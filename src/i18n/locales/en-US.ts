@@ -8,6 +8,8 @@ export default {
     finish: 'Stop and Announce',
     replay: 'Replay',
     continue: 'Continue',
+    gotoAddMember: 'Goto Add Member',
+    useDefaultData: 'Use Default Data',
   },
   general: {
     title: 'General Config',
@@ -17,7 +19,7 @@ export default {
   member: {
     title: 'Member Management',
     excelImport: 'Excel Import',
-    downloadTemplate: 'Download Excel Import Template',
+    downloadTemplate: 'Download Import Template',
   },
   award: {
     title: 'Award Config',

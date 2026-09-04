@@ -1,3 +1,4 @@
+import { useAwardStore } from '@/store/award.ts';
 import { useCallback, useMemo } from 'react';
 import { App } from 'antd';
 
@@ -11,6 +12,9 @@ export function useAwardList() {
   const lotteryStatus = useLotteryStore((state) => state.lotteryStatus);
   const currAwardId = useLotteryStore((state) => state.currAwardId);
   const setCurrAwardId = useLotteryStore((state) => state.setCurrAwardId);
+  const isAwardListExpanded = useLotteryStore((state) => state.isAwardListExpanded);
+  const setIsAwardListExpanded = useLotteryStore((state) => state.setIsAwardListExpanded);
+  const awards = useAwardStore((state) => state.awards);
 
   const ableClick = useMemo<boolean>(() => {
     return [INIT, READY].includes(lotteryStatus);
@@ -28,8 +32,13 @@ export function useAwardList() {
     }
   }, [currAwardId, lotteryStatus, message, setCurrAwardId]);
 
-  return {
-    ableClick,
-    handleClick,
-  };
+  const handleExpand = useCallback(() => {
+    if (awards.length) {
+      setIsAwardListExpanded(!isAwardListExpanded);
+    } else {
+      message.warning('奖项列表为空，请添加！');
+    }
+  }, [awards, isAwardListExpanded, setIsAwardListExpanded, message]);
+
+  return { ableClick, handleClick, handleExpand };
 }

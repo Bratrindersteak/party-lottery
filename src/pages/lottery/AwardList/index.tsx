@@ -11,11 +11,8 @@ import styles from './styles.module.css';
 export default function AwardList() {
   const currAwardId = useLotteryStore((state) => state.currAwardId);
   const isAwardListExpanded = useLotteryStore((state) => state.isAwardListExpanded);
-  const setIsAwardListExpanded = useLotteryStore((state) => state.setIsAwardListExpanded);
-
   const awards = useAwardStore((state) => state.awards);
-
-  const { ableClick, handleClick } = useAwardList();
+  const { ableClick, handleClick, handleExpand } = useAwardList();
 
   return (
     <div className={styles['award-drawer']}>
@@ -42,7 +39,7 @@ export default function AwardList() {
           </li>
         ))}
       </ul>
-      <div className={styles['award-handle']} onClick={() => setIsAwardListExpanded(!isAwardListExpanded)}>
+      <div className={styles['award-handle']} onClick={handleExpand}>
         {isAwardListExpanded ? <LeftOutlined/> : <RightOutlined/>}
       </div>
     </div>
