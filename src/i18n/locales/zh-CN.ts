@@ -31,7 +31,7 @@ export default {
   },
   record: {
     title: '获奖记录',
-    excelExport: 'Excel 导出',
+    exportData: '导出数据',
   },
   music: {
     title: '音乐配置',

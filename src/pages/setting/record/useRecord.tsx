@@ -201,5 +201,13 @@ export function useRecord() {
     },
   ], [t, handleDelete, awards, members]);
 
-  return { records, columns, rowSelection, handleDownload, handleAdd, handleBulkAdd, handleBulkDelete, handleClear };
+  const ableBulkDelete = useMemo(() => {
+    return selectedRowKeys.length > 0;
+  }, [selectedRowKeys]);
+
+  const ableClear = useMemo(() => {
+    return records.length > 0;
+  }, [records]);
+
+  return { records, columns, rowSelection, handleDownload, handleAdd, handleBulkAdd, handleBulkDelete, handleClear, ableBulkDelete, ableClear };
 }

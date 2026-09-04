@@ -16,12 +16,12 @@ interface AwardRecordProps {
 function AwardRecord({ style }: AwardRecordProps) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const { records: dataSource, columns, rowSelection, handleDownload, handleBulkDelete, handleClear } = useRecord(form);
+  const { records: dataSource, columns, rowSelection, handleDownload, handleBulkDelete, handleClear, ableBulkDelete, ableClear } = useRecord();
 
   return (
     <div style={style}>
       <div className={styles.operations}>
-        <Button icon={<DownloadOutlined />} color="green" variant="solid" className={styles['operation-btn']} onClick={handleDownload}>{t('record.excelExport')}</Button>
+        <Button icon={<DownloadOutlined />} color="green" variant="solid" className={styles['operation-btn']} onClick={handleDownload}>{t('record.exportData')}</Button>
         <Popconfirm
           title="确认批量删除？"
           icon={<DeleteOutlined style={{ color: '#F56C6C' }}/>}
@@ -30,7 +30,7 @@ function AwardRecord({ style }: AwardRecordProps) {
           okText="删除"
           cancelText="取消"
         >
-          <Button type="primary" danger className={styles['operation-btn']}>{t('operation.bulkDelete')}</Button>
+          <Button type="primary" danger className={styles['operation-btn']} disabled={!ableBulkDelete}>{t('operation.bulkDelete')}</Button>
         </Popconfirm>
         <Popconfirm
           title="确认清空？"
@@ -40,7 +40,7 @@ function AwardRecord({ style }: AwardRecordProps) {
           okText="清空"
           cancelText="取消"
         >
-          <Button type="primary" danger className={styles['operation-btn']}>{t('operation.clear')}</Button>
+          <Button type="primary" danger className={styles['operation-btn']} disabled={!ableClear}>{t('operation.clear')}</Button>
         </Popconfirm>
       </div>
       <Form form={form} component={false}>
