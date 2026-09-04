@@ -295,5 +295,13 @@ export function useAward(form: FormInstance) {
     },
   ], [handleRepeat, t, handleSave, handleCancel, handleEdit, handleDelete, handleReplay]);
 
-  return { awards, columns, rowSelection, handleAdd, handleBulkDelete, handleClear };
+  const ableBulkDelete = useMemo(() => {
+    return selectedRowKeys.length > 0;
+  }, [selectedRowKeys]);
+
+  const ableClear = useMemo(() => {
+    return awards.length > 0;
+  }, [awards]);
+
+  return { awards, columns, rowSelection, handleAdd, handleBulkDelete, handleClear, ableBulkDelete, ableClear };
 }

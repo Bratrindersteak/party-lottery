@@ -16,7 +16,7 @@ interface MusicConfigProps {
 function MusicConfig({ style }: MusicConfigProps) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const { musics: dataSource, openingId, handleOpeningChange, lotteryId, handleLotteryChange, winningId, handleWinningChange, columns, rowSelection, uploadProps, handleBulkDelete, handleClear } = useMusic(form);
+  const { musics: dataSource, openingId, handleOpeningChange, lotteryId, handleLotteryChange, winningId, handleWinningChange, columns, rowSelection, uploadProps, handleBulkDelete, handleClear, ableBulkDelete, ableClear } = useMusic();
 
   return (
     <div style={style}>
@@ -33,7 +33,7 @@ function MusicConfig({ style }: MusicConfigProps) {
             okText="删除"
             cancelText="取消"
           >
-            <Button type="primary" danger className={styles['operation-btn']}>{t('operation.bulkDelete')}</Button>
+            <Button type="primary" danger className={styles['operation-btn']} disabled={!ableBulkDelete}>{t('operation.bulkDelete')}</Button>
           </Popconfirm>
           <Popconfirm
             title="确认清空？"
@@ -43,7 +43,7 @@ function MusicConfig({ style }: MusicConfigProps) {
             okText="清空"
             cancelText="取消"
           >
-            <Button type="primary" danger className={styles['operation-btn']}>{t('operation.clear')}</Button>
+            <Button type="primary" danger className={styles['operation-btn']} disabled={!ableClear}>{t('operation.clear')}</Button>
           </Popconfirm>
         </div>
         <div>

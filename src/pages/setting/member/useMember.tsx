@@ -294,5 +294,13 @@ export function useMember(form: FormInstance) {
     });
   }, [members]);
 
-  return { sortedMembers, columns, setColumns, rowSelection, uploadProps, getMemberById, handleDownloadTemplate, handleAdd, handleBulkDelete, handleClear };
+  const ableBulkDelete = useMemo(() => {
+    return selectedRowKeys.length > 0;
+  }, [selectedRowKeys]);
+
+  const ableClear = useMemo(() => {
+    return members.length > 0;
+  }, [members]);
+
+  return { sortedMembers, columns, setColumns, rowSelection, uploadProps, getMemberById, handleDownloadTemplate, handleAdd, handleBulkDelete, handleClear, ableBulkDelete, ableClear };
 }

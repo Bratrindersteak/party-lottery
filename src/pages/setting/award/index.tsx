@@ -16,7 +16,7 @@ interface AwardConfigProps {
 function AwardConfig({ style }: AwardConfigProps) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const { awards: dataSource, columns, rowSelection, handleAdd, handleBulkDelete, handleClear } = useAward(form);
+  const { awards: dataSource, columns, rowSelection, handleAdd, handleBulkDelete, handleClear, ableBulkDelete, ableClear } = useAward(form);
 
   return (
     <div style={style}>
@@ -30,7 +30,7 @@ function AwardConfig({ style }: AwardConfigProps) {
           okText="删除"
           cancelText="取消"
         >
-          <Button type="primary" danger className={styles['operation-btn']}>{t('operation.bulkDelete')}</Button>
+          <Button type="primary" danger className={styles['operation-btn']} disabled={!ableBulkDelete}>{t('operation.bulkDelete')}</Button>
         </Popconfirm>
         <Popconfirm
           title="确认清空？"
@@ -40,7 +40,7 @@ function AwardConfig({ style }: AwardConfigProps) {
           okText="清空"
           cancelText="取消"
         >
-          <Button type="primary" danger className={styles['operation-btn']}>{t('operation.clear')}</Button>
+          <Button type="primary" danger className={styles['operation-btn']} disabled={!ableClear}>{t('operation.clear')}</Button>
         </Popconfirm>
       </div>
       <Form form={form} component={false}>

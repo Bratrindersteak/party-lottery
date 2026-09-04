@@ -254,5 +254,13 @@ export function useMusic() {
     },
   ], [t, handleDelete, currAudioId, isPlaying, handlePlayMusic, handlePauseMusic]);
 
-  return { musics, openingId, handleOpeningChange, lotteryId, handleLotteryChange, winningId, handleWinningChange, columns, rowSelection, uploadProps, handleBulkDelete, handleClear };
+  const ableBulkDelete = useMemo(() => {
+    return selectedRowKeys.length > 0;
+  }, [selectedRowKeys]);
+
+  const ableClear = useMemo(() => {
+    return musics.length > 0;
+  }, [musics]);
+
+  return { musics, openingId, handleOpeningChange, lotteryId, handleLotteryChange, winningId, handleWinningChange, columns, rowSelection, uploadProps, handleBulkDelete, handleClear, ableBulkDelete, ableClear };
 }

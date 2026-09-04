@@ -16,7 +16,7 @@ interface MemberManagementProps {
 function MemberManagement({ style }: MemberManagementProps) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const { sortedMembers: dataSource, columns, rowSelection, uploadProps, handleDownloadTemplate, handleAdd, handleBulkDelete, handleClear } = useMember(form);
+  const { sortedMembers: dataSource, columns, rowSelection, uploadProps, handleDownloadTemplate, handleAdd, handleBulkDelete, handleClear, ableBulkDelete, ableClear } = useMember(form);
 
   return (
     <div style={style}>
@@ -34,7 +34,7 @@ function MemberManagement({ style }: MemberManagementProps) {
           okText="删除"
           cancelText="取消"
         >
-          <Button type="primary" danger className={styles['operation-btn']}>{t('operation.bulkDelete')}</Button>
+          <Button type="primary" danger className={styles['operation-btn']} disabled={!ableBulkDelete}>{t('operation.bulkDelete')}</Button>
         </Popconfirm>
         <Popconfirm
           title="确认清空？"
@@ -44,7 +44,7 @@ function MemberManagement({ style }: MemberManagementProps) {
           okText="清空"
           cancelText="取消"
         >
-          <Button type="primary" danger className={styles['operation-btn']}>{t('operation.clear')}</Button>
+          <Button type="primary" danger className={styles['operation-btn']} disabled={!ableClear}>{t('operation.clear')}</Button>
         </Popconfirm>
       </div>
       <Form form={form} component={false}>
