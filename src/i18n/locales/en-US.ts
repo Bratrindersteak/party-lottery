@@ -41,10 +41,11 @@ export default {
   },
   operation: {
     add: 'Add',
-    clear: 'Clear',
+    edit: 'Edit',
     save: 'Save',
     cancel: 'Cancel',
-    remove: 'Remove',
-    edit: 'Edit',
+    delete: 'Delete',
+    bulkDelete: 'Bulk Delete',
+    clear: 'Clear',
   },
 };
