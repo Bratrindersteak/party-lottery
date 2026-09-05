@@ -11,6 +11,7 @@ import Background from './background';
 import AwardList from './AwardList';
 import TopBar from './TopBar';
 import Default from './Default';
+import DemoList from './DemoList.tsx';
 
 export default function Lottery() {
   const { t } = useTranslation();
@@ -25,9 +26,10 @@ export default function Lottery() {
     <>
       <Three />
       <Background />
-      <AwardList />
+      {/*<AwardList />*/}
       <TopBar />
       <Default />
+      <DemoList />
 
       <div className={styles['title']}>{title}</div>
 

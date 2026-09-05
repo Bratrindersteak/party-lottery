@@ -35,6 +35,8 @@
     border-radius: 5px;
     cursor: pointer;
     box-sizing: border-box;
+    touch-action: none; /* 禁用移动端/浏览器默认触摸滚动，让 dnd-kit 完全接管事件 */
+    user-select: none;  /* 防止拖动过程中选中文本 */
 
     &.award-active {
       cursor: default;
