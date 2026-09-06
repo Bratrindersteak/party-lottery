@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useLotteryStore } from '@/store/lottery.ts';
 import { useLottery } from './useLottery.tsx';
+import { useMemberStore } from '@/store/member.ts';
 
 import styles from './styles.module.css';
 
@@ -16,6 +17,8 @@ import DemoList from './DemoList.tsx';
 export default function Lottery() {
   const { t } = useTranslation();
   const title = useLotteryStore((state) => state.title);
+  const members = useMemberStore((state) => state.members);
+  const isMembersLoaded = useMemberStore((state) => state.isMembersLoaded);
   const {
     showEnter, showPlay, showFinish, showReplay,
     ableEnter, ablePlay, ableFinish, ableReplay,
@@ -28,7 +31,7 @@ export default function Lottery() {
       <Background />
       {/*<AwardList />*/}
       <TopBar />
-      <Default />
+      {(isMembersLoaded && !members.length) && <Default />}
       <DemoList />
 
       <div className={styles['title']}>{title}</div>

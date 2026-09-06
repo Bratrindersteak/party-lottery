@@ -210,6 +210,7 @@ export function useLottery() {
       rotating(scene, camera, renderer, 1, 50, TWEEN.Easing.Linear.None, Infinity);
     } else {
       message.warning('当前所有奖项均已抽取完毕！');
+      await transform(scene, camera, renderer, objects, targets.sphere, 2000, currWinnersRef.current);
     }
     setIsAnimating(false);
   }, [lotteryStatus, currAward, awards, setIsAnimating, currAwardId, setLotteryStatus, setCurrAwardId, scene, camera, renderer, objects, targets.sphere, message]);

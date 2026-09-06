@@ -6,7 +6,8 @@ import type { Member } from '@/types/lottery';
 
 interface MemberStore {
   members: Member[];
-
+  isMembersLoaded: boolean;
+  setIsMembersLoaded: (isMembersLoaded: boolean) => void;
   init: () => Promise<void>;
   get: (id: number) => Promise<Member | null>;
   create: (item: Member) => Promise<void>;
@@ -20,8 +21,12 @@ interface MemberStore {
   clear: () => Promise<void>;
 }
 
-export const useMemberStore = create<MemberStore>((set) => ({
+export const useMemberStore = create<MemberStore>((set, get) => ({
   members: [],
+  isMembersLoaded: false,
+  setIsMembersLoaded: (isMembersLoaded:boolean) => {
+    set({ isMembersLoaded });
+  },
   init: async () => {
     try {
       const data = await db.member.toArray();
@@ -29,6 +34,7 @@ export const useMemberStore = create<MemberStore>((set) => ({
       console.log('data: ', data);
 
       set({ members: data });
+      get().setIsMembersLoaded(true);
     } catch (error) {
       console.error('初始化人员数据失败: ', error);
     }

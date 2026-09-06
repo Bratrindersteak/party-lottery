@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { App } from 'antd';
 
 import { useMemberStore } from '@/store/member.ts';
@@ -12,7 +12,6 @@ import type { RcFile } from 'antd/es/upload';
 
 export function useDefault() {
   const { message } = App.useApp();
-  const members = useMemberStore((state) => state.members);
   const bulkCreate = useMemberStore((state) => state.bulkCreate);
   const setModule = useSettingStore((state) => state.setModule);
   const setScreen = useLotteryStore((state) => state.setScreen);
@@ -24,10 +23,6 @@ export function useDefault() {
   const addAward = useAwardStore((state) => state.create);
 
   const [ableClick, setAbleClick] = useState(true);
-
-  const ableShow = useMemo(() => {
-    return members.length === 0;
-  }, [members]);
 
   const handleGoToAddData = useCallback(async () => {
     setScreen(SETTING);
@@ -77,5 +72,5 @@ export function useDefault() {
     setAbleClick(true);
   }, [bulkCreate, message, title, awards, setTitle, setCurrAwardId, setIsAwardListExpanded, addAward]);
 
-  return { ableShow, ableClick, handleGoToAddData, handleUseDefaultData };
+  return { ableClick, handleGoToAddData, handleUseDefaultData };
 }

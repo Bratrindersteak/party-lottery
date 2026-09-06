@@ -7,10 +7,10 @@ import styles from './styles.module.css';
 
 export default function Default() {
   const { t } = useTranslation();
-  const { ableShow, ableClick, handleGoToAddData, handleUseDefaultData } = useDefault();
+  const { ableClick, handleGoToAddData, handleUseDefaultData } = useDefault();
 
   return (
-      <div className={`${styles.container} ${!ableShow && styles.hide}`}>
+      <div className={`${styles.container}`}>
         <Button className={styles['button']}
                 color="pink" variant="filled" size="large" disabled={!ableClick}
                 onClick={handleGoToAddData}
