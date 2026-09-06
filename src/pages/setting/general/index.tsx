@@ -17,7 +17,7 @@ interface GeneralConfigProps {
 function GeneralConfig({ style }: GeneralConfigProps) {
   const [form] = Form.useForm();
   const { t } = useTranslation();
-  const { title, handleSaveTitle, handleCancelTitle, handleAlgoChange, handleClearAll } =  useGeneral(form);
+  const { title, isTitleChange, handleTitleChange, handleSaveTitle, handleCancelTitle, handleAlgoChange, handleClearAll } =  useGeneral(form);
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -33,10 +33,12 @@ function GeneralConfig({ style }: GeneralConfigProps) {
             <div className={styles.title}>标题</div>
             <div className={styles.content}>
               <Form.Item name={['title']} initialValue={title} className={styles['input']}>
-                <Input placeholder="Basic usage" />
+                <Input placeholder="Basic usage" onChange={handleTitleChange} />
               </Form.Item>
-              <Button color="green" variant="outlined" className={styles['operation-btn']} onClick={handleSaveTitle}>{t('operation.save')}</Button>
-              <Button className={styles['operation-btn']} onClick={handleCancelTitle}>{t('operation.cancel')}</Button>
+              {isTitleChange && (<>
+                <Button color="green" variant="outlined" className={styles['operation-btn']} onClick={handleSaveTitle}>{t('operation.save')}</Button>
+                <Button className={styles['operation-btn']} onClick={handleCancelTitle}>{t('operation.cancel')}</Button>
+              </>)}
             </div>
           </div>
 
@@ -46,6 +48,7 @@ function GeneralConfig({ style }: GeneralConfigProps) {
               <Select
                 defaultValue="shuffle"
                 style={{ width: 360 }}
+                disabled={true}
                 onChange={handleAlgoChange}
                 options={[
                   { value: 'shuffle', label: '随机洗牌算法' },
