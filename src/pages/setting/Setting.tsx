@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { Button, Col, Row, Menu } from 'antd';
-import { UserOutlined, GiftOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import { SettingOutlined, TeamOutlined, GiftOutlined, UnorderedListOutlined, SoundOutlined, QuestionCircleOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next'
 
 import type { GetProp, MenuProps } from 'antd';
@@ -33,12 +33,12 @@ function Setting() {
   }, [setScreen]);
 
   const items: MenuItem[] = [
-    { key: GENERAL, label: t('general.title'), icon: '' },
-    { key: MEMBER, label: t('member.title'), icon: <UserOutlined /> },
+    { key: GENERAL, label: t('general.title'), icon: <SettingOutlined /> },
+    { key: MEMBER, label: t('member.title'), icon: <TeamOutlined /> },
     { key: AWARD, label: t('award.title'), icon: <GiftOutlined /> },
-    { key: RECORD, label: t('record.title'), icon: '' },
-    { key: MUSIC, label: t('music.title'), icon: '' },
-    { key: INSTRUCTION, label: t('instruction.title'), icon: '' },
+    { key: RECORD, label: t('record.title'), icon: <UnorderedListOutlined /> },
+    { key: MUSIC, label: t('music.title'), icon: <SoundOutlined /> },
+    { key: INSTRUCTION, label: t('instruction.title'), icon: <QuestionCircleOutlined /> },
   ];
 
   const handleMenuClick = useCallback(({ key, keyPath, domEvent }) => {

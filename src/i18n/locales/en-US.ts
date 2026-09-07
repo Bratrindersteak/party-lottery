@@ -2,6 +2,7 @@ export default {
   setting: 'Setting',
   backToLottery: 'Back To Lottery',
   pleaseInput: 'Please Input',
+  pleaseSelect: 'Please Select',
   lottery: {
     enter: 'Enter',
     play: 'Play',

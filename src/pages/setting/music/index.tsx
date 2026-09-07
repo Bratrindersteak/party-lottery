@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Form, Popconfirm, Table, Upload, Select, Tag } from 'antd';
+import { Button, Form, Popconfirm, Table, Upload, Select } from 'antd';
 import { DeleteOutlined, UploadOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
@@ -20,61 +20,65 @@ function MusicConfig({ style }: MusicConfigProps) {
 
   return (
     <div style={style}>
-      <div className={styles.operations}>
-        <div>
-          <Upload {...uploadProps} className={styles['operation-btn']}>
-            <Button icon={<UploadOutlined />} color="green" variant="solid">{t('operation.add')}</Button>
-          </Upload>
-          <Popconfirm
-            title="确认批量删除？"
-            icon={<DeleteOutlined style={{ color: '#F56C6C' }}/>}
-            onConfirm={handleBulkDelete}
-            okButtonProps={{ danger: true }}
-            okText="删除"
-            cancelText="取消"
-          >
-            <Button type="primary" danger className={styles['operation-btn']} disabled={!ableBulkDelete}>{t('operation.bulkDelete')}</Button>
-          </Popconfirm>
-          <Popconfirm
-            title="确认清空？"
-            icon={<DeleteOutlined style={{ color: '#F56C6C' }}/>}
-            onConfirm={handleClear}
-            okButtonProps={{ danger: true }}
-            okText="清空"
-            cancelText="取消"
-          >
-            <Button type="primary" danger className={styles['operation-btn']} disabled={!ableClear}>{t('operation.clear')}</Button>
-          </Popconfirm>
-        </div>
-        <div>
+      <div className={styles.selection}>
+        <Form.Item label={t('music.openingMusic')} className={styles['select-item']}>
           <Select
             className={styles['music-selector']}
             value={openingId}
             fieldNames={{label: 'name', value: 'id'}}
-            prefix={<Tag color="#2db7f5">开场音效</Tag>}
-            style={{ width: 200 }}
+            placeholder={t('pleaseSelect')}
+            style={{ maxWidth: 200 }}
             options={dataSource}
             onChange={handleOpeningChange}
           />
+        </Form.Item>
+        <Form.Item label={t('music.lotteryMusic')} className={styles['select-item']}>
           <Select
             className={styles['music-selector']}
             value={lotteryId}
             fieldNames={{label: 'name', value: 'id'}}
-            prefix={<Tag color="#2db7f5">抽奖音效</Tag>}
-            style={{ width: 200 }}
+            placeholder={t('pleaseSelect')}
+            style={{ maxWidth: 200 }}
             options={dataSource}
             onChange={handleLotteryChange}
           />
+        </Form.Item>
+        <Form.Item label={t('music.winningMusic')} className={styles['select-item']}>
           <Select
             className={styles['music-selector']}
             value={winningId}
             fieldNames={{label: 'name', value: 'id'}}
-            prefix={<Tag color="#2db7f5">开奖音效</Tag>}
-            style={{ width: 200 }}
+            placeholder={t('pleaseSelect')}
+            style={{ maxWidth: 200 }}
             options={dataSource}
             onChange={handleWinningChange}
           />
-        </div>
+        </Form.Item>
+      </div>
+      <div className={styles.operations}>
+        <Upload {...uploadProps} className={styles['operation-btn']}>
+          <Button icon={<UploadOutlined />} color="green" variant="solid">{t('operation.add')}</Button>
+        </Upload>
+        <Popconfirm
+          title="确认批量删除？"
+          icon={<DeleteOutlined style={{ color: '#F56C6C' }}/>}
+          onConfirm={handleBulkDelete}
+          okButtonProps={{ danger: true }}
+          okText="删除"
+          cancelText="取消"
+        >
+          <Button type="primary" danger className={styles['operation-btn']} disabled={!ableBulkDelete}>{t('operation.bulkDelete')}</Button>
+        </Popconfirm>
+        <Popconfirm
+          title="确认清空？"
+          icon={<DeleteOutlined style={{ color: '#F56C6C' }}/>}
+          onConfirm={handleClear}
+          okButtonProps={{ danger: true }}
+          okText="清空"
+          cancelText="取消"
+        >
+          <Button type="primary" danger className={styles['operation-btn']} disabled={!ableClear}>{t('operation.clear')}</Button>
+        </Popconfirm>
       </div>
       <Form form={form} component={false}>
         <Table<Music> rowSelection={rowSelection} columns={columns} dataSource={dataSource} rowKey="id" pagination={{ showTotal: (total) => `共 ${total} 条`, pageSize: 10, showQuickJumper: true }} />

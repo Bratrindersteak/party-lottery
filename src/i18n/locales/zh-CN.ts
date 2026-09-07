@@ -2,6 +2,7 @@ export default {
   setting: '设置',
   backToLottery: '返回抽奖',
   pleaseInput: '请输入',
+  pleaseSelect: '请选择',
   lottery: {
     enter: '进入抽奖',
     play: '开始抽奖',
