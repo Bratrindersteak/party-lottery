@@ -1,15 +1,21 @@
 .selection {
   display: flex;
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 24px 20px;
+  margin: 16px 0;
 
   & .select-item {
+    max-width: 320px;
     flex: auto;
     text-align: left;
+    margin-bottom: 0;
   }
 }
 
 .operations {
   display: flex;
-  justify-content: space-between;
   margin: 16px 0;
 }
 
