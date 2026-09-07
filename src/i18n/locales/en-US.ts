@@ -24,6 +24,13 @@ export default {
   },
   award: {
     title: 'Award Config',
+    prize: 'Prize',
+    quota: 'Quota',
+    status: {
+      ready: 'Ready',
+      running: 'Running',
+      finished: 'Finished',
+    },
   },
   record: {
     title: 'Award Record',
@@ -41,6 +48,11 @@ export default {
   },
   instruction: {
     title: 'Instruction',
+    paragraphs: [
+      '1. dasdasdasdasdasd',
+      '2. fsdfsdfsdfsdfsdfsd',
+      '3. dfvsfgdfhrewsdfwdd',
+    ],
   },
   operation: {
     add: 'Add',

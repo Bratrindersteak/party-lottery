@@ -18,6 +18,7 @@ function MusicConfig({ style }: MusicConfigProps) {
   const [form] = Form.useForm();
   const { musics: dataSource, openingId, handleOpeningChange, lotteryId, handleLotteryChange, winningId, handleWinningChange, columns, rowSelection, uploadProps, handleBulkDelete, handleClear, ableBulkDelete, ableClear } = useMusic();
 
+  // TODO 感觉可以再追加一个背景音效.
   return (
     <div style={style}>
       <div className={styles.selection}>

@@ -1,10 +1,12 @@
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef, useEffect } from 'react';
 import * as TWEEN from '@tweenjs/tween.js';
 import { App } from 'antd';
 
 import { useAwardStore } from '@/store/award.ts';
 import { useLotteryStore } from '@/store/lottery.ts';
 import { useMemberStore } from '@/store/member.ts';
+import { useMusicStore } from '@/store/music.ts';
+import { useSettingStore } from '@/store/setting.ts';
 import { useRecordStore } from '@/store/record.ts';
 import { useThreeStore } from '@/store/three.ts';
 import { FINISHED, INIT, READY, RUNNING } from '@/config/constants.ts';
@@ -14,12 +16,16 @@ import { rotating, transform } from '@/utils/three';
 import winnerPosition from '@/utils/three/winnerPosition.ts';
 import winnerTransform from '@/utils/three/winnerTransform.ts';
 
-import type { Award, Member, Record } from '@/types/lottery.ts';
+import type { Award, Member, Record, Music } from '@/types/lottery.ts';
 
 export function useLottery() {
   const { message } = App.useApp();
 
   const members = useMemberStore((state) => state.members);
+
+  const musics = useMusicStore((state) => state.musics);
+  const openingId = useMusicStore((state) => state.openingId);
+  const mute = useSettingStore((state) => state.mute);
 
   const currAwardId = useLotteryStore((state) => state.currAwardId);
   const setCurrAwardId = useLotteryStore((state) => state.setCurrAwardId);
@@ -46,6 +52,33 @@ export function useLottery() {
   const currAward = useMemo<Award | null>(() => {
     return awards.find((award: Award) => award.id === currAwardId) || null;
   }, [currAwardId, awards]);
+
+  const openingMusic = useMemo<Music | null>(() => {
+    return musics.find((music: Music) => music.id === openingId) || null;
+  }, [musics, openingId]);
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    audioRef.current = new Audio();
+
+    audioRef.current.muted = mute;
+
+    const handleAudioEnded = () => {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play();
+    };
+
+    audioRef.current.addEventListener('ended', handleAudioEnded);
+
+    // 🧼 组件销毁时（比如切页面了），无条件把声音掐断，释放内存
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.removeEventListener('ended', handleAudioEnded);
+        audioRef.current.pause();
+      }
+    };
+  }, [mute]);
 
   const showEnter = useMemo<boolean>(() => {
     return members.length > 0 && lotteryStatus === INIT;
@@ -96,7 +129,12 @@ export function useLottery() {
     setIsAnimating(true);
     setLotteryStatus(READY);
 
-    // openingAudio.value?.play();
+    if (openingMusic) {
+      audioRef.current?.pause();           // 切歌前先掐断上一首
+      audioRef.current.src = URL.createObjectURL(openingMusic.file);  // 换子弹（切歌直链）
+      audioRef.current?.load();
+      audioRef.current?.play();
+    }
 
     await transform(scene, camera, renderer, objects, targets.sphere, 2000);
     setIsAnimating(false);
