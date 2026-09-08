@@ -32,7 +32,7 @@ export function useDefault() {
   const handleUseDefaultData = useCallback(async () => {
     setAbleClick(false);
     // 1. 发起请求获取静态文件
-    const response = await fetch('default-members.xlsx');
+    const response = await fetch('./excels/default-members.xlsx');
     if (!response.ok) {
       throw new Error(`静态 Excel 文件读取失败，HTTP 状态码: ${response.status}`);
     }
