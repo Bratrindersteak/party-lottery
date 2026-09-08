@@ -114,7 +114,7 @@ export function useLottery() {
       audioRef.current?.load();
       audioRef.current?.play().catch((err) => console.warn('自动重播失败:', err));
     }
-  }, [lotteryStatus]);
+  }, [lotteryStatus, openingMusic, lotteryMusic, winningMusic]);
 
   const showEnter = useMemo<boolean>(() => {
     return members.length > 0 && lotteryStatus === INIT;
@@ -221,10 +221,10 @@ export function useLottery() {
     }));
     bulkCreateRecord(records);
 
-    const positions = winnerPosition(currWinnersRef.current.length);
+    const positions = winnerPosition(currWinnersRef.current.length, members.length);
     await winnerTransform(scene, camera, renderer, objects, 1500, positions, currWinnersRef.current);
     setIsAnimating(false);
-  }, [lotteryStatus, currAward, setIsAnimating, scene, camera, renderer, setLotteryStatus, updateAward, bulkCreateRecord, objects]);
+  }, [lotteryStatus, currAward, setIsAnimating, scene, camera, renderer, setLotteryStatus, updateAward, bulkCreateRecord, members, objects]);
 
   // 重新抽取当前奖项.
   const handleReplay = useCallback(async () => {

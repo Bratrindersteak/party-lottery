@@ -40,7 +40,7 @@ function winnerTransform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3
     const position = positions[index];
 
     object._positionTween = new TWEEN.Tween(object.position, mainGroup)
-      .to({ x: position.x, y: position.y, z: 1000 }, duration)
+      .to({ x: position.x, y: position.y, z: position.z }, duration)
       .easing(TWEEN.Easing.Exponential.InOut)
       .onComplete(() => { object._positionTween = null })
       .onStop(() => { object._positionTween = null });
