@@ -3,7 +3,7 @@
   top: 5vh;
   left: 50%;
   transform: translateX(-50%);
-  font-size: clamp(24px, 3.8vh, 56px);
+  font-size: clamp(32px, 3.8vh, 56px);
   font-weight: bold;
   letter-spacing: 0.1em;
   color: #ffffff;

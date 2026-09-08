@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import * as TWEEN from '@tweenjs/tween.js';
 import { App } from 'antd';
 
@@ -16,7 +16,7 @@ import { rotating, transform } from '@/utils/three';
 import winnerPosition from '@/utils/three/winnerPosition.ts';
 import winnerTransform from '@/utils/three/winnerTransform.ts';
 
-import type { Award, Member, Record, Music } from '@/types/lottery.ts';
+import type { Award, Member, Music, Record } from '@/types/lottery.ts';
 
 export function useLottery() {
   const { message } = App.useApp();
@@ -25,6 +25,8 @@ export function useLottery() {
 
   const musics = useMusicStore((state) => state.musics);
   const openingId = useMusicStore((state) => state.openingId);
+  const lotteryId = useMusicStore((state) => state.lotteryId);
+  const winningId = useMusicStore((state) => state.winningId);
   const mute = useSettingStore((state) => state.mute);
 
   const currAwardId = useLotteryStore((state) => state.currAwardId);
@@ -56,29 +58,63 @@ export function useLottery() {
   const openingMusic = useMemo<Music | null>(() => {
     return musics.find((music: Music) => music.id === openingId) || null;
   }, [musics, openingId]);
+  const lotteryMusic = useMemo<Music | null>(() => {
+    return musics.find((music: Music) => music.id === lotteryId) || null;
+  }, [musics, lotteryId]);
+  const winningMusic = useMemo<Music | null>(() => {
+    return musics.find((music: Music) => music.id === winningId) || null;
+  }, [musics, winningId]);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     audioRef.current = new Audio();
 
-    audioRef.current.muted = mute;
-
     const handleAudioEnded = () => {
       audioRef.current.currentTime = 0;
-      audioRef.current.play();
+      audioRef.current.play().catch((err) => console.warn('自动重播失败:', err));
     };
 
     audioRef.current.addEventListener('ended', handleAudioEnded);
 
-    // 🧼 组件销毁时（比如切页面了），无条件把声音掐断，释放内存
+    // 组件销毁时（比如切页面了），无条件把声音掐断，释放内存.
     return () => {
       if (audioRef.current) {
         audioRef.current.removeEventListener('ended', handleAudioEnded);
         audioRef.current.pause();
+        audioRef.current = null;
       }
     };
+  }, []);
+
+  // 专门负责同步 muted 状态（不打断播放）.
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.muted = mute;
+    }
   }, [mute]);
+
+  useEffect(() => {
+    // 切歌前先掐断上一首.
+    audioRef.current?.pause();
+
+    if (lotteryStatus === READY && openingMusic) {
+      audioRef.current.src = URL.createObjectURL(openingMusic.file);
+    }
+
+    if (lotteryStatus === RUNNING && lotteryMusic) {
+      audioRef.current.src = URL.createObjectURL(lotteryMusic.file);
+    }
+
+    if (lotteryStatus === FINISHED && winningMusic) {
+      audioRef.current.src = URL.createObjectURL(winningMusic.file);
+    }
+
+    if (audioRef.current.src) {
+      audioRef.current?.load();
+      audioRef.current?.play().catch((err) => console.warn('自动重播失败:', err));
+    }
+  }, [lotteryStatus]);
 
   const showEnter = useMemo<boolean>(() => {
     return members.length > 0 && lotteryStatus === INIT;
@@ -128,13 +164,6 @@ export function useLottery() {
 
     setIsAnimating(true);
     setLotteryStatus(READY);
-
-    if (openingMusic) {
-      audioRef.current?.pause();           // 切歌前先掐断上一首
-      audioRef.current.src = URL.createObjectURL(openingMusic.file);  // 换子弹（切歌直链）
-      audioRef.current?.load();
-      audioRef.current?.play();
-    }
 
     await transform(scene, camera, renderer, objects, targets.sphere, 2000);
     setIsAnimating(false);
