@@ -3,8 +3,6 @@ import { Form, Button, Input, Modal, Select } from 'antd';
 import { DeleteTwoTone } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
-import { shuffle, weightedRandom } from '@/utils/algorithm';
-
 import { useGeneral } from './useGeneral.tsx';
 
 import styles from './styles.module.css';

@@ -1,6 +1,8 @@
 import { create } from 'zustand';
+import { message } from 'antd';
 
 import { db } from '@/config/db';
+import { consoleError } from '@/utils/console.ts';
 
 import type { Member } from '@/types/lottery';
 
@@ -34,14 +36,16 @@ export const useMemberStore = create<MemberStore>((set, get) => ({
       set({ members: data });
       get().setIsMembersLoaded(true);
     } catch (error) {
-      console.error('初始化人员数据失败: ', error);
+      message.error('初始化成员数据失败!');
+      consoleError('store > member > init', '初始化成员数据失败', error);
     }
   },
   get: async (id: number): Promise<Member|null> => {
     try {
       return await db.member.get(id) || null;
     } catch (error) {
-      console.error('查询人员信息失败: ', error);
+      message.error('查询成员信息失败!');
+      consoleError('store > member > get', '查询成员信息失败', error);
       return null;
     }
   },
@@ -55,7 +59,8 @@ export const useMemberStore = create<MemberStore>((set, get) => ({
         members: state.members.map((member: Member) => member.id === id ? { id: realId, ...rest } : member),
       }));
     } catch (error) {
-      console.error('添加人员信息失败: ', error);
+      message.error('添加成员信息失败!');
+      consoleError('store > member > create', '添加成员信息失败', error);
     }
   },
   createInMemory: async (item: Member) => {
@@ -68,7 +73,8 @@ export const useMemberStore = create<MemberStore>((set, get) => ({
 
       set((state) => ({ members: [...state.members, ...newMembers] }));
     } catch (error) {
-      console.error('导入人员信息失败: ', error);
+      message.error('导入成员信息失败!');
+      consoleError('store > member > bulkCreate', '导入成员信息失败', error);
     }
   },
   update: async (item: Member) => {
@@ -81,7 +87,8 @@ export const useMemberStore = create<MemberStore>((set, get) => ({
         members: state.members.map((member: Member) => member.id === id ? { id, ...rest } : member),
       }));
     } catch (error) {
-      console.error('更新人员信息失败: ', error);
+      message.error('更新成员信息失败!');
+      consoleError('store > member > update', '更新成员信息失败', error);
     }
   },
   updateInMemory: (item: Member) => {
@@ -97,7 +104,8 @@ export const useMemberStore = create<MemberStore>((set, get) => ({
         members: state.members.filter((member: Member) => member.id !== item.id),
       }));
     } catch (error) {
-      console.error('删除人员信息失败: ', error);
+      message.error('删除成员信息失败!');
+      consoleError('store > member > delete', '删除成员信息失败', error);
     }
   },
   deleteInMemory: (item: Member) => {
@@ -113,7 +121,8 @@ export const useMemberStore = create<MemberStore>((set, get) => ({
         members: state.members.filter((member: Member) => !ids.includes(member.id as number)),
       }));
     } catch (error) {
-      console.error('批量删除人员信息失败: ', error);
+      message.error('批量删除成员失败!');
+      consoleError('store > member > bulkDelete', '批量删除成员失败', error);
     }
   },
   clear: async () => {
@@ -122,7 +131,8 @@ export const useMemberStore = create<MemberStore>((set, get) => ({
 
       set(() => ({ members: [] }));
     } catch (error) {
-      console.error('清空人员信息失败: ', error);
+      message.error('清空成员失败!');
+      consoleError('store > member > clear', '清空成员失败', error);
     }
   },
 }));

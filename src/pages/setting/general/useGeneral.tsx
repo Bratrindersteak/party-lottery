@@ -41,7 +41,7 @@ export function useGeneral(form: FormInstance) {
   }, [form, title]);
 
   const handleAlgoChange = useCallback(() => {
-
+    // nothing.
   }, []);
 
   const handleClearAll = useCallback(() => {
