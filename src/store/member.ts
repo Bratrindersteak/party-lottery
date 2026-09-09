@@ -31,8 +31,6 @@ export const useMemberStore = create<MemberStore>((set, get) => ({
     try {
       const data = await db.member.toArray();
 
-      console.log('data: ', data);
-
       set({ members: data });
       get().setIsMembersLoaded(true);
     } catch (error) {

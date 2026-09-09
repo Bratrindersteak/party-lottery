@@ -96,9 +96,10 @@
 
   & .award-handle {
     position: absolute;
-    right: 0;
+    right: 1px;
     top: 50%;
     transform: translate(100%, -50%);
+    padding: 16px 4px;
     background: linear-gradient(
       135deg,
       rgba(15, 23, 42, 0.92) 0%,
@@ -109,8 +110,8 @@
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5),
     inset 0 0 12px rgba(0, 242, 254, 0.1); /* 增加微弱内发光 */
     color: #00f2fe;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
     cursor: pointer;
 
     &:hover {

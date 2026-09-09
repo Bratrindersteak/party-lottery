@@ -18,7 +18,6 @@ function App() {
   const getMusics = useMusicStore((state) => state.getMusics);
 
   useEffect(() => {
-    console.log('init 被调用~');
     init();
     getMusics();
   }, [init, getMusics]);

@@ -1,5 +1,5 @@
 import { useAwardStore } from '@/store/award.ts';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { App } from 'antd';
 
 import { useLotteryStore } from '@/store/lottery.ts';
@@ -15,6 +15,12 @@ export function useAwardList() {
   const isAwardListExpanded = useLotteryStore((state) => state.isAwardListExpanded);
   const setIsAwardListExpanded = useLotteryStore((state) => state.setIsAwardListExpanded);
   const awards = useAwardStore((state) => state.awards);
+
+  useEffect(() => {
+    if (awards.length === 0) {
+      setIsAwardListExpanded(false);
+    }
+  }, [awards, setIsAwardListExpanded]);
 
   const ableClick = useMemo<boolean>(() => {
     return [INIT, READY].includes(lotteryStatus);

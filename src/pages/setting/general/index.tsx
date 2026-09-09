@@ -33,7 +33,7 @@ function GeneralConfig({ style }: GeneralConfigProps) {
             <div className={styles.title}>标题</div>
             <div className={styles.content}>
               <Form.Item name={['title']} initialValue={title} className={styles['input']}>
-                <Input placeholder="Basic usage" onChange={handleTitleChange} />
+                <Input placeholder={t('pleaseInput')} onChange={handleTitleChange} />
               </Form.Item>
               {isTitleChange && (<>
                 <Button color="green" variant="outlined" className={styles['operation-btn']} onClick={handleSaveTitle}>{t('operation.save')}</Button>
