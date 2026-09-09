@@ -145,7 +145,6 @@ export function useAward(form: FormInstance) {
   }, [bulkDeleteRecord, records, update]);
 
   const handleDelete = useCallback((item: Award) => {
-    console.log('handleDelete: ', item);
     remove(item);
   }, [remove]);
 

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { App } from 'antd';
 
 import { useLotteryStore } from '@/store/lottery.ts';
@@ -11,6 +11,10 @@ export function useGeneral(form: FormInstance) {
   const setTitle = useLotteryStore((state) => state.setTitle);
 
   const [isTitleChange, setIsTitleChange] = useState(false);
+
+  useEffect(() => {
+    form.setFieldsValue({ title });
+  }, [form, title]);
 
   const handleTitleChange = useCallback((e) => {
     const value = e.target.value;

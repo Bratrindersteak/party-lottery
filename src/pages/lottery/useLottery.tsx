@@ -59,6 +59,12 @@ export function useLottery() {
     return awards.find((award: Award) => award.id === currAwardId) || null;
   }, [currAwardId, awards]);
 
+  useEffect(() => {
+    if (awards.length === 0) {
+      setCurrAwardId(null);
+    }
+  }, [awards, setCurrAwardId]);
+
   const openingMusic = useMemo<Music | null>(() => {
     return musics.find((music: Music) => music.id === openingId) || null;
   }, [musics, openingId]);

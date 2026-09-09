@@ -15,7 +15,7 @@ interface LotteryStore {
   setTitle: (title: string) => void;
 
   currAwardId: number | null;
-  setCurrAwardId: (id: number) => void;
+  setCurrAwardId: (id: number | null) => void;
 
   isAnimating: boolean;
   setIsAnimating: (isAnimating: boolean) => void;
@@ -37,7 +37,7 @@ export const useLotteryStore = create<LotteryStore>()(
       setTitle: (title: string) => set({ title }),
 
       currAwardId: null,
-      setCurrAwardId: (id: number) => set({ currAwardId: id }),
+      setCurrAwardId: (id: number | null) => set({ currAwardId: id }),
 
       isAnimating: false,
       setIsAnimating: (isAnimating: boolean) => set({ isAnimating }),
