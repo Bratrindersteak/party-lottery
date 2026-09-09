@@ -236,7 +236,6 @@ export function useLottery() {
     }));
     bulkCreateRecord(records);
 
-    console.log('handleFinish: ', cameraZ);
     const sphereRadius = calcSphereRadius(members.length);
     const winnerScale = calcWinnerScale(cameraZ, sphereRadius, currWinnersRef.current.length);
     const positions = winnerPosition(currWinnersRef.current.length, sphereRadius, cameraZ, winnerScale);

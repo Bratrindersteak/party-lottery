@@ -1,4 +1,3 @@
-import calcSphereRadius from '@/utils/three/calcSphereRadius.ts';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { CSS3DRenderer, TrackballControls, CSS3DObject } from 'three/addons';
@@ -14,7 +13,8 @@ import cardLayout from '@/utils/three/cardLayout.ts';
 import { handleWindowResize } from '@/utils/three/handles.ts';
 import calcCameraZ from '@/utils/three/calcCameraZ.ts';
 import { mainGroup } from '@/utils/three/tweenManager.ts';
-import { CAMERA_FOV } from '@/config/constants.ts';
+import calcSphereRadius from '@/utils/three/calcSphereRadius.ts';
+import { CAMERA_FOV, INIT } from '@/config/constants.ts';
 
 import styles from './styles.module.css';
 
@@ -29,6 +29,7 @@ export function useThree() {
   const setObjects = useThreeStore((state) => state.setObjects);
   const setTargets = useThreeStore((state) => state.setTargets);
 
+  const setLotteryStatus = useLotteryStore((state) => state.setLotteryStatus);
   const setIsAnimating = useLotteryStore((state) => state.setIsAnimating);
 
   const members = useMemberStore((state) => state.members);
@@ -39,6 +40,7 @@ export function useThree() {
 
     if (length <= 0) { return }
 
+    setLotteryStatus(INIT);
     setIsAnimating(true);
 
     const { cols, rows, offsetX, offsetY } = cardLayout(length);
