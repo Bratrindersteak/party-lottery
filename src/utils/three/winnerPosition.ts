@@ -1,4 +1,4 @@
-import { WINNER_SCALE, CARD_WIDTH, CARD_HEIGHT, GAP_X, GAP_Y } from '@/config/constants.ts';
+import { CARD_WIDTH, CARD_HEIGHT, GAP_X, GAP_Y, WINNER_COLS } from '@/config/constants.ts';
 
 import type { ObjectPosition } from '@/types/3d.ts';
 
@@ -8,19 +8,16 @@ import type { ObjectPosition } from '@/types/3d.ts';
  * @param total - 中奖总人数.
  * @param sphereRadius - 球体卡片半径.
  * @param cameraZ - 初始化时的 camera.position.z 值.
+ * @param scale - 缩放比例.
  * @returns 获奖卡片们的 position 坐标数组.
  */
-function winnerPosition(total: number, sphereRadius: number, cameraZ: number): ObjectPosition[] {
-  const maxCols = 6;
-
+function winnerPosition(total: number, sphereRadius: number, cameraZ: number, scale: number): ObjectPosition[] {
   // 1. 根据总人数动态决定列数.
-  let cols = Math.min(total, maxCols);
-  if (total === 4) cols = 2; // 4人时 2x2 布局比 4x1 更美观
-  if (total === 9) cols = 3; // 9人时 3x3 布局
+  const cols = Math.min(total, WINNER_COLS);
 
   const rows = Math.ceil(total / cols);
-  const stepX = (CARD_WIDTH + GAP_X) * WINNER_SCALE;
-  const stepY = (CARD_HEIGHT + GAP_Y) * WINNER_SCALE;
+  const stepX = (CARD_WIDTH + GAP_X) * scale;
+  const stepY = (CARD_HEIGHT + GAP_Y) * scale;
 
   // 2. 整体阵列的居中偏移量 (基于完整网格).
   const totalWidth = (cols - 1) * stepX;

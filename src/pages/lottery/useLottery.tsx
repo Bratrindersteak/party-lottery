@@ -232,11 +232,11 @@ export function useLottery() {
 
     console.log('handleFinish: ', cameraZ);
     const sphereRadius = calcSphereRadius(members.length);
-    const positions = winnerPosition(currWinnersRef.current.length, sphereRadius, cameraZ);
-    const winnerScale = calcWinnerScale(cameraZ, sphereRadius);
+    const winnerScale = calcWinnerScale(cameraZ, sphereRadius, currWinnersRef.current.length);
+    const positions = winnerPosition(currWinnersRef.current.length, sphereRadius, cameraZ, winnerScale);
     await winnerTransform(scene, camera, renderer, objects, 1500, positions, currWinnersRef.current, winnerScale);
     setIsAnimating(false);
-  }, [lotteryStatus, currAward, setIsAnimating, scene, camera, renderer, setLotteryStatus, updateAward, bulkCreateRecord, members, objects]);
+  }, [lotteryStatus, currAward, setIsAnimating, scene, camera, renderer, setLotteryStatus, updateAward, bulkCreateRecord, cameraZ, members, objects]);
 
   // 重新抽取当前奖项.
   const handleReplay = useCallback(async () => {
