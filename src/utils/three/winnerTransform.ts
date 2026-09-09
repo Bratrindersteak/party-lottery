@@ -13,11 +13,12 @@ import type { ObjectPosition } from '@/types/3d.ts';
 type ObjectItem = CSS3DObject & {
   _positionTween?: Tween | null;
   _rotationTween?: Tween | null;
+  _scaleTween?: Tween | null;
 };
 
 let winnersInstance: Tween | null = null;
 
-function winnerTransform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRenderer, objects: CSS3DObject[], duration: number, positions: ObjectPosition[], winners: Member[] = []): Promise<void> {
+function winnerTransform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRenderer, objects: CSS3DObject[], duration: number, positions: ObjectPosition[], winners: Member[] = [], scale: number): Promise<void> {
   if (winnersInstance) {
     winnersInstance.stop();
     winnersInstance = null;
@@ -35,6 +36,10 @@ function winnerTransform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3
     if (object._rotationTween) {
       object._rotationTween.stop();
       object._rotationTween = null;
+    }
+    if (object._scaleTween) {
+      object._scaleTween.stop();
+      object._scaleTween = null;
     }
 
     const position = positions[index];
@@ -55,6 +60,13 @@ function winnerTransform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3
       .onComplete(() => { object._rotationTween = null })
       .onStop(() => { object._rotationTween = null });
     object._rotationTween.start(now);
+
+    object._scaleTween = new TWEEN.Tween(object.scale, mainGroup)
+      .to({ x: scale, y: scale, z: scale }, duration)
+      .easing(TWEEN.Easing.Exponential.InOut)
+      .onComplete(() => { object._scaleTween = null })
+      .onStop(() => { object._scaleTween = null });
+    object._scaleTween.start(now);
   });
 
   return new Promise((resolve) => {

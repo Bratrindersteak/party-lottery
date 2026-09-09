@@ -27,6 +27,9 @@ export const READY = 'READY';
 export const RUNNING = 'RUNNING';
 export const FINISHED = 'FINISHED';
 
+export const CAMERA_FOV = 40;
+export const MIN_CAMERA_Z = 2000;
+export const MIN_SPHERE_RADIUS = 300;
 export const CARD_WIDTH = 120;
 export const CARD_HEIGHT = 160;
 export const GAP_X = 20;

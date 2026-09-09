@@ -6,10 +6,11 @@ import type { ObjectPosition } from '@/types/3d.ts';
  * 计算每一个 CSS3DObject 在 3D 空间中的目标位置 (x, y, z).
  *
  * @param total - 中奖总人数.
- * @param memberLength - 卡片总数.
+ * @param sphereRadius - 球体卡片半径.
+ * @param cameraZ - 初始化时的 camera.position.z 值.
  * @returns 获奖卡片们的 position 坐标数组.
  */
-function winnerPosition(total: number, memberLength: number): ObjectPosition[] {
+function winnerPosition(total: number, sphereRadius: number, cameraZ: number): ObjectPosition[] {
   const maxCols = 6;
 
   // 1. 根据总人数动态决定列数.
@@ -33,11 +34,11 @@ function winnerPosition(total: number, memberLength: number): ObjectPosition[] {
 
   const positions: ObjectPosition[] = [];
 
-  const baseSpacing =  Math.ceil(Math.sqrt((CARD_WIDTH ** 2) + (CARD_HEIGHT ** 2)) * 1.05 / Math.sqrt(4 * Math.PI));
-  const radius = Math.sqrt(memberLength) * baseSpacing;
-  // TODO 这里 safeMargin 的值需要根据当前 camera.position.z 的值去计算.
-  const safeMargin = 2000;
-  const z = radius + safeMargin;
+  // 1. 将卡片送到相机前方一个【固定比例视距】的位置
+  // 放在相机与球体最前沿(R)中间偏前的位置 (比如距离相机 1.5 * R)
+  // 这样既能绝对摆脱球体包围 (Z_target > R)，又距离相机安全
+  const targetDistanceToCamera = Math.min(1200, cameraZ - sphereRadius * 1.3);
+  const z = cameraZ - targetDistanceToCamera;
 
   for (let i = 0; i < total; i++) {
     const row = Math.floor(i / cols); // 当前行 (0 开始)
@@ -51,7 +52,8 @@ function winnerPosition(total: number, memberLength: number): ObjectPosition[] {
       x = col * stepX - offsetX;
     }
 
-    const y = -(row * stepY - offsetY); // Y 轴：上方为正，下方为负.
+    // Y 轴：上方为正，下方为负.
+    const y = -(row * stepY - offsetY);
 
     positions.push({ x, y, z });
   }

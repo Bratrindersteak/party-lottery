@@ -13,6 +13,10 @@ import { FINISHED, INIT, READY, RUNNING } from '@/config/constants.ts';
 import { shuffle } from '@/utils/algorithm';
 import isNullish from '@/utils/isNullish.ts';
 import { rotating, transform } from '@/utils/three';
+import calcCameraZ from '@/utils/three/calcCameraZ.ts';
+import calcSphereRadius from '@/utils/three/calcSphereRadius.ts';
+import calcWinnerScale from '@/utils/three/calcWinnerScale.ts';
+import cardLayout from '@/utils/three/cardLayout.ts';
 import winnerPosition from '@/utils/three/winnerPosition.ts';
 import winnerTransform from '@/utils/three/winnerTransform.ts';
 
@@ -64,6 +68,11 @@ export function useLottery() {
   const winningMusic = useMemo<Music | null>(() => {
     return musics.find((music: Music) => music.id === winningId) || null;
   }, [musics, winningId]);
+
+  const cameraZ = useMemo<number>(() => {
+    const { rows } = cardLayout(members.length);
+    return calcCameraZ(rows);
+  }, [members]);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -221,8 +230,11 @@ export function useLottery() {
     }));
     bulkCreateRecord(records);
 
-    const positions = winnerPosition(currWinnersRef.current.length, members.length);
-    await winnerTransform(scene, camera, renderer, objects, 1500, positions, currWinnersRef.current);
+    console.log('handleFinish: ', cameraZ);
+    const sphereRadius = calcSphereRadius(members.length);
+    const positions = winnerPosition(currWinnersRef.current.length, sphereRadius, cameraZ);
+    const winnerScale = calcWinnerScale(cameraZ, sphereRadius);
+    await winnerTransform(scene, camera, renderer, objects, 1500, positions, currWinnersRef.current, winnerScale);
     setIsAnimating(false);
   }, [lotteryStatus, currAward, setIsAnimating, scene, camera, renderer, setLotteryStatus, updateAward, bulkCreateRecord, members, objects]);
 

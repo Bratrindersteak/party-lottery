@@ -12,6 +12,7 @@ import type { Member } from '@/types/lottery';
 type ObjectItem = CSS3DObject & {
   _positionTween?: Tween | null;
   _rotationTween?: Tween | null;
+  _scaleTween?: Tween | null;
 };
 
 let transformInstance: Tween | null = null;
@@ -32,9 +33,15 @@ function transform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRende
 
     if (object._positionTween) {
       object._positionTween.stop();
+      object._positionTween = null;
     }
     if (object._rotationTween) {
       object._rotationTween.stop();
+      object._rotationTween = null;
+    }
+    if (object._scaleTween) {
+      object._scaleTween.stop();
+      object._scaleTween = null;
     }
 
     const winnerIndex = winners.findIndex(winner => winner.id === object.userData.memberId);
@@ -62,6 +69,13 @@ function transform(scene: Scene, camera: PerspectiveCamera, renderer: CSS3DRende
       .onComplete(() => { object._rotationTween = null })
       .onStop(() => { object._rotationTween = null });
     object._rotationTween.start(now);
+
+    object._scaleTween = new TWEEN.Tween(object.scale, mainGroup)
+      .to({ x: 1, y: 1, z: 1 }, (0.5 + Math.random() * 0.5) * duration)
+      .easing(TWEEN.Easing.Exponential.InOut)
+      .onComplete(() => { object._scaleTween = null })
+      .onStop(() => { object._scaleTween = null });
+    object._scaleTween.start(now);
   }
 
   // 3. 将新创建的计时器赋给全局变量

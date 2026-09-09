@@ -1,5 +1,6 @@
+import calcSphereRadius from '@/utils/three/calcSphereRadius.ts';
 import { useEffect, useRef } from 'react';
-import * as THREE from "three";
+import * as THREE from 'three';
 import { CSS3DRenderer, TrackballControls, CSS3DObject } from 'three/addons';
 
 import { useThreeStore } from '@/store/three.ts';
@@ -13,6 +14,7 @@ import cardLayout from '@/utils/three/cardLayout.ts';
 import { handleWindowResize } from '@/utils/three/handles.ts';
 import calcCameraZ from '@/utils/three/calcCameraZ.ts';
 import { mainGroup } from '@/utils/three/tweenManager.ts';
+import { CAMERA_FOV } from '@/config/constants.ts';
 
 import styles from './styles.module.css';
 
@@ -44,7 +46,7 @@ export function useThree() {
     const scene: Scene = new THREE.Scene();
     setScene(scene);
 
-    const camera: PerspectiveCamera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+    const camera: PerspectiveCamera = new THREE.PerspectiveCamera(CAMERA_FOV, window.innerWidth / window.innerHeight, 1, 10000);
 
     camera.position.z = calcCameraZ(rows);
     setCamera(camera);
@@ -71,10 +73,12 @@ export function useThree() {
 
     const vector = new THREE.Vector3();
 
+    const sphereRadius = calcSphereRadius(length);
+
     for (let i = 0; i < length; i += 1) {
       initCard(scene, objects, members[i], styles);
       initTable(i, cols, offsetX, offsetY, targets.table);
-      initSphere(i, length, vector, targets.sphere);
+      initSphere(i, length, sphereRadius, vector, targets.sphere);
     }
 
     const windowResizeListener = () => handleWindowResize(scene, camera, renderer);
