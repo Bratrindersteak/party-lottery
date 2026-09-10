@@ -1,12 +1,14 @@
 import React, { useMemo, useCallback, useState } from 'react';
-import { Button, Popconfirm, Table } from 'antd';
+import { Button, Image, Popconfirm, Table } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
+import dayjs from 'dayjs';
 
 import { useRecordStore } from '@/store/record.ts';
 import { useAwardStore } from '@/store/award.ts';
 import { useMemberStore } from '@/store/member.ts';
 import { exportToExcel } from '@/utils/excel.ts';
+import defaultAwardUrl from '@/assets/images/default-award.png';
 
 import styles from './styles.module.css';
 
@@ -64,15 +66,18 @@ export function useRecord() {
   };
 
   const handleDownload = useCallback(() => {
-    const data = records.map(({ awardId, memberId }) => {
+    const data = records.map(({ awardId, memberId, createdAt }) => {
       const award = awards.find(award => award.id === awardId);
 
       const member = members.find(member => member.id === memberId);
 
-      const item: ExportColumns = {};
+      const item: ExportColumns = {
+        createdAt: dayjs(createdAt).format('YYYY-MM-DD HH:mm:ss'),
+      };
 
       if (award) {
         item.award = award.name;
+        item.prize = award.prize;
       }
 
       if (member) {
@@ -134,10 +139,39 @@ export function useRecord() {
       dataIndex: 'awardId',
       key: 'award',
       render: (value, record, index: number) => {
-        const award: Award = awards.find(award => award.id === value);
+        const award: Award | undefined = awards.find(award => award.id === value);
 
         return (
           <>{award ? award.name : ''}</>
+        );
+      },
+    },
+    {
+      title: '奖品',
+      dataIndex: 'awardId',
+      key: 'prize',
+      render: (value, record, index: number) => {
+        const award: Award | undefined = awards.find(award => award.id === value);
+
+        return (
+          <>{award ? award.prize : ''}</>
+        );
+      },
+    },
+    {
+      title: '预览',
+      dataIndex: 'awardId',
+      key: 'url',
+      render: (value, record, index: number) => {
+        const award: Award | undefined = awards.find(award => award.id === value);
+
+        return (
+          <Image
+            height={32}
+            alt="basic"
+            src={award?.url}
+            fallback={defaultAwardUrl}
+          />
         );
       },
     },
@@ -174,6 +208,16 @@ export function useRecord() {
 
         return (
           <>{member ? member.department : ''}</>
+        );
+      },
+    },
+    {
+      title: '获奖时间',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render: (value, record, index: number) => {
+        return (
+          <>{dayjs(value).format('YYYY-MM-DD HH:mm:ss')}</>
         );
       },
     },

@@ -112,14 +112,16 @@ export async function exportToExcel(data: ExportColumns[]) {
   // 2. 设置表头.
   worksheet.columns = [
     { header: '奖项', key: 'award', width: 15 },
+    { header: '奖品', key: 'prize', width: 20 },
     { header: '工号', key: 'employeeId', width: 15 },
     { header: '姓名', key: 'name', width: 15 },
     { header: '部门', key: 'department', width: 20 },
+    { header: '获奖时间', key: 'createdAt', width: 20 },
   ];
 
   // 3. 添加数据.
-  data.forEach(({ award, employeeId, name, department }) => {
-    worksheet.addRow({ award, employeeId, name, department });
+  data.forEach(item => {
+    worksheet.addRow(item);
   });
 
   // 4. 加样式（设置表头背景色与加粗）.
@@ -128,7 +130,7 @@ export async function exportToExcel(data: ExportColumns[]) {
   headerRow.fill = {
     type: 'pattern',
     pattern: 'solid',
-    fgColor: { argb: '4F81BD' }
+    fgColor: { argb: '4F81BD' },
   };
 
   // 5. 生成 Buffer 并触发浏览器下载.

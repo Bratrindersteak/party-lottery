@@ -5,7 +5,7 @@ import { useMemberStore } from '@/store/member.ts';
 import { useLotteryStore } from '@/store/lottery.ts';
 import { useSettingStore } from '@/store/setting.ts';
 import { useAwardStore } from '@/store/award.ts';
-import { SETTING, MEMBER, INIT_TITLE, DEFAULT_TITLE, DEFAULT_AWARDS } from '@/config/constants.ts';
+import { SETTING, MEMBER, DEFAULT_TITLE, DEFAULT_AWARDS } from '@/config/constants.ts';
 import { parseExcel } from '@/utils/excel.ts';
 
 import type { RcFile } from 'antd/es/upload';
@@ -55,9 +55,7 @@ export function useDefault() {
     await bulkCreate(newMembers);
     message.success({ content: `成功导入${members.length}人！`, key: 'importing' });
 
-    if (title === INIT_TITLE) {
-      setTitle(DEFAULT_TITLE);
-    }
+    setTitle(DEFAULT_TITLE);
 
     if (awards.length === 0) {
       await Promise.all(DEFAULT_AWARDS.map(award => {

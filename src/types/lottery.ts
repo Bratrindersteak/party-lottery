@@ -44,9 +44,11 @@ export interface Record {
 
 export interface ExportColumns {
   award?: string;
+  prize?: string;
   employeeId?: string;
   name?: string;
   department?: string;
+  createdAt?: string;
 }
 
 export interface Music {

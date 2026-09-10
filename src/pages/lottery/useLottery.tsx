@@ -230,9 +230,12 @@ export function useLottery() {
     setLotteryStatus(FINISHED);
     updateAward({ ...currAward, isFinished: true });
 
+    const timestamp = Date.now();
     const records: Record[] = currWinnersRef.current.map((winner) => ({
       awardId: currAward.id as number,
       memberId: winner.id as number,
+      createdAt: timestamp,
+      updatedAt: timestamp,
     }));
     bulkCreateRecord(records);
 
