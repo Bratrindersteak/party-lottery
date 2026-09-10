@@ -12,6 +12,7 @@ function Instruction({ style }: InstructionProps) {
 
   return (
     <div style={style}>
+      <h1 className={styles.title}>{t('instruction.h1')}</h1>
       <p>{t('instruction.paragraphs.0')}</p>
       <p>{t('instruction.paragraphs.1')}</p>
       <p>{t('instruction.paragraphs.2')}</p>

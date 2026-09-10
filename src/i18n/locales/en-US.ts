@@ -65,6 +65,7 @@ export default {
   },
   instruction: {
     title: 'Instruction',
+    h1: 'How To Use It',
     paragraphs: [
       '1. dasdasdasdasdasd',
       '2. fsdfsdfsdfsdfsdfsd',

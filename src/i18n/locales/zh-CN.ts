@@ -65,6 +65,7 @@ export default {
   },
   instruction: {
     title: '操作说明',
+    h1: '使用说明',
     paragraphs: [
       '1. dasdasdasdasdasd',
       '2. fsdfsdfsdfsdfsdfsd',

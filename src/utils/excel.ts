@@ -115,8 +115,8 @@ export async function exportToExcel(data: ExportColumns[]) {
     { header: '奖品', key: 'prize', width: 20 },
     { header: '工号', key: 'employeeId', width: 15 },
     { header: '姓名', key: 'name', width: 15 },
-    { header: '部门', key: 'department', width: 20 },
-    { header: '获奖时间', key: 'createdAt', width: 20 },
+    { header: '部门', key: 'department', width: 25 },
+    { header: '获奖时间', key: 'createdAt', width: 25 },
   ];
 
   // 3. 添加数据.
