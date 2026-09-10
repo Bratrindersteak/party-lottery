@@ -17,8 +17,8 @@ export const WINNING_MUSIC = 'WINNING_MUSIC';
 export const INIT_TITLE = '暂无数据';
 export const DEFAULT_TITLE = '大明嘉靖三十九年腊月廿九';
 export const DEFAULT_AWARDS = [
-  { name: '三等奖', prize: '补发半年欠俸', url: './images/talisman.png', count: 3, isFinished: false, allowRepeat: false },
-  { name: '二等奖', prize: '嘉靖元年花雕一坛', url: './images/talisman.png', count: 2, isFinished: false, allowRepeat: false },
+  { name: '三等奖', prize: '补发半年欠俸', url: './images/salary.png', count: 3, isFinished: false, allowRepeat: false },
+  { name: '二等奖', prize: '六十年茅台陈酿', url: './images/moutai.png', count: 2, isFinished: false, allowRepeat: false },
   { name: '一等奖', prize: '万寿帝君仙符', url: './images/talisman.png', count: 1, isFinished: false, allowRepeat: false },
 ];
 
