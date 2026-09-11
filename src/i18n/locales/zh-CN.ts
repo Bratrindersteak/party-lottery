@@ -2,7 +2,7 @@ export default {
   lottery: {
     enter: '进入抽奖',
     play: '开始抽奖',
-    finish: '停止并开奖',
+    finish: '开奖',
     replay: '重新抽奖',
     continue: '继续抽奖',
     gotoAddMember: '去添加成员',

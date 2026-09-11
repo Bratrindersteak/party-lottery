@@ -2,7 +2,7 @@ export default {
   lottery: {
     enter: 'Enter',
     play: 'Play',
-    finish: 'Stop and Announce',
+    finish: 'Reveal Winners',
     replay: 'Replay',
     continue: 'Continue',
     gotoAddMember: 'Goto Add Member',
