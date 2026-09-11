@@ -12,6 +12,7 @@ export default {
     add: '添加',
     edit: '编辑',
     save: '保存',
+    confirm: '确认',
     cancel: '取消',
     init: '初始化',
     query: '查询',
@@ -21,6 +22,8 @@ export default {
     delete: '删除',
     bulkDelete: '批量删除',
     clear: '清空',
+    confirm_bulkDelete: '$t(operation.confirm)$t(operation.bulkDelete)？',
+    confirm_clear: '$t(operation.confirm)$t(operation.clear)？',
   },
   setting: '设置',
   backToLottery: '返回抽奖',
@@ -67,9 +70,10 @@ export default {
     title: '操作说明',
     h1: '使用说明',
     paragraphs: [
-      '1. dasdasdasdasdasd',
-      '2. fsdfsdfsdfsdfsdfsd',
-      '3. dfvsfgdfhrewsdfwdd',
+      {
+        title: '整体介绍',
+        content: '纯静态页面，无需部署 server，存储依赖内存、IndexedDB 和 Localstorage',
+      },
     ],
   },
 };

@@ -12,6 +12,7 @@ export default {
     add: 'Add',
     edit: 'Edit',
     save: 'Save',
+    confirm: 'Confirm',
     cancel: 'Cancel',
     init: 'Init',
     query: 'Query',
@@ -21,6 +22,8 @@ export default {
     delete: 'Delete',
     bulkDelete: 'Bulk Delete',
     clear: 'Clear',
+    confirm_bulkDelete: '$t(operation.confirm) $t(operation.bulkDelete) ?',
+    confirm_clear: '$t(operation.confirm) $t(operation.clear) ?',
   },
   setting: 'Setting',
   backToLottery: 'Back To Lottery',
@@ -67,9 +70,10 @@ export default {
     title: 'Instruction',
     h1: 'How To Use It',
     paragraphs: [
-      '1. dasdasdasdasdasd',
-      '2. fsdfsdfsdfsdfsdfsd',
-      '3. dfvsfgdfhrewsdfwdd',
+      {
+        title: '整体介绍',
+        content: 'Pure static page without backend API services; storage relies on in-memory, IndexedDB, and LocalStorage.',
+      },
     ],
   },
 };

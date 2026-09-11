@@ -10,12 +10,17 @@ interface InstructionProps {
 function Instruction({ style }: InstructionProps) {
   const { t } = useTranslation();
 
+  const paragraphs = t('instruction.paragraphs', { returnObjects: true }) as Array<{ title: string; content: string }>;
+
   return (
     <div style={style}>
       <h1 className={styles.title}>{t('instruction.h1')}</h1>
-      <p>{t('instruction.paragraphs.0')}</p>
-      <p>{t('instruction.paragraphs.1')}</p>
-      <p>{t('instruction.paragraphs.2')}</p>
+      {paragraphs.map((paragraph, index) => (
+        <React.Fragment key={index}>
+          <h2>{paragraph.title}</h2>
+          <p>{paragraph.content}</p>
+        </React.Fragment>
+      ))}
     </div>
   );
 }
