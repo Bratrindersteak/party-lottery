@@ -35,7 +35,7 @@ export default {
   general: {
     title: '通用配置',
     lotteryTitle: '抽奖标题',
-    clearAll: '清空所有缓存',
+    clearAll: '清空数据并退出',
   },
   member: {
     title: '成员管理',

@@ -25,10 +25,10 @@ function GeneralConfig({ style }: GeneralConfigProps) {
 
   return (
     <>
-      <div style={style}>
+      <div style={style} className={styles['setting-general']}>
         <Form form={form} component={false}>
-          <div className={styles.item}>
-            <div className={styles.title}>标题</div>
+          <div className={styles.block}>
+            <div className={styles['block-title']}>标题</div>
             <div className={styles.content}>
               <Form.Item name={['title']} initialValue={title} className={styles['input']}>
                 <Input placeholder={t('pleaseInput')} onChange={handleTitleChange} />
@@ -40,8 +40,8 @@ function GeneralConfig({ style }: GeneralConfigProps) {
             </div>
           </div>
 
-          <div className={styles.item}>
-            <div className={styles.title}>算法</div>
+          <div className={styles.block}>
+            <div className={styles['block-title']}>算法</div>
             <div className={styles.content}>
               <Select
                 defaultValue="shuffle"
@@ -56,10 +56,18 @@ function GeneralConfig({ style }: GeneralConfigProps) {
             </div>
           </div>
 
-          <div className={styles.item}>
-            <div className={styles.title}>清理</div>
-            <div className={styles.content}>
-              <Button color="danger" variant="solid" className={styles['operation-btn']} onClick={() => { setModalOpen(true) }}>{t('general.clearAll')}</Button>
+          <div className={styles.block}>
+            <div className={styles['block-title']}>Danger Zone</div>
+            <div className={styles.list}>
+              <div className={styles.item}>
+                <div>
+                  <h5 className={styles['item-title']}>{t('general.clearAll')}</h5>
+                  <p className={styles['item-desc']}>Once you clean the page, there is no going back. Please be certain.</p>
+                </div>
+                <div>
+                  <Button color="danger" variant="solid" className={styles['danger-btn']} onClick={() => { setModalOpen(true) }}>{t('general.clearAll')}</Button>
+                </div>
+              </div>
             </div>
           </div>
         </Form>

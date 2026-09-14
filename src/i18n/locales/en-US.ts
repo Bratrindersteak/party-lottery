@@ -35,7 +35,7 @@ export default {
   general: {
     title: 'General Config',
     lotteryTitle: 'Lottery Title',
-    clearAll: 'Clean All Cache',
+    clearAll: 'Clear All Data and Exit',
   },
   member: {
     title: 'Member Management',
