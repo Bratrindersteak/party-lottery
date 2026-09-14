@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { App } from 'antd';
 
 import { useLotteryStore } from '@/store/lottery.ts';
+import { deleteDatabase } from '@/config/db.ts';
 
 import type { FormInstance } from 'antd';
 
@@ -44,9 +45,16 @@ export function useGeneral(form: FormInstance) {
     // nothing.
   }, []);
 
-  const handleClearAll = useCallback(() => {
+  const handleClearAll = useCallback(async () => {
     // TODO 清除所有 Localstorage 和 IndexedDB 中的相关数据.
-  }, []);
+    localStorage.removeItem('party-lottery');
+    localStorage.removeItem('party-lottery-award');
+    localStorage.removeItem('party-lottery-music');
+    localStorage.removeItem('party-lottery-record');
+    localStorage.removeItem('party-lottery-setting');
+    await deleteDatabase();
+    message.success('数据已全部清除！');
+  }, [message]);
 
   return { title, isTitleChange, handleTitleChange, handleSaveTitle, handleCancelTitle, handleAlgoChange, handleClearAll };
 }
