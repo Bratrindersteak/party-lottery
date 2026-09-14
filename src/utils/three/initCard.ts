@@ -23,8 +23,11 @@ function initCard(scene: Scene, objects: CSS3DObject[], member: Member, styles: 
 
   const name = document.createElement('div');
   name.className = styles.name;
-  if (member.name.length > 3) {
-    name.style.setProperty('font-size', '26px');
+  if (member.name.length === 4) {
+    name.style.setProperty('font-size', '28px');
+  } else if (member.name.length > 4) {
+    name.style.setProperty('font-size', '22px');
+    name.style.setProperty('line-height', '32px');
   }
   name.textContent = member.name;
   element.appendChild(name);
