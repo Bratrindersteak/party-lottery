@@ -72,7 +72,15 @@ export default {
     paragraphs: [
       {
         title: '整体介绍',
-        content: '纯静态页面，无需部署 server，存储依赖内存、IndexedDB 和 Localstorage',
+        content: '纯静态页面，无需部署后端服务。数据存储依赖 IndexedDB 和 Localstorage。',
+      },
+      {
+        title: '整体介绍',
+        content: '纯静态页面，无需部署后端服务。数据存储依赖 IndexedDB 和 Localstorage。',
+      },
+      {
+        title: '整体介绍',
+        content: '纯静态页面，无需部署后端服务。数据存储依赖 IndexedDB 和 Localstorage。',
       },
     ],
   },
