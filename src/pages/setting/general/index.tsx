@@ -74,11 +74,11 @@ function GeneralConfig({ style }: GeneralConfigProps) {
       </div>
 
       <Modal
-        title={<><DeleteTwoTone twoToneColor={['#FF4D4F', '#FFF2F0']} /> 确认清空所有缓存?</>}
+        title={<><DeleteTwoTone twoToneColor={['#FF4D4F', '#FFF2F0']} /> 确认清空所有数据?</>}
         style={{ top: 240 }}
         open={modalOpen}
         okButtonProps={{ color: 'danger', variant: 'solid' }}
-        okText="清空所有缓存"
+        okText="清空所有数据"
         onOk={handleClearAll}
         onCancel={() => setModalOpen(false)}
       >

@@ -1,5 +1,19 @@
+.setting-instruction {
+
+}
+
 .title {
-  color: #ffffff;
   letter-spacing: 5px;
   font-size: 48px;
+  color: #f0f6fc;
+}
+
+.sub-title {
+  text-align: left;
+  color: #f0f6fc;
+}
+
+.sub-content {
+  text-align: left;
+  color: #f0f6fc;
 }

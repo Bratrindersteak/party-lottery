@@ -13,12 +13,12 @@ function Instruction({ style }: InstructionProps) {
   const paragraphs = t('instruction.paragraphs', { returnObjects: true }) as Array<{ title: string; content: string }>;
 
   return (
-    <div style={style}>
+    <div style={style} className={styles['setting-instruction']}>
       <h1 className={styles.title}>{t('instruction.h1')}</h1>
       {paragraphs.map((paragraph, index) => (
         <React.Fragment key={index}>
-          <h2>{paragraph.title}</h2>
-          <p>{paragraph.content}</p>
+          <h2 className={styles['sub-title']}>{paragraph.title}</h2>
+          <p className={styles['sub-content']}>{paragraph.content}</p>
         </React.Fragment>
       ))}
     </div>
