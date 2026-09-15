@@ -72,15 +72,33 @@ export default {
     paragraphs: [
       {
         title: '整体介绍',
-        content: '纯静态页面，无需部署后端服务。数据存储依赖 IndexedDB 和 Localstorage。',
+        content: '纯静态页面，无需部署后端服务。数据存储依赖 IndexedDB 和 Localstorage。支持 excel 文件导入成员数据（请使用提供的模板）。支持抽奖结果导出为 excel 文件。支持自上传抽奖音效。',
       },
       {
-        title: '整体介绍',
+        title: '模块介绍',
         content: '纯静态页面，无需部署后端服务。数据存储依赖 IndexedDB 和 Localstorage。',
-      },
-      {
-        title: '整体介绍',
-        content: '纯静态页面，无需部署后端服务。数据存储依赖 IndexedDB 和 Localstorage。',
+        children: [
+          {
+            title: '抽奖页面',
+            content: '纯静态页面，无需部署后端服务。数据存储依赖 IndexedDB 和 Localstorage。',
+            children: [
+              {
+                title: '模块介绍',
+                content: '纯静态页面，无需部署后端服务。数据存储依赖 IndexedDB 和 Localstorage。',
+              },
+            ],
+          },
+          {
+            title: '配置页面',
+            content: '纯静态页面，无需部署后端服务。数据存储依赖 IndexedDB 和 Localstorage。',
+            children: [
+              {
+                title: '模块介绍',
+                content: '纯静态页面，无需部署后端服务。数据存储依赖 IndexedDB 和 Localstorage。',
+              },
+            ],
+          },
+        ],
       },
     ],
   },

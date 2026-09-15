@@ -1,6 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { ParagraphItem } from './ParagraphItem';
+
 import styles from './styles.module.css';
 
 interface InstructionProps {
@@ -16,10 +18,7 @@ function Instruction({ style }: InstructionProps) {
     <div style={style} className={styles['setting-instruction']}>
       <h1 className={`${styles.title} ${styles.h1}`}>{t('instruction.h1')}</h1>
       {paragraphs.map((paragraph, index) => (
-        <div className={styles['paragraph']} key={index}>
-          <h2 className={`${styles['sub-title']} ${styles.h2}`}>{paragraph.title}</h2>
-          <p className={styles['sub-content']}>{paragraph.content}</p>
-        </div>
+        <ParagraphItem key={index} data={paragraph} level={2} />
       ))}
     </div>
   );

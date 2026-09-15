@@ -8,6 +8,7 @@
   margin: 0 0 16px;
   font-size: 36px;
   font-weight: 600;
+  letter-spacing: 5px;
 }
 
 .h2 {
@@ -18,21 +19,20 @@
   font-weight: 600;
 }
 
-.title {
-  letter-spacing: 5px;
-  color: #f0f6fc;
-}
-
 .paragraph {
-  margin-bottom: 48px;
+  &.level2 {
+    margin-bottom: 48px;
+  }
 }
 
-.sub-title {
-  text-align: left;
+.title {
+  &:not(.h1) {
+    text-align: left;
+  }
   color: #f0f6fc;
 }
 
-.sub-content {
+.content {
   text-align: left;
   color: #f0f6fc;
 }
