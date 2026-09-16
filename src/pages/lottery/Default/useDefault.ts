@@ -67,8 +67,10 @@ export function useDefault() {
       setIsAwardListExpanded(true);
     }
 
+    // TODO 加载并设置默认音效.
+
     setAbleClick(true);
-  }, [bulkCreate, message, title, awards, setTitle, setCurrAwardId, setIsAwardListExpanded, addAward]);
+  }, [bulkCreate, message, awards, setTitle, setCurrAwardId, setIsAwardListExpanded, addAward]);
 
   return { ableClick, handleGoToAddData, handleUseDefaultData };
 }

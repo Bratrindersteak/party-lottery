@@ -86,6 +86,7 @@ export function useLottery() {
     audioRef.current = new Audio();
 
     const handleAudioEnded = () => {
+      if (lotteryStatus === FINISHED) { return }
       audioRef.current.currentTime = 0;
       audioRef.current.play().catch((err) => console.warn('自动重播失败:', err));
     };
@@ -100,7 +101,7 @@ export function useLottery() {
         audioRef.current = null;
       }
     };
-  }, []);
+  }, [lotteryStatus]);
 
   // 专门负责同步 muted 状态（不打断播放）.
   useEffect(() => {
