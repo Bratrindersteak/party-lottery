@@ -71,8 +71,18 @@ export default {
     h1: 'How To Use It',
     paragraphs: [
       {
-        title: '整体介绍',
-        content: 'Pure static page without backend API services; storage relies on in-memory, IndexedDB, and LocalStorage.',
+        title: 'Overview',
+        content: 'Pure static page without backend API services; storage relies on IndexedDB and LocalStorage.',
+      },
+      {
+        title: 'Lottery Page',
+        content: '',
+        children: [],
+      },
+      {
+        title: 'Setting Page',
+        content: '',
+        children: [],
       },
     ],
   },

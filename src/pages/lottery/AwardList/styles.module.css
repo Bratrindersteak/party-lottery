@@ -6,8 +6,10 @@
 
   & .award-list {
     width: 350px;
+    max-height: 488px;
+    overflow-y: scroll;
     transition: margin-left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden; /* 必须加，否则内部文字会撑开 */
+    overflow-x: hidden; /* 必须加，否则内部文字会撑开 */
     white-space: nowrap; /* 防止宽度缩小时文字换行导致抖动 */
     background: linear-gradient(
       135deg,
@@ -20,6 +22,34 @@
 
     &.award-closed {
       margin-left: -352px;
+    }
+
+    /* 2.1 整体区域配置：宽度、背景 (替换原生白色) */
+    &::-webkit-scrollbar {
+      width: 4px;  /* 宽度设置细一点更精致，原生大概 15px 左右 */
+    }
+
+    /* 2.2 轨道 (Track)：背景色 (这里设为半透明或纯黑) */
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2); /* 使轨道更暗 */
+      border-radius: 2px;
+    }
+
+    /* 2.3 滑块 (Thumb)：最关键的部分 */
+    &::-webkit-scrollbar-thumb {
+      /* 背景：采用一个半透明白色，使其在暗色底上可见，但不刺眼 */
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 2px; /* 圆角化 */
+
+      /* 增加一个淡入淡出动画过渡 */
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    /* 2.4 滑块悬浮 (Hover) 状态：鼠标划入时 */
+    &::-webkit-scrollbar-thumb:hover {
+      /* 悬浮时切成和标题一致的科技蓝色，并增加透明度 */
+      background: rgba(0, 198, 255, 0.8);
+      cursor: pointer;
     }
   }
 

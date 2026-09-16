@@ -4,9 +4,7 @@
 
 .h1 {
   padding-bottom: 8px;
-  border-bottom: 1px solid rgba(61, 68, 77, 0.7);
   margin: 0 0 16px;
-  font-size: 36px;
   font-weight: 600;
   letter-spacing: 5px;
 }
@@ -14,9 +12,35 @@
 .h2 {
   padding-bottom: 8px;
   border-bottom: 1px solid rgba(61, 68, 77, 0.7);
+}
+
+.h2, .h3, .h4, .h5, .h6 {
   margin: 24px 0 16px;
-  font-size: 24px;
   font-weight: 600;
+}
+
+.h1 {
+  font-size: 36px;
+}
+
+.h2 {
+  font-size: 24px;
+}
+
+.h3 {
+  font-size: 20px;
+}
+
+.h4 {
+  font-size: 16px;
+}
+
+.h5 {
+  font-size: 14px;
+}
+
+.h6 {
+  font-size: 12px;
 }
 
 .paragraph {
@@ -34,5 +58,7 @@
 
 .content {
   text-align: left;
+  white-space: pre-line;
+  font-size: 16px;
   color: #f0f6fc;
 }
