@@ -47,7 +47,14 @@ export const useMusicStore = create<MusicStore>()(
       getMusics: async () => {
         try {
           const data = await db.music.toArray();
-          set({ musics: data });
+          set({ musics: [{
+              id: -1,
+              name: 'default-opening',
+              file: './musics/default-opening.mp3',
+              size: 1191040,
+              duration: 148.728,
+              isBuildIn: true,
+            }, ...data] });
         } catch (error) {
           console.error('获取音乐数据失败: ', error);
         }

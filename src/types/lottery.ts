@@ -55,11 +55,11 @@ export interface ExportColumns {
 
 export interface Music {
   id?: number;
-  name: string;         // 名称.
-  file: File;           // 数据.
-  size: number;         // 大小(MB).
-  duration: number;     // 时长(秒).
-  isBuildIn: boolean; // 是否为内置.
+  name: string;        // 名称.
+  file: File | string; // 数据.
+  size: number;        // 大小(MB).
+  duration: number;    // 时长(秒).
+  isBuildIn: boolean;  // 是否为内置.
   createdAt?: number;
   updatedAt?: number;
 }

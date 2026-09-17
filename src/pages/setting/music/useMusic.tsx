@@ -154,9 +154,16 @@ export function useMusic() {
 
   const handlePlayMusic = useCallback((music: Music) => {
 
+    let url: string;
+    if (typeof music.file === 'string') {
+      url = music.file;
+    } else {
+      url = URL.createObjectURL(music.file);
+    }
+
     if (music.id !== currAudioId) {
       audioRef.current?.pause();           // 切歌前先掐断上一首
-      audioRef.current.src = URL.createObjectURL(music.file);  // 换子弹（切歌直链）
+      audioRef.current.src = url;  // 换子弹（切歌直链）
       audioRef.current?.load();
       setCurrAudioId(music.id as number);
     }
