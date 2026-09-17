@@ -59,7 +59,7 @@ export interface Music {
   file: File | string; // 数据.
   size: number;        // 大小(MB).
   duration: number;    // 时长(秒).
-  isBuildIn: boolean;  // 是否为内置.
+  isBuiltIn: boolean;  // 是否为内置.
   createdAt?: number;
   updatedAt?: number;
 }

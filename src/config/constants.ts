@@ -1,4 +1,4 @@
-import type { Award } from '@/types/lottery.ts';
+import type { Award, Music } from '@/types/lottery.ts';
 
 export const LOTTERY = 'LOTTERY';
 export const SETTING = 'SETTING';
@@ -22,6 +22,11 @@ export const DEFAULT_AWARDS: Award[] = [
   { name: '三等奖', prize: '补发半年欠俸', url: './images/salary.png', count: 3, isFinished: false, allowRepeat: false, enabled: true },
   { name: '二等奖', prize: '六十年茅台陈酿', url: './images/moutai.png', count: 2, isFinished: false, allowRepeat: false, enabled: true },
   { name: '一等奖', prize: '万寿帝君仙符', url: './images/talisman.png', count: 1, isFinished: false, allowRepeat: false, enabled: true },
+];
+export const DEFAULT_MUSICS: Music[] = [
+  { id: -1, name: 'default-opening', file: './musics/default-opening.mp3', size: 1191040, duration: 148.728, isBuiltIn: true },
+  { id: -2, name: 'default-lottery', file: './musics/default-lottery.mp3', size: 759744, duration: 94.944, isBuiltIn: true },
+  { id: -3, name: 'default-winning', file: './musics/default-winning.mp3', size: 10400, duration: 3.132, isBuiltIn: true },
 ];
 
 export const INIT = 'INIT';

@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
 import { db } from '@/config/db';
-import { OPENING_MUSIC, LOTTERY_MUSIC, WINNING_MUSIC } from '@/config/constants.ts';
+import { OPENING_MUSIC, LOTTERY_MUSIC, WINNING_MUSIC, DEFAULT_MUSICS } from '@/config/constants.ts';
 
 import type { Music } from '@/types/lottery';
 
@@ -25,9 +25,9 @@ export const useMusicStore = create<MusicStore>()(
   persist(
     (set) => ({
       musics: [],
-      openingId: null,
-      lotteryId: null,
-      winningId: null,
+      openingId: -1,
+      lotteryId: -2,
+      winningId: -3,
 
       setMusic: async (type: string, id: number) => {
         switch (type) {
@@ -47,14 +47,7 @@ export const useMusicStore = create<MusicStore>()(
       getMusics: async () => {
         try {
           const data = await db.music.toArray();
-          set({ musics: [{
-              id: -1,
-              name: 'default-opening',
-              file: './musics/default-opening.mp3',
-              size: 1191040,
-              duration: 148.728,
-              isBuildIn: true,
-            }, ...data] });
+          set({ musics: [...DEFAULT_MUSICS, ...data] });
         } catch (error) {
           console.error('获取音乐数据失败: ', error);
         }
@@ -122,7 +115,7 @@ export const useMusicStore = create<MusicStore>()(
         try {
           await db.music.clear();
 
-          set(() => ({ musics: [] }));
+          set((state) => ({ musics: state.musics.filter(music => music.isBuiltIn) }));
         } catch (error) {
           console.error('清空音乐列表失败: ', error);
         }

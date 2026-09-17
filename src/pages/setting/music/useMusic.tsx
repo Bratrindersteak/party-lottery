@@ -43,10 +43,13 @@ export function useMusic() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const rowSelection: TableRowSelection<Music> = {
     selectedRowKeys,
-    onChange: (newSelectedRowKeys: React.Key[], selectedRows, info) => {
-      console.log('selectedRowKeys changed: ', newSelectedRowKeys, { selectedRows, info });
+    onChange: (newSelectedRowKeys: React.Key[]) => {
       setSelectedRowKeys(newSelectedRowKeys);
     },
+    getCheckboxProps: (record: Music) => ({
+      disabled: record.isBuiltIn, // 当为内置音频时禁用勾选框
+      name: record.name,
+    }),
     selections: [
       Table.SELECTION_ALL,
       Table.SELECTION_INVERT,
@@ -90,7 +93,7 @@ export function useMusic() {
   const uploadProps = useMemo<UploadProps<never>>(() => ({
     accept: 'audio/*',      // 浏览器文件选择框层面的防御
     multiple: true,
-    beforeUpload: async (file: RcFile, fileList: RcFile[]) => {
+    beforeUpload: async (file: RcFile) => {
       // 1. 🛡️ 严格看门狗：先验一下是不是 Excel 文件，防止 HR 误传一张照片进来
       const isAudio = file.type.startsWith('audio/');
 
@@ -115,7 +118,7 @@ export function useMusic() {
         audio.onerror = () => { resolve(0) };
       });
 
-      create({ name, file, size, duration, isBuildIn: false });
+      create({ name, file, size, duration, isBuiltIn: false });
 
       // 4. 💥 核心：死死咬住返回 false，坚决不让 antd 发起任何网络请求！
       return false;
@@ -174,9 +177,11 @@ export function useMusic() {
   }, [currAudioId]);
 
   const handlePauseMusic = useCallback((music: Music) => {
-    audioRef.current?.pause(); // 暂停
-    setIsPlaying(false);
-  }, []);
+    if (music.id === currAudioId) {
+      audioRef.current?.pause();
+      setIsPlaying(false);
+    }
+  }, [currAudioId]);
 
   const columns = useMemo<TableColumnsType<Music>>(() => [
     {
@@ -226,6 +231,18 @@ export function useMusic() {
       },
     },
     {
+      title: '类型',
+      dataIndex: 'isBuiltIn',
+      key: 'isBuiltIn',
+      render: (value) => {
+        return (value) ? (
+          <Tag color="magenta" variant="outlined">内置</Tag>
+        ) : (
+          <Tag color="green" variant="outlined">自上传</Tag>
+        );
+      },
+    },
+    {
       title: '操作',
       key: 'operation',
       fixed: 'end',
@@ -241,7 +258,7 @@ export function useMusic() {
               okText="删除"
               cancelText="取消"
             >
-              <Button color="danger" variant="outlined" size="small" className={styles['table-btn']}>{t('operation.delete')}</Button>
+              <Button disabled={record.isBuiltIn} color="danger" variant="outlined" size="small" className={styles['table-btn']}>{t('operation.delete')}</Button>
             </Popconfirm>
           </>
         );
