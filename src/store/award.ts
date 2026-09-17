@@ -5,6 +5,7 @@ import type { Award } from '@/types/lottery';
 
 interface AwardStore {
   id: number;
+  sortOrder: number;
   awards: Award[];
   setAwards: (awards: Award[]) => Promise<void>;
   create: (item: Omit<Award, 'id'>) => Promise<void>; // 💡 新建音乐时，入参通常是不带 id 的
@@ -18,6 +19,7 @@ export const useAwardStore = create<AwardStore>()(
   persist(
     (set) => ({
       id: 0,
+      sortOrder: 0,
       awards: [],
 
       setAwards: async (awards: Award[]) => {
@@ -25,7 +27,7 @@ export const useAwardStore = create<AwardStore>()(
       },
 
       create: async (item: Award) => {
-        set((state) => ({ awards: [...state.awards, { id: state.id++, ...item }] }));
+        set((state) => ({ awards: [...state.awards, { id: state.id++, sortOrder: state.sortOrder++, ...item }] }));
       },
 
       update: async (item: Award) => {

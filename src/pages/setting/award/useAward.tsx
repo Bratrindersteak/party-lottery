@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useState } from 'react';
-import { Form, Input, InputNumber, Button, Checkbox, Popconfirm, Table, Tag, Image, Tooltip, App } from 'antd';
+import { Form, Input, InputNumber, Button, Checkbox, Popconfirm, Table, Tag, Image, Switch, Tooltip, App } from 'antd';
 import { DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
@@ -71,6 +71,7 @@ export function useAward(form: FormInstance) {
       count: 0,
       isFinished: false,
       allowRepeat: false,
+      enabled: true,
       createdAt: Date.now(),
       _isEdit: true,
       _type: ADD,
@@ -99,17 +100,15 @@ export function useAward(form: FormInstance) {
     const { _type, _backup, _isEdit, id, ...rest } = item;
 
     try {
-      // 1. 🛡️ 严格模式：先触发表单的校验（防止用户漏填必填项，或者格式写错）
+      // 1. 严格模式：先触发表单的校验（防止用户漏填必填项，或者格式写错）
       // validateFields 传入嵌套路径，只校验并捞出当前这一行，不影响表格其他行，体验极好
       const rowValues = await form.validateFields([[id, 'name'], [id, 'prize'], [id, 'count']]);
 
-      // 2. 🎯 定点爆破：直接从大盒子里，把当前行 ID 对应的最新表单值捞出来
+      // 2. 定点爆破：直接从大盒子里，把当前行 ID 对应的最新表单值捞出来
       // 此时的 fields 干净得就像刚出生的婴儿：{ name: "最新的名字", dept: "最新的部门" }
       const fields = form.getFieldValue(id);
-
-      console.log('handleSave: ', { rowValues, fields });
-
       const timestamp = Date.now();
+
       if (_type === ADD) {
         update({ id, ...rest, ...fields, createdAt: timestamp, updatedAt: timestamp });
       } else if (_type === EDIT) {
@@ -161,12 +160,16 @@ export function useAward(form: FormInstance) {
     update({ ...item, allowRepeat });
   }, [update]);
 
+  const handleEnable = useCallback((checked: boolean, item: Award) => {
+    update({ ...item, enabled: checked });
+  }, [update]);
+
   const columns = useMemo<TableColumnsType<Award>>(() => [
     {
       title: '奖项',
       dataIndex: 'name',
       key: 'name',
-      render: (value, record, index: number) => {
+      render: (value, record) => {
         return record._isEdit ? (
           <Form.Item name={[record.id as number, 'name']} initialValue={value} className={styles['table-edit-item']}>
             <Input placeholder="请输入"/>
@@ -180,7 +183,7 @@ export function useAward(form: FormInstance) {
       title: '奖品',
       dataIndex: 'prize',
       key: 'prize',
-      render: (value, record, index: number) => {
+      render: (value, record) => {
         return record._isEdit ? (
           <Form.Item name={[record.id as number, 'prize']} rules={[{ required: true, message: '' }]} initialValue={value} className={styles['table-edit-item']}>
             <Input placeholder="请输入"/>
@@ -194,7 +197,7 @@ export function useAward(form: FormInstance) {
       title: '预览',
       dataIndex: 'url',
       key: 'url',
-      render: (value, record, index: number) => {
+      render: (value, record) => {
         return record._isEdit ? (
           <Form.Item name={[record.id as number, 'url']} initialValue={value} className={styles['table-edit-item']}>
             <Input placeholder="请输入"/>
@@ -213,7 +216,7 @@ export function useAward(form: FormInstance) {
       title: '名额',
       dataIndex: 'count',
       key: 'count',
-      render: (value, record, index: number) => {
+      render: (value, record) => {
         return record._isEdit ? (
           <Form.Item name={[record.id as number, 'count']} initialValue={value} className={styles['table-edit-item']}>
             <InputNumber mode="spinner" min={0} />
@@ -224,29 +227,42 @@ export function useAward(form: FormInstance) {
       },
     },
     {
-      title: () => {
-        return (
-          <>
-            <>重复抽取 </>
-            <Tooltip placement="top" title='是否允许已获奖人员继续抽取此奖项'>
-              <QuestionCircleOutlined />
-            </Tooltip>
-          </>
-        );
-      },
+      title: (
+        <>
+          <>重复抽取 </>
+          <Tooltip placement="top" title="是否允许已获奖人员继续抽取此奖项">
+            <QuestionCircleOutlined />
+          </Tooltip>
+        </>
+      ),
       dataIndex: 'allowRepeat',
       key: 'allowRepeat',
-      render: (value, record, index: number) => {
+      render: (value, record) => {
         return (
-          <Checkbox checked={value} onChange={(e) => { handleRepeat(e, record) }} />
+          <Checkbox disabled={record.isFinished} checked={value} onChange={(e) => { handleRepeat(e, record) }} />
         );
       },
+    },
+    {
+      title: (
+        <>
+          <>参与抽奖 </>
+          <Tooltip title="关闭后，主界面抽奖流程将自动跳过该奖项">
+            <QuestionCircleOutlined />
+          </Tooltip>
+        </>
+      ),
+      dataIndex: 'enabled',
+      key: 'enabled',
+      render: (value: boolean, record) => (
+        <Switch disabled={record.isFinished} checked={value} onChange={(checked) => handleEnable(checked, record)} />
+      ),
     },
     {
       title: '状态',
       dataIndex: 'isFinished',
       key: 'isFinished',
-      render: (value, record, index: number) => {
+      render: (value) => {
         return value ? (
           <Tag color="success" variant="outlined">已开奖</Tag>
         ) : (
@@ -259,7 +275,7 @@ export function useAward(form: FormInstance) {
       key: 'operation',
       fixed: 'end',
       width: 300,
-      render: (value, record, index: number) => {
+      render: (_, record) => {
         return record._isEdit ? (
           <>
             <Button color="green" variant="outlined" size="small" className={styles['table-btn']} onClick={() => { handleSave(record) }}>{t('operation.save')}</Button>
@@ -292,7 +308,7 @@ export function useAward(form: FormInstance) {
         );
       },
     },
-  ], [handleRepeat, t, handleSave, handleCancel, handleEdit, handleDelete, handleReplay]);
+  ], [handleRepeat, handleEnable, t, handleSave, handleCancel, handleEdit, handleDelete, handleReplay]);
 
   const ableBulkDelete = useMemo(() => {
     return selectedRowKeys.length > 0;

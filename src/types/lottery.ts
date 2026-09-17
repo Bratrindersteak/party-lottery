@@ -27,6 +27,8 @@ export interface Award {
   count: number; // 奖项名额指标.
   isFinished: boolean; // 是否已抽取.
   allowRepeat: boolean; // 是否允许已获奖人员参与.
+  enabled?: boolean;
+  sortOrder?: number;
   createdAt?: number;
   updatedAt?: number;
   _isEdit?: boolean;
