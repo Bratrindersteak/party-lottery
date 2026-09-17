@@ -19,7 +19,7 @@ export const useAwardStore = create<AwardStore>()(
   persist(
     (set) => ({
       id: 0,
-      sortOrder: 0,
+      sortOrder: 1,
       awards: [],
 
       setAwards: async (awards: Award[]) => {

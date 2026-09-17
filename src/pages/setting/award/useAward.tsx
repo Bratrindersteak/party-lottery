@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback, useState } from 'react';
 import { Form, Input, InputNumber, Button, Checkbox, Popconfirm, Table, Tag, Image, Switch, Tooltip, App } from 'antd';
-import { DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { DeleteOutlined, QuestionCircleOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
 import { useAwardStore } from '@/store/award.ts';
@@ -155,9 +155,8 @@ export function useAward(form: FormInstance) {
     clear();
   }, [clear]);
 
-  const handleRepeat = useCallback((event: CheckboxChangeEvent, item: Award) => {
-    const allowRepeat = event.target.checked ?? false;
-    update({ ...item, allowRepeat });
+  const handleRepeat = useCallback((checked: boolean, item: Award) => {
+    update({ ...item, allowRepeat: checked });
   }, [update]);
 
   const handleEnable = useCallback((checked: boolean, item: Award) => {
@@ -229,7 +228,7 @@ export function useAward(form: FormInstance) {
     {
       title: (
         <>
-          <>重复抽取 </>
+          <>是否允许继续参与 </>
           <Tooltip placement="top" title="是否允许已获奖人员继续抽取此奖项">
             <QuestionCircleOutlined />
           </Tooltip>
@@ -239,15 +238,18 @@ export function useAward(form: FormInstance) {
       key: 'allowRepeat',
       render: (value, record) => {
         return (
-          <Checkbox disabled={record.isFinished} checked={value} onChange={(e) => { handleRepeat(e, record) }} />
+          <Switch disabled={record.isFinished}
+                  checkedChildren={<CheckOutlined />} unCheckedChildren={<CloseOutlined />}
+                  checked={value} onChange={(checked) => handleRepeat(checked, record)}
+          />
         );
       },
     },
     {
       title: (
         <>
-          <>参与抽奖 </>
-          <Tooltip title="关闭后，主界面抽奖流程将自动跳过该奖项">
+          <>是否启用 </>
+          <Tooltip title="启用后会在抽奖列表中展示，参与抽奖">
             <QuestionCircleOutlined />
           </Tooltip>
         </>
@@ -255,7 +257,10 @@ export function useAward(form: FormInstance) {
       dataIndex: 'enabled',
       key: 'enabled',
       render: (value: boolean, record) => (
-        <Switch disabled={record.isFinished} checked={value} onChange={(checked) => handleEnable(checked, record)} />
+        <Switch disabled={record.isFinished}
+                checkedChildren={<CheckOutlined />} unCheckedChildren={<CloseOutlined />}
+                checked={value} onChange={(checked) => handleEnable(checked, record)}
+        />
       ),
     },
     {

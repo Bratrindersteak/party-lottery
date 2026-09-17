@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { DndContext, PointerSensor, useSensor, useSensors, closestCenter, type DragEndEvent } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -61,6 +61,12 @@ export default function AwardList() {
   const setAwards = useAwardStore((state) => state.setAwards);
   const { handleExpand } = useAwardList();
 
+  const enabledAwards = useMemo(() => {
+    return awards
+      .filter((award) => award.enabled !== false)
+      .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+  }, [awards]);
+
   // 配置 Sensor：解决点击与拖拽冲突的关键！
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -73,10 +79,23 @@ export default function AwardList() {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (over && active.id !== over.id) {
-      const oldIndex = awards.findIndex((i) => i.id === active.id);
-      const newIndex = awards.findIndex((i) => i.id === over.id);
+      const oldIndex = enabledAwards.findIndex((i) => i.id === active.id);
+      const newIndex = enabledAwards.findIndex((i) => i.id === over.id);
 
-      const newAwards = arrayMove(awards, oldIndex, newIndex);
+      const newVisibleAwards = arrayMove(enabledAwards, oldIndex, newIndex);
+
+      const newAwards = [
+        ...newVisibleAwards.map((newVisibleAward, index) => ({ ...newVisibleAward, sortOrder: index + 1 }),),
+      ];
+
+      let disabledSortOrder = enabledAwards.length + 1;
+
+      awards.forEach((award) => {
+        if (!award.enabled) {
+          newAwards.push({ ...award, sortOrder: disabledSortOrder++ });
+        }
+      });
+
       setAwards(newAwards); // 更新 Store 中的真实数据
     }
   };
@@ -85,8 +104,8 @@ export default function AwardList() {
     <div className={styles['award-drawer']}>
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <ul className={`${styles['award-list']} ${!isAwardListExpanded && styles['award-closed']}`}>
-          <SortableContext items={awards.map((award) => award.id as number)} strategy={verticalListSortingStrategy}>
-            {awards.map((award) => (
+          <SortableContext items={enabledAwards.map((award) => award.id as number)} strategy={verticalListSortingStrategy}>
+            {enabledAwards.map((award) => (
               <SortableItem key={award.id as number} award={award} />
             ))}
           </SortableContext>
