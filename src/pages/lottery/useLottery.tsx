@@ -1,3 +1,4 @@
+import getFileUrl from '@/utils/getFileUrl.ts';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import * as TWEEN from '@tweenjs/tween.js';
 import { App } from 'antd';
@@ -115,19 +116,20 @@ export function useLottery() {
     audioRef.current?.pause();
 
     if (lotteryStatus === READY && openingMusic) {
-      audioRef.current.src = URL.createObjectURL(openingMusic.file);
+      audioRef.current.src = getFileUrl(openingMusic.file);
     }
 
     if (lotteryStatus === RUNNING && lotteryMusic) {
-      audioRef.current.src = URL.createObjectURL(lotteryMusic.file);
+      audioRef.current.src = getFileUrl(lotteryMusic.file);
     }
 
     if (lotteryStatus === FINISHED && winningMusic) {
-      audioRef.current.src = URL.createObjectURL(winningMusic.file);
+      audioRef.current.src = getFileUrl(winningMusic.file);
     }
 
     if (audioRef.current.src) {
       audioRef.current?.load();
+      audioRef.current.muted = mute;
       audioRef.current?.play().catch((err) => console.warn('自动重播失败:', err));
     }
   }, [lotteryStatus, openingMusic, lotteryMusic, winningMusic]);
@@ -173,6 +175,11 @@ export function useLottery() {
       return;
     }
 
+    if (!currAward?.count) {
+      message.warning('当前奖项无剩余名额！');
+      return;
+    }
+
     if (currAward?.isFinished) {
       message.warning('当前奖项已抽取完毕！');
       return;
@@ -192,6 +199,11 @@ export function useLottery() {
 
     if (!currAward) {
       message.warning('请选择要抽取的奖项！');
+      return;
+    }
+
+    if (!currAward?.count) {
+      message.warning('当前奖项无剩余名额！');
       return;
     }
 

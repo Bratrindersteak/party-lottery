@@ -1,5 +1,5 @@
 /**
- * 🛡️ 工业级安全的临时 ID 生成器（无视 HTTP/HTTPS 环境限制）.
+ * 工业级安全的临时 ID 生成器（无视 HTTP/HTTPS 环境限制）.
  *
  * @param prefix - 前缀字段.
  * @returns 临时ID.
