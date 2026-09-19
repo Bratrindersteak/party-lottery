@@ -37,7 +37,6 @@ function SortableItem({ award }: { award: Award }) {
       <div className={styles['award-left']}>
         <Image className={styles['award-image']}
                alt="basic image"
-               width={56}
                src={award.url}
                fallback={defaultAwardUrl}
         />
@@ -96,7 +95,7 @@ export default function AwardList() {
         }
       });
 
-      setAwards(newAwards); // 更新 Store 中的真实数据
+      setAwards(newAwards);
     }
   };
 

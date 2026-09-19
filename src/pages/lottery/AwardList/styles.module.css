@@ -87,6 +87,14 @@
     }
   }
 
+  & .award-left {
+    display: flex;
+    align-items: center;
+    width: 56px;
+    height: 56px;
+    overflow: hidden;
+  }
+
   & .award-middle {
     overflow: hidden;
     margin: 0 8px;

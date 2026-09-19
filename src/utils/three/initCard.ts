@@ -8,6 +8,7 @@ import type { Member } from '@/types/lottery.ts';
 function initCard(scene: Scene, objects: CSS3DObject[], member: Member, styles: Record<string, string>) {
   const element = document.createElement('div');
   element.className = styles.element;
+  element.style.setProperty('background-image', `url('${defaultAvatar}')`);
 
   const img = new Image();
   img.referrerPolicy = 'no-referrer';
