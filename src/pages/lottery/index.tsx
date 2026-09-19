@@ -12,6 +12,7 @@ import Background from './background';
 import AwardList from './AwardList';
 import TopBar from './TopBar';
 import Default from './Default';
+import Hint from './Hint';
 
 export default function Lottery() {
   const { t } = useTranslation();
@@ -33,6 +34,8 @@ export default function Lottery() {
       {(isMembersLoaded && !members.length) && <Default />}
 
       <div className={styles['title']}>{title}</div>
+
+      <Hint />
 
       <div className={styles['operation-wrapper']}>
         <Button className={styles['operation-btn']} style={{ display: showEnter ? 'block' : 'none' }}

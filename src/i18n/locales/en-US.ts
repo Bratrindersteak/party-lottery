@@ -7,6 +7,7 @@ export default {
     continue: 'Continue',
     gotoAddMember: 'Goto Add Member',
     useDefaultData: 'Use Default Data',
+    nowDrawing: 'Now Drawing',
   },
   operation: {
     add: 'Add',

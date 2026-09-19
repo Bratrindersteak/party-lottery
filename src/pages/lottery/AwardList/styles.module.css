@@ -76,7 +76,10 @@
       background: linear-gradient(135deg, rgba(0, 242, 254, 0.2) 0%, rgba(79, 70, 229, 0.2) 100%);
       border: 1px solid rgba(0, 242, 254, 0.6);
       box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); /* 青色霓虹呼吸发光 */
-      color: #1677ff;
+
+      .award-title {
+        color: #1677ff;
+      }
     }
 
     &.award-disabled:not(.award-active) {

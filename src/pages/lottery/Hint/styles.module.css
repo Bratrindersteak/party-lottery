@@ -1,0 +1,45 @@
+.hint {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease-in-out, visibility 0.35s ease-in-out, transform 1s ease-in-out, top 1s ease-in-out, left 1s ease-in-out, color 1s ease-in-out;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 282px;
+  padding: 16px 32px;
+  background-color: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(0, 242, 254, 0.6);
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); /* 青色霓虹呼吸发光 */
+}
+
+.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.finish {
+  top: 4px;
+  left: 4px;
+  transform: translate(0, 0);
+
+  & .curr-award {
+    text-shadow: none;
+  }
+}
+
+.prefix {
+  font-size: 22px;
+  color: #ffffff;
+}
+
+.curr-award {
+  margin: 32px 0 16px;
+  font-size: 36px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: #e0f2fe;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.95);
+  transition: text-shadow 1s ease-in-out;
+}

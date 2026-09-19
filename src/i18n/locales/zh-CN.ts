@@ -7,6 +7,7 @@ export default {
     continue: '继续抽奖',
     gotoAddMember: '去添加成员',
     useDefaultData: '使用默认数据',
+    nowDrawing: '当前正在抽取',
   },
   operation: {
     add: '添加',

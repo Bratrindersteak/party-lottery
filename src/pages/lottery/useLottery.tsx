@@ -290,8 +290,8 @@ export function useLottery() {
     const unfinishAwardIds1: number[] = [];
     const unfinishAwardIds2: number[] = [];
     const currIndex = awards.findIndex(award => award.id === currAwardId);
-    awards.forEach(({ id, isFinished }, index) => {
-      if (!isFinished) {
+    awards.forEach(({ id, isFinished, enabled }, index) => {
+      if (!isFinished && enabled) {
         if (index > currIndex) {
           unfinishAwardIds1.push(id);
         } else if (index < currIndex) {
