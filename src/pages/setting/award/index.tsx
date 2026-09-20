@@ -23,22 +23,22 @@ function AwardConfig({ style }: AwardConfigProps) {
       <div className={styles.operations}>
         <Button type="primary" className={styles['operation-btn']} onClick={handleAdd}>{t('operation.add')}</Button>
         <Popconfirm
-          title="确认批量删除？"
+          title={t('operation.confirm_bulkDelete')}
           icon={<DeleteOutlined style={{ color: '#F56C6C' }}/>}
           onConfirm={handleBulkDelete}
           okButtonProps={{ danger: true }}
-          okText="删除"
-          cancelText="取消"
+          okText={t('operation.bulkDelete')}
+          cancelText={t('operation.cancel')}
         >
           <Button type="primary" danger className={styles['operation-btn']} disabled={!ableBulkDelete}>{t('operation.bulkDelete')}</Button>
         </Popconfirm>
         <Popconfirm
-          title="确认清空？"
+          title={t('operation.confirm_clear')}
           icon={<DeleteOutlined style={{ color: '#F56C6C' }}/>}
           onConfirm={handleClear}
           okButtonProps={{ danger: true }}
-          okText="清空"
-          cancelText="取消"
+          okText={t('operation.clear')}
+          cancelText={t('operation.cancel')}
         >
           <Button type="primary" danger className={styles['operation-btn']} disabled={!ableClear}>{t('operation.clear')}</Button>
         </Popconfirm>

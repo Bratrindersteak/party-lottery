@@ -59,7 +59,7 @@ function GeneralConfig({ style }: GeneralConfigProps) {
               <div className={styles.item}>
                 <div>
                   <h5 className={styles['item-title']}>{t('general.clearAll')}</h5>
-                  <p className={styles['item-desc']}>Once you clean the page, there is no going back. Please be certain.</p>
+                  <p className={styles['item-desc']}>{t('general.clearAllWarning')}</p>
                 </div>
                 <div>
                   <Button color="danger" variant="solid" className={styles['danger-btn']} onClick={() => { setModalOpen(true) }}>{t('general.clearAll')}</Button>
@@ -71,15 +71,16 @@ function GeneralConfig({ style }: GeneralConfigProps) {
       </div>
 
       <Modal
-        title={<><DeleteTwoTone twoToneColor={['#FF4D4F', '#FFF2F0']} /> 确认清空所有数据?</>}
+        title={<><DeleteTwoTone twoToneColor={['#FF4D4F', '#FFF2F0']} /> {t('operation.confirm_clearAll')}</>}
         style={{ top: 240 }}
         open={modalOpen}
         okButtonProps={{ color: 'danger', variant: 'solid' }}
-        okText="清空所有数据"
+        okText={t('general.clearAll')}
         onOk={handleClearAll}
+        cancelText={t('operation.cancel')}
         onCancel={() => setModalOpen(false)}
       >
-        <p>详细解释关于为什么要清空缓存以及清空的范围</p>
+        <p>{t('general.clearAllDesc')}</p>
       </Modal>
     </>
   );

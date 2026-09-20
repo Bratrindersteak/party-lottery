@@ -25,6 +25,7 @@ export default {
     clear: 'Clear',
     confirm_bulkDelete: '$t(operation.confirm) $t(operation.bulkDelete) ?',
     confirm_clear: '$t(operation.confirm) $t(operation.clear) ?',
+    confirm_clearAll: '$t(operation.confirm) $t(general.clearAll) ?',
   },
   setting: 'Setting',
   backToLottery: 'Back To Lottery',
@@ -44,6 +45,8 @@ export default {
     algorithm: 'Algorithm',
     dangerZone: 'Danger Zone',
     clearAll: 'Clear All Data and Exit',
+    clearAllWarning: 'Once you clean the page, there is no going back. Please be certain.',
+    clearAllDesc: 'As a pure static page, storage is completely dependent on browser and the data size is always large. If not manually cleaned, it will occupy space for a long time.',
   },
   member: {
     title: 'Member Management',

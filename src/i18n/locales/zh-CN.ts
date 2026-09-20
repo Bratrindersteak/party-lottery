@@ -25,6 +25,7 @@ export default {
     clear: '清空',
     confirm_bulkDelete: '$t(operation.confirm)$t(operation.bulkDelete)？',
     confirm_clear: '$t(operation.confirm)$t(operation.clear)？',
+    confirm_clearAll: '$t(operation.confirm)$t(general.clearAll)？',
   },
   setting: '设置',
   backToLottery: '返回抽奖',
@@ -44,6 +45,8 @@ export default {
     algorithm: '算法',
     dangerZone: '危险操作',
     clearAll: '清空数据并退出',
+    clearAllWarning: '一旦清理页面，无法撤销。请务必确认。',
+    clearAllDesc: '由于是纯静态页面，存储完全依赖浏览器，且数据量往往很大，若不手动清理则会长期占用空间。',
   },
   member: {
     title: '成员管理',
