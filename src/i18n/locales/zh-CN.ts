@@ -138,27 +138,27 @@ export default {
         content: '管理成员、奖项、音乐、结果等相关的后台页面。',
         children: [
           {
-            title: '通用配置',
+            title: '$t(general.title)',
             content: '目前支持配置【抽奖标题】、【清空所有数据】等操作。',
           },
           {
-            title: '成员管理',
+            title: '$t(member.title)',
             content: '成员的导入、添加、编辑、删除、清空等操作。提供成员导入模版可供下载。',
           },
           {
-            title: '奖项配置',
+            title: '$t(award.title)',
             content: '奖项的添加、编辑、删除、清空等操作。',
           },
           {
-            title: '获奖记录',
+            title: '$t(record.title)',
             content: '记录抽奖结果，可导出为 excel 文件。',
           },
           {
-            title: '音乐配置',
+            title: '$t(music.title)',
             content: '音乐文件的添加、删除等操作，并可配置开场音乐、抽奖音乐、开奖音乐等。',
           },
           {
-            title: '操作说明',
+            title: '$t(instruction.title)',
             content: '就是本页面。',
           },
         ],

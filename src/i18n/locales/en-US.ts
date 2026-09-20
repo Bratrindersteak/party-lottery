@@ -117,13 +117,51 @@ export default {
       },
       {
         title: 'Lottery Page',
-        content: '',
-        children: [],
+        content: 'The main page of the lottery. After setup the data, all the activities will be carried out here.',
+        children: [
+          {
+            title: 'Lottery Zone',
+            content: '屏幕中央区域。上方是抽奖标题，中间是成员卡片展示区域，下方是控制抽奖流程的操作按钮',
+          },
+          {
+            title: 'Award List',
+            content: '位置在屏幕左侧边缘，展示当前所有抽取奖项，可收缩并支持拖拽调整顺序。因为奖项是自上而下抽取的，所以调整奖项顺序就可以控制抽奖顺序。',
+          },
+          {
+            title: 'Operation Bar',
+            content: '位置在顶部右侧，目前有【Mute】、【language switch】、【Enter Settings】三个操作。',
+          },
+        ],
       },
       {
         title: 'Setting Page',
-        content: '',
-        children: [],
+        content: 'The backend pages which manage members, awards, music, results, etc.',
+        children: [
+          {
+            title: '$t(general.title)',
+            content: '目前支持配置【$t(general.lotteryTitle)】、【Clear All Data】等操作。',
+          },
+          {
+            title: '$t(member.title)',
+            content: '成员的导入、添加、编辑、删除、清空等操作。提供成员导入模版可供下载。',
+          },
+          {
+            title: '$t(award.title)',
+            content: '奖项的添加、编辑、删除、清空等操作。',
+          },
+          {
+            title: '$t(record.title)',
+            content: '记录抽奖结果，可导出为 excel 文件。',
+          },
+          {
+            title: '$t(music.title)',
+            content: '音乐文件的添加、删除等操作，并可配置开场音乐、抽奖音乐、开奖音乐等。',
+          },
+          {
+            title: '$t(instruction.title)',
+            content: 'This page it is.',
+          },
+        ],
       },
     ],
   },
