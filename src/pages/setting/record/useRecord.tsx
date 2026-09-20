@@ -117,7 +117,6 @@ export function useRecord() {
   }, [create]);
 
   const handleDelete = useCallback((item: Record) => {
-    console.log('handleDelete: ', item);
     remove(item);
   }, [remove]);
 
@@ -135,7 +134,7 @@ export function useRecord() {
 
   const columns = useMemo<TableColumnsType<Record>>(() => [
     {
-      title: '奖项',
+      title: t('columns.awardName'),
       dataIndex: 'awardId',
       key: 'award',
       render: (value, record, index: number) => {
@@ -147,7 +146,7 @@ export function useRecord() {
       },
     },
     {
-      title: '奖品',
+      title: t('columns.prize'),
       dataIndex: 'awardId',
       key: 'prize',
       render: (value, record, index: number) => {
@@ -159,7 +158,7 @@ export function useRecord() {
       },
     },
     {
-      title: '预览',
+      title: t('columns.prizeUrl'),
       dataIndex: 'awardId',
       key: 'url',
       render: (value, record, index: number) => {
@@ -176,7 +175,7 @@ export function useRecord() {
       },
     },
     {
-      title: '工号',
+      title: t('columns.employeeId'),
       dataIndex: 'memberId',
       key: 'employeeId',
       render: (value, record, index: number) => {
@@ -188,7 +187,7 @@ export function useRecord() {
       },
     },
     {
-      title: '姓名',
+      title: t('columns.name'),
       dataIndex: 'memberId',
       key: 'name',
       render: (value, record, index: number) => {
@@ -200,7 +199,7 @@ export function useRecord() {
       },
     },
     {
-      title: '部门',
+      title: t('columns.department'),
       dataIndex: 'memberId',
       key: 'department',
       render: (value, record, index: number) => {
@@ -212,7 +211,7 @@ export function useRecord() {
       },
     },
     {
-      title: '获奖时间',
+      title: t('columns.awardTime'),
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (value, record, index: number) => {
@@ -222,7 +221,7 @@ export function useRecord() {
       },
     },
     {
-      title: '操作',
+      title: t('columns.operation'),
       key: 'operation',
       fixed: 'end',
       width: 200,

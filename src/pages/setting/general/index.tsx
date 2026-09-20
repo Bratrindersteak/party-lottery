@@ -28,7 +28,7 @@ function GeneralConfig({ style }: GeneralConfigProps) {
       <div style={style} className={styles['setting-general']}>
         <Form form={form} component={false}>
           <div className={styles.block}>
-            <div className={styles['block-title']}>标题</div>
+            <div className={styles['block-title']}>{t('general.lotteryTitle')}</div>
             <div className={styles.content}>
               <Form.Item name={['title']} initialValue={title} className={styles['input']}>
                 <Input placeholder={t('pleaseInput')} onChange={handleTitleChange} />
@@ -41,7 +41,7 @@ function GeneralConfig({ style }: GeneralConfigProps) {
           </div>
 
           <div className={styles.block}>
-            <div className={styles['block-title']}>算法</div>
+            <div className={styles['block-title']}>{t('general.algorithm')}</div>
             <div className={styles.content}>
               <Select
                 defaultValue="shuffle"
@@ -57,7 +57,7 @@ function GeneralConfig({ style }: GeneralConfigProps) {
           </div>
 
           <div className={styles.block}>
-            <div className={styles['block-title']}>Danger Zone</div>
+            <div className={styles['block-title']}>{t('general.dangerZone')}</div>
             <div className={styles.list}>
               <div className={styles.item}>
                 <div>

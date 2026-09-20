@@ -36,6 +36,8 @@ export default {
   general: {
     title: 'General Config',
     lotteryTitle: 'Lottery Title',
+    algorithm: 'Algorithm',
+    dangerZone: 'Danger Zone',
     clearAll: 'Clear All Data and Exit',
   },
   member: {
@@ -66,6 +68,29 @@ export default {
     openingMusic: 'Opening Music',
     lotteryMusic: 'Lottery Music',
     winningMusic: 'Winning Music',
+  },
+  columns: {
+    name: 'Name',
+    avatar: 'Avatar',
+    employeeId: 'Employee ID',
+    department: 'Department',
+    awardName: 'Award Name',
+    prize: 'Prize',
+    prizeUrl: 'Prize Preview',
+    awardCount: 'Count',
+    awardRepeat: 'Allow Repeat Winning',
+    awardEnable: 'Enable',
+    awardStatus: 'Status',
+    awardTime: 'Award Time',
+    musicName: 'Name',
+    size: 'Size',
+    duration: 'Duration',
+    play: 'Play',
+    type: 'Type',
+    operation: 'Operation',
+  },
+  tooltip: {
+
   },
   instruction: {
     title: 'Instruction',

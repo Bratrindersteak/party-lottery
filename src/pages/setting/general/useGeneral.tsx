@@ -46,8 +46,6 @@ export function useGeneral(form: FormInstance) {
   }, []);
 
   const handleClearAll = useCallback(async () => {
-    // TODO 清除所有 Localstorage 和 IndexedDB 中的相关数据.
-
     // 1. 删除 LocalStorage 数据.
     localStorage.removeItem('party-lottery');
     localStorage.removeItem('party-lottery-award');

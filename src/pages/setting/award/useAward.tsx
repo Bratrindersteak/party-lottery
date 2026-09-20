@@ -165,7 +165,7 @@ export function useAward(form: FormInstance) {
 
   const columns = useMemo<TableColumnsType<Award>>(() => [
     {
-      title: '奖项',
+      title: t('columns.awardName'),
       dataIndex: 'name',
       key: 'name',
       render: (value, record) => {
@@ -179,7 +179,7 @@ export function useAward(form: FormInstance) {
       },
     },
     {
-      title: '奖品',
+      title: t('columns.prize'),
       dataIndex: 'prize',
       key: 'prize',
       render: (value, record) => {
@@ -193,7 +193,7 @@ export function useAward(form: FormInstance) {
       },
     },
     {
-      title: '预览',
+      title: t('columns.prizeUrl'),
       dataIndex: 'url',
       key: 'url',
       render: (value, record) => {
@@ -212,7 +212,7 @@ export function useAward(form: FormInstance) {
       },
     },
     {
-      title: '名额',
+      title: t('columns.awardCount'),
       dataIndex: 'count',
       key: 'count',
       render: (value, record) => {
@@ -228,7 +228,7 @@ export function useAward(form: FormInstance) {
     {
       title: (
         <>
-          <>是否允许继续参与 </>
+          <>{t('columns.awardRepeat')} </>
           <Tooltip placement="top" title="是否允许已获奖人员继续抽取此奖项">
             <QuestionCircleOutlined />
           </Tooltip>
@@ -248,7 +248,7 @@ export function useAward(form: FormInstance) {
     {
       title: (
         <>
-          <>是否启用 </>
+          <>{t('columns.awardEnable')} </>
           <Tooltip title="启用后会在抽奖列表中展示，参与抽奖">
             <QuestionCircleOutlined />
           </Tooltip>
@@ -264,7 +264,7 @@ export function useAward(form: FormInstance) {
       ),
     },
     {
-      title: '状态',
+      title: t('columns.awardStatus'),
       dataIndex: 'isFinished',
       key: 'isFinished',
       render: (value) => {
@@ -276,7 +276,7 @@ export function useAward(form: FormInstance) {
       },
     },
     {
-      title: '操作',
+      title: t('columns.operation'),
       key: 'operation',
       fixed: 'end',
       width: 300,

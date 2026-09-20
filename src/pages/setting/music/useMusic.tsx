@@ -178,7 +178,7 @@ export function useMusic() {
 
   const columns = useMemo<TableColumnsType<Music>>(() => [
     {
-      title: '名称',
+      title: t('columns.musicName'),
       dataIndex: 'name',
       key: 'name',
       render: (value, record, index: number) => {
@@ -188,7 +188,7 @@ export function useMusic() {
       },
     },
     {
-      title: '大小',
+      title: t('columns.size'),
       dataIndex: 'size',
       key: 'size',
       render: (value, record, index: number) => {
@@ -198,7 +198,7 @@ export function useMusic() {
       },
     },
     {
-      title: '时长',
+      title: t('columns.duration'),
       dataIndex: 'duration',
       key: 'duration',
       render: (value, record, index: number) => {
@@ -213,7 +213,7 @@ export function useMusic() {
       },
     },
     {
-      title: '播放',
+      title: t('columns.play'),
       key: 'play',
       render: (value, record, index: number) => {
         return (record.id === currAudioId && isPlaying) ? (
@@ -224,7 +224,7 @@ export function useMusic() {
       },
     },
     {
-      title: '类型',
+      title: t('columns.type'),
       dataIndex: 'isBuiltIn',
       key: 'isBuiltIn',
       render: (value) => {
@@ -236,7 +236,7 @@ export function useMusic() {
       },
     },
     {
-      title: '操作',
+      title: t('columns.operation'),
       key: 'operation',
       fixed: 'end',
       width: 200,

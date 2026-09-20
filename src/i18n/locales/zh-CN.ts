@@ -36,6 +36,8 @@ export default {
   general: {
     title: '通用配置',
     lotteryTitle: '抽奖标题',
+    algorithm: '算法',
+    dangerZone: '危险操作',
     clearAll: '清空数据并退出',
   },
   member: {
@@ -66,6 +68,29 @@ export default {
     openingMusic: '开场音效',
     lotteryMusic: '抽奖音效',
     winningMusic: '中奖音效',
+  },
+  columns: {
+    name: '姓名',
+    avatar: '头像',
+    employeeId: '工号',
+    department: '部门',
+    awardName: '奖项',
+    prize: '奖品',
+    prizeUrl: '预览',
+    awardCount: '名额',
+    awardRepeat: '允许重复中奖',
+    awardEnable: '是否启用',
+    awardStatus: '状态',
+    awardTime: '获奖时间',
+    musicName: '名称',
+    size: '大小',
+    duration: '时长',
+    play: '播放',
+    type: '类型',
+    operation: '操作',
+  },
+  tooltip: {
+
   },
   instruction: {
     title: '操作说明',

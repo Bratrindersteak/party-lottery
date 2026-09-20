@@ -161,7 +161,7 @@ export function useMember(form: FormInstance) {
     accept: '.xlsx, .xls, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel', // 浏览器文件选择框层面的防御.
     maxCount: 1, // 每次只允许传一个文件.
     beforeUpload: async (file: RcFile, fileList: RcFile[]) => {
-      // 1. 🛡️ 严格看门狗：先验一下是不是 Excel 文件，防止 HR 误传一张照片进来.
+      // 1. 先验一下是不是 Excel 文件，防止 HR 误传一张照片进来.
       const isExcel =
         file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
         file.name.endsWith('.xlsx') ||
@@ -173,26 +173,26 @@ export function useMember(form: FormInstance) {
       }
 
       try {
-        // 2. ⚡ 趁热打铁：直接调用我们写好的解析工具.
+        // 2. 调用解析工具.
         message.loading({ content: '正在拼命解析千人名单...', key: 'importing' })
         const members = await parseExcel(file);
         const timestamp = Date.now();
         const newMembers = members.map(member => ({ ...member, createdAt: timestamp, updatedAt: timestamp }));
-        // 3. 📦 兵分两路送进全局状态中心（和本地数据库）.
+
         await bulkCreate(newMembers);
         message.success({ content: `成功导入${members.length}人！`, key: 'importing' });
       } catch (error) {
         message.error({ content: 'Excel 解析砸锅了，请检查格式！', key: 'importing' });
       }
-      // 4. 💥 核心：死死咬住返回 false，坚决不让 antd 发起任何网络请求！
+      // 4. 返回 false，坚决不让 antd 发起任何网络请求！
       return false;
-    }, // ⚙️ 挂载拦截看门狗
-    showUploadList: false,    // 既然不上传，我们可以隐藏那个自带的进度条列表
+    },
+    showUploadList: false, // 既然不上传，隐藏自带的进度条列表.
   }), [bulkCreate, message]);
 
   const columns = useMemo<TableColumnsType<Member>>(() => [
     {
-      title: '姓名',
+      title: t('columns.name'),
       dataIndex: 'name',
       key: 'name',
       render: (value, record, index: number) => {
@@ -206,7 +206,7 @@ export function useMember(form: FormInstance) {
       },
     },
     {
-      title: '头像',
+      title: t('columns.avatar'),
       dataIndex: 'avatar',
       key: 'avatar',
       render: (value, record, index: number) => {
@@ -225,7 +225,7 @@ export function useMember(form: FormInstance) {
       },
     },
     {
-      title: '工号',
+      title: t('columns.employeeId'),
       dataIndex: 'employeeId',
       key: 'employeeId',
       render: (value, record, index: number) => {
@@ -239,7 +239,7 @@ export function useMember(form: FormInstance) {
       },
     },
     {
-      title: '部门',
+      title: t('columns.department'),
       dataIndex: 'department',
       key: 'department',
       render: (value, record, index: number) => {
@@ -253,7 +253,7 @@ export function useMember(form: FormInstance) {
       },
     },
     {
-      title: '操作',
+      title: t('columns.operation'),
       key: 'operation',
       fixed: 'end',
       width: 200,
