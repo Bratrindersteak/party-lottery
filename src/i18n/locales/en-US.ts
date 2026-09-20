@@ -2,7 +2,7 @@ export default {
   lottery: {
     enter: 'Enter',
     play: 'Play',
-    finish: 'Reveal Winners',
+    finish: 'Draw Winner(s)',
     replay: 'Replay',
     continue: 'Continue',
     gotoAddMember: 'Goto Add Member',
@@ -121,15 +121,15 @@ export default {
         children: [
           {
             title: 'Lottery Zone',
-            content: '屏幕中央区域。上方是抽奖标题，中间是成员卡片展示区域，下方是控制抽奖流程的操作按钮',
+            content: 'Located in the central area of screen. The top is the title of lottery, the middle is the area for displaying member cards, and the bottom is the operation button for controlling the lottery process.',
           },
           {
             title: 'Award List',
-            content: '位置在屏幕左侧边缘，展示当前所有抽取奖项，可收缩并支持拖拽调整顺序。因为奖项是自上而下抽取的，所以调整奖项顺序就可以控制抽奖顺序。',
+            content: 'Located in the left edge of the screen, display all current awards, which can be retracted and support dragging to adjust the order. Since the awards are drawn from top to bottom, adjusting the order of the awards can control the sequence of lottery.',
           },
           {
             title: 'Operation Bar',
-            content: '位置在顶部右侧，目前有【Mute】、【language switch】、【Enter Settings】三个操作。',
+            content: 'Located in the top right side, there are currently three operations: [ Mute ], [ Language Switch ], and [ Enter Settings ].',
           },
         ],
       },
@@ -139,23 +139,23 @@ export default {
         children: [
           {
             title: '$t(general.title)',
-            content: '目前支持配置【$t(general.lotteryTitle)】、【Clear All Data】等操作。',
+            content: 'Currently, operations such as [ $t(general.lotteryTitle) ] and [ Clear All Data ] are supported.',
           },
           {
             title: '$t(member.title)',
-            content: '成员的导入、添加、编辑、删除、清空等操作。提供成员导入模版可供下载。',
+            content: 'Operations such as importing, adding, editing, deleting, and clearing members. A member import template is provided for download.',
           },
           {
             title: '$t(award.title)',
-            content: '奖项的添加、编辑、删除、清空等操作。',
+            content: 'Operations such as adding, editing, deleting, and clearing awards.',
           },
           {
             title: '$t(record.title)',
-            content: '记录抽奖结果，可导出为 excel 文件。',
+            content: 'Record lottery results and could export them as a excel file.',
           },
           {
             title: '$t(music.title)',
-            content: '音乐文件的添加、删除等操作，并可配置开场音乐、抽奖音乐、开奖音乐等。',
+            content: 'Operations such as adding and deleting music files, and can configure opening music, lottery music, and winning music.',
           },
           {
             title: '$t(instruction.title)',
