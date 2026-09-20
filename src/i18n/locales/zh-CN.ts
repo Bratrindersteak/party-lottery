@@ -33,6 +33,11 @@ export default {
   success: '成功',
   fail: '失败',
   data: '数据',
+  totalCount: '共 {{total}} 条',
+  algorithm: {
+    shuffle: '随机洗牌算法',
+    weightedRandom: '加权随机算法',
+  },
   general: {
     title: '通用配置',
     lotteryTitle: '抽奖标题',

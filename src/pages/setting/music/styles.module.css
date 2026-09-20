@@ -7,10 +7,14 @@
   margin: 16px 0;
 
   & .select-item {
-    max-width: 320px;
+    max-width: 350px;
     flex: auto;
     text-align: left;
     margin-bottom: 0;
+
+    &:not(:first-child) {
+      margin-left: 16px;
+    }
   }
 }
 
@@ -26,6 +30,7 @@
 }
 
 .music-selector {
+  max-width: 224px;
   margin-left: 16px;
 }
 

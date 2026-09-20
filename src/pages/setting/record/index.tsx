@@ -44,7 +44,7 @@ function AwardRecord({ style }: AwardRecordProps) {
         </Popconfirm>
       </div>
       <Form form={form} component={false}>
-        <Table<Record> rowSelection={rowSelection} columns={columns} dataSource={dataSource} rowKey="id" pagination={{ showTotal: (total) => `共 ${total} 条`, pageSize: 10, showQuickJumper: true }} />
+        <Table<Record> rowSelection={rowSelection} columns={columns} dataSource={dataSource} rowKey="id" pagination={{ showTotal: (total) => t('totalCount', { total }), pageSize: 10, showQuickJumper: true }} />
       </Form>
     </div>
   )

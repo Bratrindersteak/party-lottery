@@ -33,6 +33,11 @@ export default {
   success: 'Success',
   fail: 'Fail',
   data: 'Data',
+  totalCount: 'Total {{total}} items',
+  algorithm: {
+    shuffle: 'Random Shuffle Algorithm',
+    weightedRandom: 'Weighted Random Algorithm',
+  },
   general: {
     title: 'General Config',
     lotteryTitle: 'Lottery Title',

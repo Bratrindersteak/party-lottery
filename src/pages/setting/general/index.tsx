@@ -7,9 +7,8 @@ import { useGeneral } from './useGeneral.tsx';
 
 import styles from './styles.module.css';
 
-// 🚀 1. 严密声明：告诉 TS，我的组件现在合规接收 style 属性了
 interface GeneralConfigProps {
-  style?: React.CSSProperties; // 🎯 这里的 CSSProperties 就是 style 的正宗类型
+  style?: React.CSSProperties;
 }
 
 function GeneralConfig({ style }: GeneralConfigProps) {
@@ -18,8 +17,6 @@ function GeneralConfig({ style }: GeneralConfigProps) {
   const { title, isTitleChange, handleTitleChange, handleSaveTitle, handleCancelTitle, handleAlgoChange, handleClearAll } =  useGeneral(form);
 
   const [modalOpen, setModalOpen] = useState(false);
-
-  // TODO 这里应该加一个一键清空缓存的按钮，当抽奖结束之后使用，否则缓存一直留在IndexedDB和localStorage中，很不环保.
 
   // TODO 抽奖标题除了内容可修改之外，还应该支持修改字号和颜色等.
 
@@ -49,8 +46,8 @@ function GeneralConfig({ style }: GeneralConfigProps) {
                 disabled={true}
                 onChange={handleAlgoChange}
                 options={[
-                  { value: 'shuffle', label: '随机洗牌算法' },
-                  { value: 'weightedRandom', label: '权重区间随机算法' },
+                  { value: 'shuffle', label: t('algorithm.shuffle') },
+                  { value: 'weightedRandom', label: t('algorithm.weightedRandom') },
                 ]}
               />
             </div>
