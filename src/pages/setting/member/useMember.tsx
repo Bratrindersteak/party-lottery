@@ -198,7 +198,7 @@ export function useMember(form: FormInstance) {
       render: (value, record, index: number) => {
         return record._isEdit ? (
           <Form.Item name={[record.id as number, 'name']} initialValue={value} className={styles['table-edit-item']}>
-            <Input placeholder="请输入" />
+            <Input placeholder={t('pleaseInput')} />
           </Form.Item>
         ) : (
           <>{value}</>
@@ -212,7 +212,7 @@ export function useMember(form: FormInstance) {
       render: (value, record, index: number) => {
         return record._isEdit ? (
           <Form.Item name={[record.id as number, 'avatar']} initialValue={value} className={styles['table-edit-item']}>
-            <Input placeholder="请输入"/>
+            <Input placeholder={t('pleaseInput')} />
           </Form.Item>
         ) : (
           <Image
@@ -231,7 +231,7 @@ export function useMember(form: FormInstance) {
       render: (value, record, index: number) => {
         return record._isEdit ? (
           <Form.Item name={[record.id as number, 'employeeId']} rules={[{ required: true, message: '' }]} initialValue={value} className={styles['table-edit-item']}>
-            <Input placeholder="请输入" />
+            <Input placeholder={t('pleaseInput')} />
           </Form.Item>
         ) : (
           <>{value}</>
@@ -245,7 +245,7 @@ export function useMember(form: FormInstance) {
       render: (value, record, index: number) => {
         return record._isEdit ? (
           <Form.Item name={[record.id as number, 'department']} initialValue={value} className={styles['table-edit-item']}>
-            <Input placeholder="请输入" />
+            <Input placeholder={t('pleaseInput')} />
           </Form.Item>
         ) : (
           <>{value}</>
