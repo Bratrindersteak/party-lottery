@@ -23,6 +23,8 @@ export default {
     delete: 'Delete',
     bulkDelete: 'Bulk Delete',
     clear: 'Clear',
+    confirm_replay: '$t(operation.confirm) $t(lottery.replay) ?',
+    confirm_delete: '$t(operation.confirm) $t(operation.delete) ?',
     confirm_bulkDelete: '$t(operation.confirm) $t(operation.bulkDelete) ?',
     confirm_clear: '$t(operation.confirm) $t(operation.clear) ?',
     confirm_clearAll: '$t(operation.confirm) $t(general.clearAll) ?',
@@ -76,6 +78,10 @@ export default {
     openingMusic: 'Opening Music',
     lotteryMusic: 'Lottery Music',
     winningMusic: 'Winning Music',
+    type: {
+      builtin: 'Builtin',
+      custom: 'Custom',
+    },
   },
   columns: {
     name: 'Name',
@@ -98,7 +104,8 @@ export default {
     operation: 'Operation',
   },
   tooltip: {
-
+    awardRepeat: 'Allow winner continue participate in this award or not.',
+    awardEnable: 'Enable this award and display in the list or not.',
   },
   instruction: {
     title: 'Instruction',

@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback, useState } from 'react';
 import { Form, Input, InputNumber, Button, Checkbox, Popconfirm, Table, Tag, Image, Switch, Tooltip, App } from 'antd';
-import { DeleteOutlined, QuestionCircleOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { DeleteOutlined, QuestionCircleOutlined, CheckOutlined, CloseOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
 import { useAwardStore } from '@/store/award.ts';
@@ -10,7 +10,7 @@ import defaultAwardUrl from '@/assets/images/default-award.png';
 
 import styles from './styles.module.css';
 
-import type { TableProps, TableColumnsType, FormInstance, CheckboxChangeEvent } from 'antd';
+import type { TableProps, TableColumnsType, FormInstance } from 'antd';
 import type { Award } from '@/types/lottery';
 
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
@@ -229,7 +229,7 @@ export function useAward(form: FormInstance) {
       title: (
         <>
           <>{t('columns.awardRepeat')} </>
-          <Tooltip placement="top" title="是否允许已获奖人员继续抽取此奖项">
+          <Tooltip placement="top" title={t('tooltip.awardRepeat')}>
             <QuestionCircleOutlined />
           </Tooltip>
         </>
@@ -249,7 +249,7 @@ export function useAward(form: FormInstance) {
       title: (
         <>
           <>{t('columns.awardEnable')} </>
-          <Tooltip title="启用后会在抽奖列表中展示，参与抽奖">
+          <Tooltip title={t('tooltip.awardEnable')}>
             <QuestionCircleOutlined />
           </Tooltip>
         </>
@@ -269,9 +269,9 @@ export function useAward(form: FormInstance) {
       key: 'isFinished',
       render: (value) => {
         return value ? (
-          <Tag color="success" variant="outlined">已开奖</Tag>
+          <Tag color="success" variant="outlined">{t('award.status.finished')}</Tag>
         ) : (
-          <Tag color="processing" variant="outlined">未开奖</Tag>
+          <Tag color="processing" variant="outlined">{t('award.status.ready')}</Tag>
         );
       },
     },
@@ -290,22 +290,22 @@ export function useAward(form: FormInstance) {
           <>
             <Button color="primary" variant="outlined" size="small" className={styles['table-btn']} onClick={() => { handleEdit(record) }}>{t('operation.edit')}</Button>
             <Popconfirm
-              title="确认删除?"
+              title={t('operation.confirm_delete')}
               icon={<DeleteOutlined style={{ color: '#F56C6C' }}/>}
               onConfirm={() => { handleDelete(record) }}
               okButtonProps={{ danger: true }}
-              okText="删除"
-              cancelText="取消"
+              okText={t('operation.delete')}
+              cancelText={t('operation.cancel')}
             >
               <Button color="danger" variant="outlined" size="small" className={styles['table-btn']}>{t('operation.delete')}</Button>
             </Popconfirm>
             {record.isFinished && <Popconfirm
-              title="确认重新抽取?"
-              icon={<DeleteOutlined style={{ color: '#F56C6C' }}/>}
+              title={t('operation.confirm_replay')}
+              icon={<InfoCircleOutlined style={{ color: '#D8BD14' }}/>}
               onConfirm={() => { handleReplay(record) }}
-              okButtonProps={{ danger: true }}
-              okText="重新抽取"
-              cancelText="取消"
+              okButtonProps={{ color: 'yellow', variant: 'solid' }}
+              okText={t('lottery.replay')}
+              cancelText={t('operation.cancel')}
             >
               <Button color="yellow" variant="outlined" size="small" className={styles['table-btn']}>{t('lottery.replay')}</Button>
             </Popconfirm>}

@@ -229,12 +229,12 @@ export function useRecord() {
         return (
           <>
             <Popconfirm
-              title="确认删除?"
+              title={t('operation.confirm_delete')}
               icon={<DeleteOutlined style={{ color: '#F56C6C' }}/>}
               onConfirm={() => { handleDelete(record) }}
               okButtonProps={{ danger: true }}
-              okText="删除"
-              cancelText="取消"
+              okText={t('operation.delete')}
+              cancelText={t('operation.cancel')}
             >
               <Button color="danger" variant="outlined" size="small" className={styles['table-btn']}>{t('operation.delete')}</Button>
             </Popconfirm>

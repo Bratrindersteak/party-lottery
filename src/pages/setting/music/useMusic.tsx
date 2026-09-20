@@ -229,9 +229,9 @@ export function useMusic() {
       key: 'isBuiltIn',
       render: (value) => {
         return (value) ? (
-          <Tag color="magenta" variant="outlined">内置</Tag>
+          <Tag color="magenta" variant="outlined">{t('music.type.builtin')}</Tag>
         ) : (
-          <Tag color="green" variant="outlined">自上传</Tag>
+          <Tag color="green" variant="outlined">{t('music.type.custom')}</Tag>
         );
       },
     },
@@ -244,12 +244,12 @@ export function useMusic() {
         return (
           <>
             <Popconfirm
-              title="确认删除?"
+              title={t('operation.confirm_delete')}
               icon={<DeleteOutlined style={{ color: '#F56C6C' }}/>}
               onConfirm={() => { handleDelete(record) }}
               okButtonProps={{ danger: true }}
-              okText="删除"
-              cancelText="取消"
+              okText={t('operation.delete')}
+              cancelText={t('operation.cancel')}
             >
               <Button disabled={record.isBuiltIn} color="danger" variant="outlined" size="small" className={styles['table-btn']}>{t('operation.delete')}</Button>
             </Popconfirm>

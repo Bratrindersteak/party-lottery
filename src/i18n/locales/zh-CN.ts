@@ -23,6 +23,8 @@ export default {
     delete: '删除',
     bulkDelete: '批量删除',
     clear: '清空',
+    confirm_replay: '$t(operation.confirm)$t(lottery.replay)？',
+    confirm_delete: '$t(operation.confirm)$t(operation.delete)？',
     confirm_bulkDelete: '$t(operation.confirm)$t(operation.bulkDelete)？',
     confirm_clear: '$t(operation.confirm)$t(operation.clear)？',
     confirm_clearAll: '$t(operation.confirm)$t(general.clearAll)？',
@@ -76,6 +78,10 @@ export default {
     openingMusic: '开场音效',
     lotteryMusic: '抽奖音效',
     winningMusic: '中奖音效',
+    type: {
+      builtin: '内置',
+      custom: '自定义',
+    },
   },
   columns: {
     name: '姓名',
@@ -98,7 +104,8 @@ export default {
     operation: '操作',
   },
   tooltip: {
-
+    awardRepeat: '是否允许已获奖人员继续抽取此奖项',
+    awardEnable: '是否启用此奖项并在抽奖列表中展示',
   },
   instruction: {
     title: '操作说明',
