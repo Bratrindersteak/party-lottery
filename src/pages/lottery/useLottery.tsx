@@ -1,7 +1,7 @@
-import getFileUrl from '@/utils/getFileUrl.ts';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import * as TWEEN from '@tweenjs/tween.js';
 import { App } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 import { useAwardStore } from '@/store/award.ts';
 import { useLotteryStore } from '@/store/lottery.ts';
@@ -20,11 +20,13 @@ import calcWinnerScale from '@/utils/three/calcWinnerScale.ts';
 import cardLayout from '@/utils/three/cardLayout.ts';
 import winnerPosition from '@/utils/three/winnerPosition.ts';
 import winnerTransform from '@/utils/three/winnerTransform.ts';
+import getFileUrl from '@/utils/getFileUrl.ts';
 
 import type { Award, Member, Music, Record } from '@/types/lottery.ts';
 
 export function useLottery() {
   const { message } = App.useApp();
+  const { t } = useTranslation();
 
   const members = useMemberStore((state) => state.members);
 
@@ -171,17 +173,17 @@ export function useLottery() {
     if (lotteryStatus !== INIT) { return }
 
     if (!currAward) {
-      message.warning('请选择要抽取的奖项！');
+      message.warning(t('message.lottery.noCurrAward'));
       return;
     }
 
     if (!currAward?.count) {
-      message.warning('当前奖项无剩余名额！');
+      message.warning(t('message.lottery.noQuota'));
       return;
     }
 
     if (currAward?.isFinished) {
-      message.warning('当前奖项已抽取完毕！');
+      message.warning(t('message.lottery.currAwardFinished'));
       return;
     }
 
@@ -191,24 +193,24 @@ export function useLottery() {
     await transform(scene, camera, renderer, objects, targets.sphere, 2000);
     setIsAnimating(false);
     rotating(scene, camera, renderer, 1, 50, TWEEN.Easing.Linear.None, Infinity);
-  }, [lotteryStatus, currAward, setIsAnimating, setLotteryStatus, scene, camera, renderer, objects, targets.sphere, message]);
+  }, [lotteryStatus, currAward, setIsAnimating, setLotteryStatus, scene, camera, renderer, objects, targets.sphere, message, t]);
 
   // 开始抽取当前奖项.
   const handlePlay = useCallback(async () => {
     if (lotteryStatus !== READY) { return }
 
     if (!currAward) {
-      message.warning('请选择要抽取的奖项！');
+      message.warning(t('message.lottery.noCurrAward'));
       return;
     }
 
     if (!currAward?.count) {
-      message.warning('当前奖项无剩余名额！');
+      message.warning(t('message.lottery.noQuota'));
       return;
     }
 
     if (currAward?.isFinished) {
-      message.warning('当前奖项已抽取完毕！');
+      message.warning(t('message.lottery.currAwardFinished'));
       return;
     }
 
@@ -221,7 +223,7 @@ export function useLottery() {
     await rotating(scene, camera, renderer, 5, 2, TWEEN.Easing.Cubic.In);
     setIsAnimating(false);
     rotating(scene, camera, renderer, 5, 2, TWEEN.Easing.Linear.None, Infinity);
-  }, [lotteryStatus, currAward, setIsAnimating, setLotteryStatus, records, members, scene, camera, renderer, message]);
+  }, [lotteryStatus, currAward, setIsAnimating, setLotteryStatus, records, members, scene, camera, renderer, message, t]);
 
   // 停止动效并开奖.
   const handleFinish = useCallback(async () => {
@@ -309,11 +311,11 @@ export function useLottery() {
       currWinnersRef.current = [];
       rotating(scene, camera, renderer, 1, 50, TWEEN.Easing.Linear.None, Infinity);
     } else {
-      message.warning('当前所有奖项均已抽取完毕！');
+      message.warning(t('message.lottery.allAwardsFinished'));
       await transform(scene, camera, renderer, objects, targets.sphere, 2000, currWinnersRef.current);
     }
     setIsAnimating(false);
-  }, [lotteryStatus, currAward, awards, setIsAnimating, currAwardId, setLotteryStatus, setCurrAwardId, scene, camera, renderer, objects, targets.sphere, message]);
+  }, [lotteryStatus, currAward, awards, setIsAnimating, currAwardId, setLotteryStatus, setCurrAwardId, scene, camera, renderer, objects, targets.sphere, message, t]);
 
   return {
     showEnter, showPlay, showFinish, showReplay,

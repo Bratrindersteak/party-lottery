@@ -4,6 +4,7 @@ import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } 
 import { CSS } from '@dnd-kit/utilities';
 import { Image, Tag } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import { useLotteryStore } from '@/store/lottery.ts';
 import { useAwardStore } from '@/store/award.ts';
@@ -14,13 +15,13 @@ import styles from './styles.module.css';
 
 import type { Award } from '@/types/lottery.ts';
 
-// 1. 可拖拽项组件
 function SortableItem({ award }: { award: Award }) {
+  const { t } = useTranslation();
   const currAwardId = useLotteryStore((state) => state.currAwardId);
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: award.id as number });
   const { ableClick, handleClick } = useAwardList();
 
-  // 动态 Transform 和 Transition 必须留在 inline style
+  // 动态 Transform 和 Transition 必须留在 inline style.
   const inlineStyle: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -46,14 +47,13 @@ function SortableItem({ award }: { award: Award }) {
         <div className={styles['award-prize']} title={award.prize}>{award.prize}</div>
       </div>
       <div className={styles['award-right']}>
-        <div className={styles['award-count']}>{award.count}名</div>
-        <Tag className={styles['award-status']} color={award.isFinished ? '#64748b' : '#10b981'} variant="outlined">{award.isFinished ? '已开奖' : '进行中'}</Tag>
+        <div className={styles['award-count']}>{t('award.quota', { quota: award.count })}</div>
+        <Tag className={styles['award-status']} color={award.isFinished ? '#64748b' : '#10b981'} variant="outlined">{award.isFinished ? t('award.status.finished') : t('award.status.running')}</Tag>
       </div>
     </li>
   );
 }
 
-// 2. 主列表组件
 export default function AwardList() {
   const isAwardListExpanded = useLotteryStore((state) => state.isAwardListExpanded);
   const awards = useAwardStore((state) => state.awards);
@@ -66,11 +66,11 @@ export default function AwardList() {
       .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
   }, [awards]);
 
-  // 配置 Sensor：解决点击与拖拽冲突的关键！
+  // 配置 Sensor：解决点击与拖拽冲突的关键！.
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 5, // 移动超过 5px 触发拖拽，低于 5px 当作 onClick 点击
+        distance: 5, // 移动超过 5px 触发拖拽，低于 5px 当作 onClick 点击.
       },
     })
   );

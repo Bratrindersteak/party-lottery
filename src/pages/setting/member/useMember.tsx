@@ -36,8 +36,7 @@ export function useMember(form: FormInstance) {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const rowSelection: TableRowSelection<Member> = {
     selectedRowKeys,
-    onChange: (newSelectedRowKeys: React.Key[], selectedRows, info) => {
-      console.log('selectedRowKeys changed: ', newSelectedRowKeys, { selectedRows, info });
+    onChange: (newSelectedRowKeys: React.Key[]) => {
       setSelectedRowKeys(newSelectedRowKeys);
     },
     selections: [
@@ -95,19 +94,11 @@ export function useMember(form: FormInstance) {
     const { _type, id } = item;
 
     try {
-      // 1. 🛡️ 严格模式：先触发表单的校验（防止用户漏填必填项，或者格式写错）
-      // validateFields 传入嵌套路径，只校验并捞出当前这一行，不影响表格其他行，体验极好
-      const rowValues = await form.validateFields([[id, 'name'], [id, 'employeeId'], [id, 'department']]);
+      // 触发表单校验（防止用户漏填必填项，或者格式写错），validateFields 传入嵌套路径，只校验并捞出当前这一行，不影响表格其他行，体验极好.
+      await form.validateFields([[id, 'name'], [id, 'employeeId'], [id, 'department']]);
 
-      // 2. 🎯 定点爆破：直接从大盒子里，把当前行 ID 对应的最新表单值捞出来
-      // 此时的 fields 干净得就像刚出生的婴儿：{ name: "最新的名字", dept: "最新的部门" }
+      // 把当前行 ID 对应的最新表单值捞出来.
       const fields = form.getFieldValue(id);
-
-      // 3. 🚀 呼叫我们上一轮焊死的 saveAction，物理写盘，顺便关闭编辑状态
-      // await saveMember(id, fields);
-
-      console.log('handleSave: ', { rowValues, fields });
-
       const timestamp = Date.now();
       if (_type === ADD) {
         create({ ...item, ...fields, createdAt: timestamp, updatedAt: timestamp });
@@ -115,7 +106,6 @@ export function useMember(form: FormInstance) {
         update({ ...item, ...fields, updatedAt: timestamp });
       }
     } catch (error) {
-      // 🚀 核心：当表单被拦截时，我们主动把错误抓出来，啪的一下拍在屏幕最上方！
       if (error?.errorFields?.length > 0) {
         const firstError = error.errorFields[0].errors[0];
         message.error(`保存失败：${firstError || '请检查输入项！'}`);
@@ -174,15 +164,15 @@ export function useMember(form: FormInstance) {
 
       try {
         // 2. 调用解析工具.
-        message.loading({ content: '正在拼命解析千人名单...', key: 'importing' })
+        message.loading({ content: t('message.member.fileParsing'), key: 'importing' })
         const members = await parseExcel(file);
         const timestamp = Date.now();
         const newMembers = members.map(member => ({ ...member, createdAt: timestamp, updatedAt: timestamp }));
 
         await bulkCreate(newMembers);
-        message.success({ content: `成功导入${members.length}人！`, key: 'importing' });
+        message.success({ content: t('message.member.fileImportSuccess', { count: members.length }), key: 'importing' });
       } catch (error) {
-        message.error({ content: 'Excel 解析砸锅了，请检查格式！', key: 'importing' });
+        message.error({ content: 'Excel文件解析失败！', key: 'importing' });
       }
       // 4. 返回 false，坚决不让 antd 发起任何网络请求！
       return false;
@@ -195,7 +185,7 @@ export function useMember(form: FormInstance) {
       title: t('columns.name'),
       dataIndex: 'name',
       key: 'name',
-      render: (value, record, index: number) => {
+      render: (value, record) => {
         return record._isEdit ? (
           <Form.Item name={[record.id as number, 'name']} initialValue={value} className={styles['table-edit-item']}>
             <Input placeholder={t('pleaseInput')} />
@@ -209,7 +199,7 @@ export function useMember(form: FormInstance) {
       title: t('columns.avatar'),
       dataIndex: 'avatar',
       key: 'avatar',
-      render: (value, record, index: number) => {
+      render: (value, record) => {
         return record._isEdit ? (
           <Form.Item name={[record.id as number, 'avatar']} initialValue={value} className={styles['table-edit-item']}>
             <Input placeholder={t('pleaseInput')} />
@@ -228,7 +218,7 @@ export function useMember(form: FormInstance) {
       title: t('columns.employeeId'),
       dataIndex: 'employeeId',
       key: 'employeeId',
-      render: (value, record, index: number) => {
+      render: (value, record) => {
         return record._isEdit ? (
           <Form.Item name={[record.id as number, 'employeeId']} rules={[{ required: true, message: '' }]} initialValue={value} className={styles['table-edit-item']}>
             <Input placeholder={t('pleaseInput')} />
@@ -242,7 +232,7 @@ export function useMember(form: FormInstance) {
       title: t('columns.department'),
       dataIndex: 'department',
       key: 'department',
-      render: (value, record, index: number) => {
+      render: (value, record) => {
         return record._isEdit ? (
           <Form.Item name={[record.id as number, 'department']} initialValue={value} className={styles['table-edit-item']}>
             <Input placeholder={t('pleaseInput')} />
@@ -257,7 +247,7 @@ export function useMember(form: FormInstance) {
       key: 'operation',
       fixed: 'end',
       width: 200,
-      render: (value, record, index: number) => {
+      render: (_, record) => {
         return record._isEdit ? (
           <>
             <Button color="green" variant="outlined" size="small" className={styles['table-btn']} onClick={() => { handleSave(record) }}>{t('operation.save')}</Button>
@@ -284,10 +274,10 @@ export function useMember(form: FormInstance) {
 
   const setColumns = useCallback(() => {}, []);
 
-  // 🚀 核心大招：在数据流向 Table 的最后关头，强行按创建时间倒序排列！
+  // 按创建时间倒序排列.
   const sortedMembers = useMemo(() => {
     return [...members].sort((a: Member, b: Member) => {
-      // 💥 绝杀逻辑：让最新创建的（createdAt 最大的）排在最前面
+      // 让最新创建的（createdAt 大的）排在前面.
       const timeA = Number(a.createdAt) || 0;
       const timeB = Number(b.createdAt) || 0;
       return timeB - timeA;

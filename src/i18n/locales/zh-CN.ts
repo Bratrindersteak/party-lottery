@@ -58,7 +58,7 @@ export default {
   award: {
     title: '奖项配置',
     prize: '奖品',
-    quota: '名额',
+    quota: '{{quota}}名',
     status: {
       ready: '未开始',
       running: '进行中',
@@ -106,6 +106,20 @@ export default {
   tooltip: {
     awardRepeat: '是否允许已获奖人员继续抽取此奖项。',
     awardEnable: '是否启用此奖项并在抽奖列表中展示。',
+  },
+  message: {
+    lottery: {
+      noCurrAward: '请选择要抽取的奖项！',
+      noQuota: '当前奖项无剩余名额！',
+      currAwardFinished: '当前奖项已抽取完毕！',
+      allAwardsFinished: '当前所有奖项均已抽取完毕！',
+    },
+    member: {
+      fileParsing: '文件正在解析中...',
+      fileImportSuccess: '成功导入{{count}}人！',
+      initDataSuccess: '初始化成员数据$t(success)！',
+      initDataFail: '初始化成员数据$t(fail)！',
+    },
   },
   instruction: {
     title: '操作说明',

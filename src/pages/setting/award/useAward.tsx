@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useState } from 'react';
-import { Form, Input, InputNumber, Button, Checkbox, Popconfirm, Table, Tag, Image, Switch, Tooltip, App } from 'antd';
+import { Form, Input, InputNumber, Button, Popconfirm, Table, Tag, Image, Switch, Tooltip, App } from 'antd';
 import { DeleteOutlined, QuestionCircleOutlined, CheckOutlined, CloseOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 

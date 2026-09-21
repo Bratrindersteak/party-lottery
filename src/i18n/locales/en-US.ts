@@ -58,7 +58,7 @@ export default {
   award: {
     title: 'Award Config',
     prize: 'Prize',
-    quota: 'Quota',
+    quota: 'Quota: {{quota}}',
     status: {
       ready: 'Ready',
       running: 'Running',
@@ -91,7 +91,7 @@ export default {
     awardName: 'Award Name',
     prize: 'Prize',
     prizeUrl: 'Prize Preview',
-    awardCount: 'Count',
+    awardCount: 'Quota',
     awardRepeat: 'Allow Repeat Winning',
     awardEnable: 'Enable',
     awardStatus: 'Status',
@@ -106,6 +106,20 @@ export default {
   tooltip: {
     awardRepeat: 'Allow winner continue participate in this award or not.',
     awardEnable: 'Enable this award and display in the list or not.',
+  },
+  message: {
+    lottery: {
+      noCurrAward: 'Please select a award you want to draw!',
+      noQuota: 'Current award has no left quota!',
+      currAwardFinished: 'Current award finished!',
+      allAwardsFinished: 'All awards finished!',
+    },
+    member: {
+      fileParsing: 'File parsing...',
+      fileImportSuccess: 'successful import {{count}} members!',
+      initDataSuccess: 'Init Member Data $t(success)!',
+      initDataFail: 'Init Member Data $t(fail)!',
+    },
   },
   instruction: {
     title: 'Instruction',
