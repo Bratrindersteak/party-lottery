@@ -89,8 +89,8 @@ export function useRecord() {
       return item;
     });
 
-    exportToExcel(data);
-  }, [awards, members, records]);
+    exportToExcel(data, t('lottery.result'));
+  }, [awards, members, records, t]);
 
   const handleAdd = useCallback((item) => {
     const timestamp = Date.now();

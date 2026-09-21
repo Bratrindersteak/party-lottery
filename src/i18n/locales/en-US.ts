@@ -8,6 +8,7 @@ export default {
     gotoAddMember: 'Goto Add Member',
     useDefaultData: 'Use Default Data',
     nowDrawing: 'Now Drawing',
+    result: 'lottery-result',
   },
   operation: {
     add: 'Add',
@@ -115,8 +116,10 @@ export default {
       allAwardsFinished: 'All awards finished!',
     },
     member: {
+      fileTemplate: 'member-import-template',
       fileParsing: 'File parsing...',
       fileImportSuccess: 'successful import {{count}} members!',
+      fileTypeError: 'Only Excel file supported (.xlsx or .xls) !',
       initDataSuccess: 'Init Member Data $t(success)!',
       initDataFail: 'Init Member Data $t(fail)!',
     },

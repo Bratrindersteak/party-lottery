@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { App } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 import { useMemberStore } from '@/store/member.ts';
 import { useLotteryStore } from '@/store/lottery.ts';
@@ -12,10 +13,10 @@ import type { RcFile } from 'antd/es/upload';
 
 export function useDefault() {
   const { message } = App.useApp();
+  const { t } = useTranslation();
   const bulkCreate = useMemberStore((state) => state.bulkCreate);
   const setModule = useSettingStore((state) => state.setModule);
   const setScreen = useLotteryStore((state) => state.setScreen);
-  const title = useLotteryStore((state) => state.title);
   const setTitle = useLotteryStore((state) => state.setTitle);
   const setIsAwardListExpanded = useLotteryStore((state) => state.setIsAwardListExpanded);
   const setCurrAwardId = useLotteryStore((state) => state.setCurrAwardId);
@@ -46,14 +47,14 @@ export function useDefault() {
       lastModified: Date.now(),
     }) as RcFile;
 
-    // 补全 RcFile 扩展的 uid 属性
+    // 补全 RcFile 扩展的 uid 属性.
     file.uid = `static-excel-${Date.now()}`;
 
     const members = await parseExcel(file);
     const timestamp = Date.now();
     const newMembers = members.map(member => ({ ...member, createdAt: timestamp, updatedAt: timestamp }));
     await bulkCreate(newMembers);
-    message.success({ content: `成功导入${members.length}人！`, key: 'importing' });
+    message.success({ content: t('message.member.fileImportSuccess', { count: members.length }), key: 'importing' });
 
     setTitle(DEFAULT_TITLE);
 
@@ -67,10 +68,8 @@ export function useDefault() {
       setIsAwardListExpanded(true);
     }
 
-    // TODO 加载并设置默认音效.
-
     setAbleClick(true);
-  }, [bulkCreate, message, awards, setTitle, setCurrAwardId, setIsAwardListExpanded, addAward]);
+  }, [bulkCreate, message, t, setTitle, awards.length, setCurrAwardId, setIsAwardListExpanded, addAward]);
 
   return { ableClick, handleGoToAddData, handleUseDefaultData };
 }

@@ -144,22 +144,22 @@ export function useMember(form: FormInstance) {
   }, [clear]);
 
   const handleDownloadTemplate = useCallback(() => {
-    triggerDownload('./excels/template.xlsx', '成员导入模板.xlsx');
-  }, []);
+    triggerDownload('./excels/template.xlsx', `${t('message.member.fileTemplate')}.xlsx`);
+  }, [t]);
 
   const uploadProps = useMemo<UploadProps<never>>(() => ({
     accept: '.xlsx, .xls, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel', // 浏览器文件选择框层面的防御.
     maxCount: 1, // 每次只允许传一个文件.
     beforeUpload: async (file: RcFile, fileList: RcFile[]) => {
-      // 1. 先验一下是不是 Excel 文件，防止 HR 误传一张照片进来.
+      // 1. 先验一下是不是 Excel 文件，防止误传一张照片进来.
       const isExcel =
         file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
         file.name.endsWith('.xlsx') ||
-        file.name.endsWith('.xls')
+        file.name.endsWith('.xls');
 
       if (!isExcel) {
-        message.error('兄弟，只能传 Excel 文件（.xlsx 或 .xls）哦！')
-        return Upload.LIST_IGNORE // 告诉 antd 直接在上传列表里把这货抹去
+        message.error(t('message.member.fileTypeError'));
+        return Upload.LIST_IGNORE; // 告诉 antd 直接在上传列表里把这货抹去.
       }
 
       try {
@@ -178,7 +178,7 @@ export function useMember(form: FormInstance) {
       return false;
     },
     showUploadList: false, // 既然不上传，隐藏自带的进度条列表.
-  }), [bulkCreate, message]);
+  }), [bulkCreate, message, t]);
 
   const columns = useMemo<TableColumnsType<Member>>(() => [
     {

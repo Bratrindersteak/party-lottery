@@ -33,10 +33,10 @@ export async function parseExcel(file: RcFile): Promise<Member[]> {
 
         // 1. 定义期望字段及可能匹配的表头别名（大小写与空格无关）
         const headerAliases: Record<keyof Omit<Member, 'id'> | 'employeeId', string[]> = {
-          employeeId: ['工号', '员工工号', '员工编号', '编号', 'id', 'employeeId'],
-          name: ['姓名', '名字', '员工姓名', '称呼', 'name'],
-          department: ['部门', '所属部门', '架构', '部门名称', 'department'],
-          avatar: ['头像', '头像地址', '头像链接', '照片', 'avatar'],
+          employeeId: ['EmployeeID (工号)', '工号', '员工工号', '员工编号', '编号', 'id', 'employeeId'],
+          name: ['Name (姓名)', '姓名', '名字', '员工姓名', '称呼', 'name'],
+          department: ['Department (部门)', '部门', '所属部门', '架构', '部门名称', 'department'],
+          avatar: ['Avatar (头像)', '头像', '头像地址', '头像链接', '照片', 'avatar'],
         };
 
         // 2. 扫描第 1 行建立列号映射：{ employeeId: 1, name: 2, ... }
@@ -103,20 +103,21 @@ export async function parseExcel(file: RcFile): Promise<Member[]> {
  * 将抽奖记录数据导出为 Excel 文件.
  *
  * @param data - 抽奖记录数据.
+ * @param fileName - 导出文件的名称.
  */
-export async function exportToExcel(data: ExportColumns[]) {
+export async function exportToExcel(data: ExportColumns[], fileName: string) {
   // 1. 创建工作簿和工作表.
   const workbook = new ExcelJS.Workbook();
   const worksheet = workbook.addWorksheet('数据表');
 
   // 2. 设置表头.
   worksheet.columns = [
-    { header: '奖项', key: 'award', width: 15 },
-    { header: '奖品', key: 'prize', width: 20 },
-    { header: '工号', key: 'employeeId', width: 15 },
-    { header: '姓名', key: 'name', width: 15 },
-    { header: '部门', key: 'department', width: 25 },
-    { header: '获奖时间', key: 'createdAt', width: 25 },
+    { header: 'Award (奖项)', key: 'award', width: 20 },
+    { header: 'Prize (奖品)', key: 'prize', width: 20 },
+    { header: 'EmployeeID (工号)', key: 'employeeId', width: 25 },
+    { header: 'Name (姓名)', key: 'name', width: 25 },
+    { header: 'Department (部门)', key: 'department', width: 25 },
+    { header: 'AwardTime (获奖时间)', key: 'createdAt', width: 25 },
   ];
 
   // 3. 添加数据.
@@ -142,7 +143,7 @@ export async function exportToExcel(data: ExportColumns[]) {
   const url = window.URL.createObjectURL(blob);
   const anchor = document.createElement('a');
   anchor.href = url;
-  anchor.download = `抽奖结果.xlsx`;
+  anchor.download = `${fileName}.xlsx`;
   anchor.click();
 
   // 6. 释放内存.

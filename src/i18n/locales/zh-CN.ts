@@ -8,6 +8,7 @@ export default {
     gotoAddMember: '去添加成员',
     useDefaultData: '使用默认数据',
     nowDrawing: '当前正在抽取',
+    result: '抽奖结果',
   },
   operation: {
     add: '添加',
@@ -115,8 +116,10 @@ export default {
       allAwardsFinished: '当前所有奖项均已抽取完毕！',
     },
     member: {
+      fileTemplate: '成员导入模板',
       fileParsing: '文件正在解析中...',
       fileImportSuccess: '成功导入{{count}}人！',
+      fileTypeError: '只支持上传 Excel 文件（.xlsx 或 .xls）！',
       initDataSuccess: '初始化成员数据$t(success)！',
       initDataFail: '初始化成员数据$t(fail)！',
     },

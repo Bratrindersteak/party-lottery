@@ -10,7 +10,7 @@ import styles from './styles.module.css';
 import type { Record } from '@/types/lottery.ts';
 
 interface AwardRecordProps {
-  style?: React.CSSProperties; // 🎯 这里的 CSSProperties 就是 style 的正宗类型
+  style?: React.CSSProperties;
 }
 
 function AwardRecord({ style }: AwardRecordProps) {
