@@ -19,7 +19,7 @@ A static 3D lottery page based on React and Three.js.
 ## Overview
 
 ### Lottery
-<div >
+<div>
    <img src="static/images/en/init.png" alt="" style="width: calc(50% - 18px); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
    <img src="static/images/en/ready.png" alt="" style="width: calc(50% - 18px); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
    <img src="static/images/en/running.png" alt="" style="width: calc(50% - 18px); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
@@ -27,7 +27,7 @@ A static 3D lottery page based on React and Three.js.
 </div>
 
 ### Setting
-<div align="center">
+<div>
     <img src="./static/images/en/general.png" alt="" style="width: calc(50% - 18px); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
     <img src="./static/images/en/member.png" alt="" style="width: calc(50% - 18px); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
     <img src="./static/images/en/award.png" alt="" style="width: calc(50% - 18px); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
