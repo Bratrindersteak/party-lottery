@@ -7,6 +7,7 @@
 
 A static 3D lottery page based on React and Three.js.
 
+
 ## Technology Stack
 
 - **React** - The library for web and native user interfaces.
@@ -15,6 +16,24 @@ A static 3D lottery page based on React and Three.js.
 - **Dexie** - A Minimalistic Wrapper for IndexedDB.
 - **Antd** - An enterprise-class UI design language and React UI library.
 - **Exceljs** - Excel Workbook Manager.
+
+
+## Development
+
+```shell
+# clone repository
+git clone https://github.com/Bratrindersteak/party-lottery.git
+
+# install dependencies
+pnpm i 或 pnpm install
+
+# local serve
+pnpm run dev
+
+# package
+pnpm run build
+```
+
 
 ## Overview
 
@@ -35,4 +54,11 @@ A static 3D lottery page based on React and Three.js.
     <img src="./static/images/en/music.png" alt="" style="width: 49%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
     <img src="./static/images/en/instruction.png" alt="" style="width: 49%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
 </div>
+
+
+## License
+
+[MIT](https://opensource.org/licenses/MIT)
+
+Copyright (c) 2026 Bratrindersteak
 
