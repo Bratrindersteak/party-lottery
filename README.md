@@ -25,7 +25,7 @@ A static 3D lottery page based on React and Three.js.
 git clone https://github.com/Bratrindersteak/party-lottery.git
 
 # install dependencies
-pnpm i 或 pnpm install
+pnpm i or pnpm install
 
 # local serve
 pnpm run dev
