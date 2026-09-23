@@ -19,20 +19,20 @@ A static 3D lottery page based on React and Three.js.
 ## Overview
 
 ### Lottery
-<div>
-   <img src="static/images/en/init.png" alt="" style="width: calc(50% - 18px); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
-   <img src="static/images/en/ready.png" alt="" style="width: calc(50% - 18px); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
-   <img src="static/images/en/running.png" alt="" style="width: calc(50% - 18px); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
-   <img src="static/images/en/finished.png" alt="" style="width: calc(50% - 18px); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
+<div align="center">
+   <img src="static/images/en/init.png" alt="" style="width: 49%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+   <img src="static/images/en/ready.png" alt="" style="width: 49%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+   <img src="static/images/en/running.png" alt="" style="width: 49%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+   <img src="static/images/en/finished.png" alt="" style="width: 49%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
 </div>
 
 ### Setting
-<div>
-    <img src="./static/images/en/general.png" alt="" style="width: calc(50% - 18px); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
-    <img src="./static/images/en/member.png" alt="" style="width: calc(50% - 18px); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
-    <img src="./static/images/en/award.png" alt="" style="width: calc(50% - 18px); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
-    <img src="./static/images/en/record.png" alt="" style="width: calc(50% - 18px); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
-    <img src="./static/images/en/music.png" alt="" style="width: calc(50% - 18px); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
-<img src="./static/images/en/instruction.png" alt="" style="width: calc(50% - 18px); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 8px;">
+<div align="center">
+    <img src="./static/images/en/general.png" alt="" style="width: 49%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    <img src="./static/images/en/member.png" alt="" style="width: 49%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    <img src="./static/images/en/award.png" alt="" style="width: 49%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    <img src="./static/images/en/record.png" alt="" style="width: 49%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    <img src="./static/images/en/music.png" alt="" style="width: 49%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    <img src="./static/images/en/instruction.png" alt="" style="width: 49%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
 </div>
 
